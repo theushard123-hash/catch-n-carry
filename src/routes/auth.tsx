@@ -1,0 +1,345 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { z } from "zod";
+import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable/index";
+import { BrandLogo } from "@/components/BrandLogo";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useAuth } from "@/hooks/useAuth";
+import { Fish, Store } from "lucide-react";
+
+const searchSchema = z.object({
+  redirect: z.string().optional(),
+  tab: z.enum(["entrar", "cadastro"]).optional(),
+});
+
+export const Route = createFileRoute("/auth")({
+  validateSearch: searchSchema,
+  head: () => ({
+    meta: [
+      { title: "Entrar ou criar conta — Portal Trapiche Pescados" },
+      {
+        name: "description",
+        content: "Acesse o portal de pedidos da Trapiche Pescados para atacado e varejo.",
+      },
+      { property: "og:title", content: "Entrar — Portal Trapiche Pescados" },
+      { property: "og:description", content: "Acesse o portal de pedidos da Trapiche Pescados." },
+    ],
+  }),
+  component: AuthPage,
+});
+
+function safeRedirect(r?: string) {
+  if (r && r.startsWith("/") && !r.startsWith("//")) return r;
+  return "/catalogo";
+}
+
+function AuthPage() {
+  const { redirect, tab } = Route.useSearch();
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [forgot, setForgot] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) navigate({ to: safeRedirect(redirect), replace: true });
+  }, [user, loading, redirect, navigate]);
+
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    setBusy(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email: String(fd.get("email")),
+      password: String(fd.get("password")),
+    });
+    setBusy(false);
+    if (error) {
+      toast.error(
+        error.message.includes("Invalid login") ? "E-mail ou senha incorretos." : error.message,
+      );
+      return;
+    }
+    navigate({ to: safeRedirect(redirect), replace: true });
+  }
+
+  async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const password = String(fd.get("password"));
+    if (password.length < 6) {
+      toast.error("A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+    setBusy(true);
+    const { data, error } = await supabase.auth.signUp({
+      email: String(fd.get("email")),
+      password,
+      options: {
+        emailRedirectTo: window.location.origin,
+        data: {
+          full_name: String(fd.get("full_name")),
+          company_name: String(fd.get("company_name")),
+          document: String(fd.get("document")),
+          phone: String(fd.get("phone")),
+          customer_type: String(fd.get("customer_type")),
+        },
+      },
+    });
+    setBusy(false);
+    if (error) {
+      toast.error(
+        error.message.includes("already registered")
+          ? "Este e-mail já possui cadastro. Faça login."
+          : error.message,
+      );
+      return;
+    }
+    if (data.session) {
+      navigate({ to: "/catalogo", replace: true });
+    } else {
+      toast.success("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
+    }
+  }
+
+  async function handleForgot(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    setBusy(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(String(fd.get("email")), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setBusy(false);
+    if (error) toast.error(error.message);
+    else {
+      toast.success("Enviamos um link de redefinição para seu e-mail.");
+      setForgot(false);
+    }
+  }
+
+  async function handleGoogle() {
+    const result = await lovable.auth.signInWithOAuth("google", {
+      redirect_uri: window.location.origin,
+    });
+    if (result.error) {
+      toast.error("Não foi possível entrar com o Google.");
+      return;
+    }
+    if (result.redirected) return;
+    navigate({ to: safeRedirect(redirect), replace: true });
+  }
+
+  return (
+    <div className="grid min-h-screen lg:grid-cols-2">
+      <aside className="relative hidden overflow-hidden bg-gradient-ocean p-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
+        <Link to="/">
+          <BrandLogo light size="md" />
+        </Link>
+        <div className="max-w-md">
+          <h1 className="text-4xl font-bold leading-tight text-balance">
+            Do mar para a sua mesa, agora com pedidos online.
+          </h1>
+          <p className="mt-4 text-lg text-primary-foreground/75">
+            Restaurantes, mercados e clientes do varejo fazem seus pedidos com poucos cliques e
+            acompanham tudo em um só lugar.
+          </p>
+          <ul className="mt-8 space-y-3 text-sm text-primary-foreground/80">
+            <li className="flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-aqua" /> Preços por tipo de cliente
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-aqua" /> Condições de pagamento personalizadas
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="h-2 w-2 rounded-full bg-aqua" /> Histórico completo de pedidos
+            </li>
+          </ul>
+        </div>
+        <p className="text-xs text-primary-foreground/50">© Trapiche Pescados · Curitiba - PR</p>
+        <div className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-aqua/20 blur-3xl" />
+      </aside>
+
+      <div className="flex items-center justify-center bg-background bg-waves p-6 sm:p-10">
+        <div className="w-full max-w-md">
+          <Link to="/" className="mb-8 inline-flex lg:hidden">
+            <BrandLogo size="sm" />
+          </Link>
+
+          {forgot ? (
+            <form onSubmit={handleForgot} className="space-y-5">
+              <div>
+                <h2 className="text-2xl font-bold">Recuperar senha</h2>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  Informe seu e-mail para receber o link de redefinição.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="f-email">E-mail</Label>
+                <Input id="f-email" name="email" type="email" required autoComplete="email" />
+              </div>
+              <Button type="submit" className="w-full" disabled={busy}>
+                Enviar link
+              </Button>
+              <Button type="button" variant="ghost" className="w-full" onClick={() => setForgot(false)}>
+                Voltar
+              </Button>
+            </form>
+          ) : (
+            <Tabs defaultValue={tab ?? "entrar"} className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="entrar">Entrar</TabsTrigger>
+                <TabsTrigger value="cadastro">Criar conta</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="entrar" className="mt-6">
+                <form onSubmit={handleLogin} className="space-y-5">
+                  <div>
+                    <h2 className="text-2xl font-bold">Bem-vindo de volta</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Entre para fazer e acompanhar seus pedidos.
+                    </p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="l-email">E-mail</Label>
+                    <Input id="l-email" name="email" type="email" required autoComplete="email" />
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="l-password">Senha</Label>
+                      <button
+                        type="button"
+                        onClick={() => setForgot(true)}
+                        className="text-xs font-medium text-ocean hover:underline"
+                      >
+                        Esqueci minha senha
+                      </button>
+                    </div>
+                    <Input
+                      id="l-password"
+                      name="password"
+                      type="password"
+                      required
+                      autoComplete="current-password"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" size="lg" disabled={busy}>
+                    Entrar
+                  </Button>
+                  <GoogleButton onClick={handleGoogle} />
+                </form>
+              </TabsContent>
+
+              <TabsContent value="cadastro" className="mt-6">
+                <form onSubmit={handleSignup} className="space-y-4">
+                  <div>
+                    <h2 className="text-2xl font-bold">Criar cadastro</h2>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      Seu cadastro será analisado pela equipe Trapiche antes do primeiro pedido.
+                    </p>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Tipo de cliente</Label>
+                    <RadioGroup
+                      name="customer_type"
+                      defaultValue="atacado"
+                      className="grid grid-cols-2 gap-3"
+                    >
+                      <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-input bg-card p-3 text-sm has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-secondary">
+                        <RadioGroupItem value="atacado" id="t-atacado" />
+                        <span className="flex items-center gap-2 font-medium">
+                          <Store className="h-4 w-4 text-ocean" /> Atacado
+                        </span>
+                      </label>
+                      <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-input bg-card p-3 text-sm has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-secondary">
+                        <RadioGroupItem value="varejo" id="t-varejo" />
+                        <span className="flex items-center gap-2 font-medium">
+                          <Fish className="h-4 w-4 text-ocean" /> Varejo
+                        </span>
+                      </label>
+                    </RadioGroup>
+                  </div>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="s-name">Seu nome</Label>
+                      <Input id="s-name" name="full_name" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-company">Empresa / Razão social</Label>
+                      <Input id="s-company" name="company_name" placeholder="Opcional no varejo" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-doc">CNPJ ou CPF</Label>
+                      <Input id="s-doc" name="document" required inputMode="numeric" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-phone">Telefone / WhatsApp</Label>
+                      <Input id="s-phone" name="phone" required inputMode="tel" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="s-email">E-mail</Label>
+                    <Input id="s-email" name="email" type="email" required autoComplete="email" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="s-password">Senha</Label>
+                    <Input
+                      id="s-password"
+                      name="password"
+                      type="password"
+                      required
+                      minLength={6}
+                      autoComplete="new-password"
+                    />
+                  </div>
+                  <Button type="submit" className="w-full" size="lg" disabled={busy}>
+                    Criar conta
+                  </Button>
+                  <GoogleButton onClick={handleGoogle} />
+                </form>
+              </TabsContent>
+            </Tabs>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GoogleButton({ onClick }: { onClick: () => void }) {
+  return (
+    <>
+      <div className="relative py-1 text-center text-xs text-muted-foreground">
+        <span className="relative z-10 bg-background px-2">ou</span>
+        <span className="absolute inset-x-0 top-1/2 -z-0 h-px bg-border" />
+      </div>
+      <Button type="button" variant="outline" className="w-full" onClick={onClick}>
+        <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden>
+          <path
+            fill="#4285F4"
+            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1Z"
+          />
+          <path
+            fill="#34A853"
+            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0 0 12 23Z"
+          />
+          <path
+            fill="#FBBC05"
+            d="M5.84 14.1A6.6 6.6 0 0 1 5.5 12c0-.73.13-1.44.34-2.1V7.06H2.18A11 11 0 0 0 1 12c0 1.77.42 3.45 1.18 4.94l3.66-2.84Z"
+          />
+          <path
+            fill="#EA4335"
+            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06L5.84 9.9C6.71 7.31 9.14 5.38 12 5.38Z"
+          />
+        </svg>
+        Continuar com Google
+      </Button>
+    </>
+  );
+}
