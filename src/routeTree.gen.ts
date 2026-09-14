@@ -17,6 +17,7 @@ import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedCatalogoRouteImport } from './routes/_authenticated/catalogo'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
 import { Route as AuthenticatedPedidosIndexRouteImport } from './routes/_authenticated/pedidos/index'
 import { Route as AuthenticatedPedidosIdRouteImport } from './routes/_authenticated/pedidos/$id'
 
@@ -59,6 +60,12 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminPedidosRoute =
+  AuthenticatedAdminPedidosRouteImport.update({
+    id: '/pedidos',
+    path: '/pedidos',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedPedidosIndexRoute =
   AuthenticatedPedidosIndexRouteImport.update({
     id: '/pedidos/',
@@ -78,6 +85,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/pedidos/$id': typeof AuthenticatedPedidosIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/pedidos/': typeof AuthenticatedPedidosIndexRoute
@@ -88,6 +96,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/pedidos/$id': typeof AuthenticatedPedidosIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/pedidos': typeof AuthenticatedPedidosIndexRoute
@@ -101,6 +110,7 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/catalogo': typeof AuthenticatedCatalogoRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/pedidos/$id': typeof AuthenticatedPedidosIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/pedidos/': typeof AuthenticatedPedidosIndexRoute
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/catalogo'
     | '/perfil'
+    | '/admin/pedidos'
     | '/pedidos/$id'
     | '/admin/'
     | '/pedidos/'
@@ -124,6 +135,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/catalogo'
     | '/perfil'
+    | '/admin/pedidos'
     | '/pedidos/$id'
     | '/admin'
     | '/pedidos'
@@ -136,6 +148,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/catalogo'
     | '/_authenticated/perfil'
+    | '/_authenticated/admin/pedidos'
     | '/_authenticated/pedidos/$id'
     | '/_authenticated/admin/'
     | '/_authenticated/pedidos/'
@@ -206,6 +219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/pedidos': {
+      id: '/_authenticated/admin/pedidos'
+      path: '/pedidos'
+      fullPath: '/admin/pedidos'
+      preLoaderRoute: typeof AuthenticatedAdminPedidosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/pedidos/': {
       id: '/_authenticated/pedidos/'
       path: '/pedidos'
@@ -224,11 +244,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
 
