@@ -1,5 +1,7 @@
-import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
+import { LayoutDashboard, Package, Settings, ShoppingCart, Users, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
@@ -18,6 +20,15 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminLayout,
 });
 
+const tabs = [
+  { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
+  { to: "/admin/pedidos", label: "Pedidos", icon: ShoppingCart },
+  { to: "/admin/produtos", label: "Produtos", icon: Package },
+  { to: "/admin/condicoes", label: "Pagamento", icon: Wallet },
+  { to: "/admin/clientes", label: "Clientes", icon: Users },
+  { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
+] as const;
+
 function AdminLayout() {
   return (
     <div className="animate-fade-up">
@@ -25,9 +36,22 @@ function AdminLayout() {
         <h1 className="text-3xl font-bold">Administração</h1>
         <p className="text-sm text-muted-foreground">Gerencie produtos, condições de pagamento, clientes e pedidos.</p>
       </div>
-      <div className="rounded-2xl border border-dashed bg-card p-10 text-center text-muted-foreground">
-        As telas de gestão (pedidos, produtos, pagamento, clientes e configurações) serão montadas na próxima etapa.
-      </div>
+      <nav className="mb-6 flex gap-1 overflow-x-auto rounded-2xl border bg-card p-1.5 shadow-soft">
+        {tabs.map((t) => (
+          <Link
+            key={t.to}
+            to={t.to}
+            activeOptions={{ exact: t.exact }}
+            activeProps={{ className: "bg-primary text-primary-foreground shadow-soft" }}
+            className={cn(
+              "inline-flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",
+            )}
+          >
+            <t.icon className="h-4 w-4" />
+            {t.label}
+          </Link>
+        ))}
+      </nav>
       <Outlet />
     </div>
   );

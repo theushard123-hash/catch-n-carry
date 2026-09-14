@@ -56,7 +56,10 @@ function ProfilePage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const password = String(fd.get("new_password"));
-    if (password.length < 6) return toast.error("A nova senha deve ter ao menos 6 caracteres.");
+    if (password.length < 6) {
+      toast.error("A nova senha deve ter ao menos 6 caracteres.");
+      return;
+    }
     setPwBusy(true);
     const { error } = await supabase.auth.updateUser({
       password,
