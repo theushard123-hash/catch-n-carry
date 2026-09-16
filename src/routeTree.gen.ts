@@ -17,7 +17,9 @@ import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authentic
 import { Route as AuthenticatedCatalogoRouteImport } from './routes/_authenticated/catalogo'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminCondicoesRouteImport } from './routes/_authenticated/admin/condicoes'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
+import { Route as AuthenticatedAdminProdutosRouteImport } from './routes/_authenticated/admin/produtos'
 import { Route as AuthenticatedPedidosIndexRouteImport } from './routes/_authenticated/pedidos/index'
 import { Route as AuthenticatedPedidosIdRouteImport } from './routes/_authenticated/pedidos/$id'
 
@@ -60,10 +62,22 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminCondicoesRoute =
+  AuthenticatedAdminCondicoesRouteImport.update({
+    id: '/condicoes',
+    path: '/condicoes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPedidosRoute =
   AuthenticatedAdminPedidosRouteImport.update({
     id: '/pedidos',
     path: '/pedidos',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
+const AuthenticatedAdminProdutosRoute =
+  AuthenticatedAdminProdutosRouteImport.update({
+    id: '/produtos',
+    path: '/produtos',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
 const AuthenticatedPedidosIndexRoute =
@@ -85,7 +99,9 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/pedidos/$id': typeof AuthenticatedPedidosIdRoute
   '/admin/': typeof AuthenticatedAdminIndexRoute
   '/pedidos/': typeof AuthenticatedPedidosIndexRoute
@@ -96,7 +112,9 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/pedidos/$id': typeof AuthenticatedPedidosIdRoute
   '/admin': typeof AuthenticatedAdminIndexRoute
   '/pedidos': typeof AuthenticatedPedidosIndexRoute
@@ -110,7 +128,9 @@ export interface FileRoutesById {
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/catalogo': typeof AuthenticatedCatalogoRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/_authenticated/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
+  '/_authenticated/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/_authenticated/pedidos/$id': typeof AuthenticatedPedidosIdRoute
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
   '/_authenticated/pedidos/': typeof AuthenticatedPedidosIndexRoute
@@ -124,7 +144,9 @@ export interface FileRouteTypes {
     | '/admin'
     | '/catalogo'
     | '/perfil'
+    | '/admin/condicoes'
     | '/admin/pedidos'
+    | '/admin/produtos'
     | '/pedidos/$id'
     | '/admin/'
     | '/pedidos/'
@@ -135,7 +157,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/catalogo'
     | '/perfil'
+    | '/admin/condicoes'
     | '/admin/pedidos'
+    | '/admin/produtos'
     | '/pedidos/$id'
     | '/admin'
     | '/pedidos'
@@ -148,7 +172,9 @@ export interface FileRouteTypes {
     | '/_authenticated/admin'
     | '/_authenticated/catalogo'
     | '/_authenticated/perfil'
+    | '/_authenticated/admin/condicoes'
     | '/_authenticated/admin/pedidos'
+    | '/_authenticated/admin/produtos'
     | '/_authenticated/pedidos/$id'
     | '/_authenticated/admin/'
     | '/_authenticated/pedidos/'
@@ -219,11 +245,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/condicoes': {
+      id: '/_authenticated/admin/condicoes'
+      path: '/condicoes'
+      fullPath: '/admin/condicoes'
+      preLoaderRoute: typeof AuthenticatedAdminCondicoesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/pedidos': {
       id: '/_authenticated/admin/pedidos'
       path: '/pedidos'
       fullPath: '/admin/pedidos'
       preLoaderRoute: typeof AuthenticatedAdminPedidosRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
+    '/_authenticated/admin/produtos': {
+      id: '/_authenticated/admin/produtos'
+      path: '/produtos'
+      fullPath: '/admin/produtos'
+      preLoaderRoute: typeof AuthenticatedAdminProdutosRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
     '/_authenticated/pedidos/': {
@@ -244,13 +284,17 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminCondicoesRoute: typeof AuthenticatedAdminCondicoesRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
+  AuthenticatedAdminProdutosRoute: typeof AuthenticatedAdminProdutosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminCondicoesRoute: AuthenticatedAdminCondicoesRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
+    AuthenticatedAdminProdutosRoute: AuthenticatedAdminProdutosRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
   }
 
