@@ -45,6 +45,7 @@ function AuthPage() {
   const { user, loading } = useAuth();
   const [busy, setBusy] = useState(false);
   const [forgot, setForgot] = useState(false);
+  const [customerType, setCustomerType] = useState("atacado");
 
   useEffect(() => {
     if (!loading && user) navigate({ to: safeRedirect(redirect), replace: true });
@@ -76,6 +77,11 @@ function AuthPage() {
       toast.error("A senha deve ter pelo menos 6 caracteres.");
       return;
     }
+    const stateRegistration = String(fd.get("state_registration") ?? "").trim();
+    if (customerType === "atacado" && !stateRegistration) {
+      toast.error("Informe a inscrição estadual para cadastro de atacado.");
+      return;
+    }
     setBusy(true);
     const { data, error } = await supabase.auth.signUp({
       email: String(fd.get("email")),
@@ -87,7 +93,8 @@ function AuthPage() {
           company_name: String(fd.get("company_name")),
           document: String(fd.get("document")),
           phone: String(fd.get("phone")),
-          customer_type: String(fd.get("customer_type")),
+          customer_type: customerType,
+          state_registration: stateRegistration,
         },
       },
     });
