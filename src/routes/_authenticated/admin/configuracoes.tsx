@@ -4,6 +4,7 @@ import { Plug } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { ImageUploadField } from "@/components/ImageUploadField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -53,6 +54,10 @@ function AdminSettingsPage() {
           min_order_varejo: Number(String(s.min_order_varejo).replace(",", ".")) || 0,
           notice: s.notice,
           require_approval: s.require_approval,
+          logo_url: s.logo_url,
+          hero_image_url: s.hero_image_url,
+          hero_title: s.hero_title,
+          hero_subtitle: s.hero_subtitle,
         })
         .eq("id", 1);
       if (error) throw error;
@@ -148,6 +153,46 @@ function AdminSettingsPage() {
             </p>
           </div>
         </div>
+        <div className="space-y-4 rounded-2xl border bg-secondary/40 p-4 sm:col-span-2">
+          <div>
+            <h3 className="font-semibold">Imagens e textos do site</h3>
+            <p className="text-sm text-muted-foreground">
+              Troque a logo e a foto principal da página inicial sem precisar de programação.
+            </p>
+          </div>
+          <ImageUploadField
+            label="Logo"
+            folder="site"
+            value={form.logo_url}
+            onChange={(url) => setForm({ ...form, logo_url: url })}
+            hint="Aparece no topo do site e no portal do cliente."
+          />
+          <ImageUploadField
+            label="Foto principal da página inicial"
+            folder="site"
+            value={form.hero_image_url}
+            onChange={(url) => setForm({ ...form, hero_image_url: url })}
+          />
+          <div className="space-y-2">
+            <Label htmlFor="s-hero-title">Título da página inicial</Label>
+            <Input
+              id="s-hero-title"
+              value={form.hero_title}
+              placeholder="Peça seus pescados online, sem ligação, sem papelada."
+              onChange={(e) => setForm({ ...form, hero_title: e.target.value })}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="s-hero-sub">Texto da página inicial</Label>
+            <Textarea
+              id="s-hero-sub"
+              value={form.hero_subtitle}
+              placeholder="Restaurantes, mercados e revendedores: montem seus pedidos direto no portal."
+              onChange={(e) => setForm({ ...form, hero_subtitle: e.target.value })}
+            />
+          </div>
+        </div>
+
         <div className="sm:col-span-2">
           <Button type="submit" disabled={save.isPending}>
             Salvar configurações

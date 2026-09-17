@@ -18,7 +18,11 @@ export type Database = {
         Row: {
           company_name: string
           contact_email: string
+          hero_image_url: string
+          hero_subtitle: string
+          hero_title: string
           id: number
+          logo_url: string
           min_order_atacado: number
           min_order_varejo: number
           notice: string
@@ -29,7 +33,11 @@ export type Database = {
         Insert: {
           company_name?: string
           contact_email?: string
+          hero_image_url?: string
+          hero_subtitle?: string
+          hero_title?: string
           id?: number
+          logo_url?: string
           min_order_atacado?: number
           min_order_varejo?: number
           notice?: string
@@ -40,7 +48,11 @@ export type Database = {
         Update: {
           company_name?: string
           contact_email?: string
+          hero_image_url?: string
+          hero_subtitle?: string
+          hero_title?: string
           id?: number
+          logo_url?: string
           min_order_atacado?: number
           min_order_varejo?: number
           notice?: string
@@ -298,6 +310,7 @@ export type Database = {
           id: string
           phone: string
           state: string
+          state_registration: string
           updated_at: string
           user_id: string
           zip: string
@@ -317,6 +330,7 @@ export type Database = {
           id?: string
           phone?: string
           state?: string
+          state_registration?: string
           updated_at?: string
           user_id: string
           zip?: string
@@ -336,6 +350,7 @@ export type Database = {
           id?: string
           phone?: string
           state?: string
+          state_registration?: string
           updated_at?: string
           user_id?: string
           zip?: string

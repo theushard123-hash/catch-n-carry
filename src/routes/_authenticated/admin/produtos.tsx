@@ -4,6 +4,7 @@ import { Pencil, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { ImageUploadField } from "@/components/ImageUploadField";
 import { formatBRL } from "@/lib/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -326,13 +327,13 @@ function AdminProductsPage() {
                   onChange={(e) => setForm({ ...form, step_qty: e.target.value })}
                 />
               </div>
-              <div className="space-y-2 sm:col-span-2">
-                <Label htmlFor="p-img">URL da imagem</Label>
-                <Input
-                  id="p-img"
+              <div className="sm:col-span-2">
+                <ImageUploadField
+                  label="Foto do produto"
+                  folder="produtos"
                   value={form.image_url}
-                  onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-                  placeholder="https://..."
+                  onChange={(url) => setForm({ ...form, image_url: url })}
+                  hint="A foto aparece no catálogo dos clientes."
                 />
               </div>
               <div className="flex items-center gap-3 sm:col-span-2">
