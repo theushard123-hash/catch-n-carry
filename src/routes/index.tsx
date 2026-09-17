@@ -11,7 +11,9 @@ import {
   Truck,
   Waves,
 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import heroImg from "@/assets/hero-seafood.jpg";
+import { supabase } from "@/integrations/supabase/client";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 
@@ -65,6 +67,22 @@ const steps = [
 ];
 
 function LandingPage() {
+  const settingsQ = useQuery({
+    queryKey: ["public-settings"],
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("app_settings")
+        .select("hero_image_url, hero_title, hero_subtitle, logo_url, whatsapp")
+        .eq("id", 1)
+        .maybeSingle();
+      return data;
+    },
+  });
+  const s = settingsQ.data;
+  const heroSrc = s?.hero_image_url || heroImg;
+  const heroTitle = s?.hero_title?.trim();
+  const heroSubtitle = s?.hero_subtitle?.trim();
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
@@ -93,11 +111,17 @@ function LandingPage() {
               <Waves className="h-3.5 w-3.5" /> Portal de pedidos Trapiche Pescados
             </p>
             <h1 className="font-display text-4xl font-bold leading-tight text-primary-foreground md:text-5xl">
-              Peça seus pescados online, <span className="text-aqua">sem ligação, sem papelada.</span>
+              {heroTitle ? (
+                heroTitle
+              ) : (
+                <>
+                  Peça seus pescados online, <span className="text-aqua">sem ligação, sem papelada.</span>
+                </>
+              )}
             </h1>
             <p className="mt-4 max-w-lg text-lg text-primary-foreground/80">
-              Restaurantes, mercados e revendedores: montem seus pedidos direto no portal, escolham a condição de
-              pagamento e acompanhem até o faturamento.
+              {heroSubtitle ||
+                "Restaurantes, mercados e revendedores: montem seus pedidos direto no portal, escolham a condição de pagamento e acompanhem até o faturamento."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" variant="aqua">
@@ -112,7 +136,7 @@ function LandingPage() {
           </div>
           <div className="animate-fade-up relative">
             <img
-              src={heroImg}
+              src={heroSrc}
               alt="Seleção de pescados e frutos do mar frescos sobre gelo"
               className="shadow-lift w-full rounded-3xl object-cover"
               loading="eager"
