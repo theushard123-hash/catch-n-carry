@@ -8,6 +8,13 @@
       "when": 1789326487104,
       "tag": "0000_trapiche_core_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789643116722,
+      "tag": "0001_state_registration_and_site_images",
+      "breakpoints": true
     }
   ]
 }
