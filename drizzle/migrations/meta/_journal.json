@@ -29,6 +29,13 @@
       "when": 1789736731374,
       "tag": "0003_secure_public_settings",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1789736804399,
+      "tag": "0004_column_grants_public_settings",
+      "breakpoints": true
     }
   ]
 }
