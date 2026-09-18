@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import logoMark from "@/assets/logo-mark.png";
-import { supabase } from "@/integrations/supabase/client";
+import { getPublicSettings } from "@/lib/settings.functions";
 import { cn } from "@/lib/utils";
 
 export function BrandLogo({
@@ -12,19 +13,16 @@ export function BrandLogo({
   size?: "sm" | "md" | "lg";
   light?: boolean;
 }) {
+  const fetchSettings = useServerFn(getPublicSettings);
   const { data } = useQuery({
     queryKey: ["brand-logo"],
     staleTime: 5 * 60 * 1000,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("app_settings")
-        .select("logo_url")
-        .eq("id", 1)
-        .maybeSingle();
-      if (error) return null;
-      return data?.logo_url || null;
+      const s = await fetchSettings();
+      return s.logo_url || null;
     },
   });
+
 
   const img = size === "lg" ? "h-14 w-14" : size === "sm" ? "h-8 w-8" : "h-10 w-10";
   const text = size === "lg" ? "text-2xl" : size === "sm" ? "text-base" : "text-lg";
