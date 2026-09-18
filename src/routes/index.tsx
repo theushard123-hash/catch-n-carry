@@ -221,6 +221,17 @@ function LandingPage() {
             <p>Alameda Princesa Izabel, 1710 — Bigorrilho, Curitiba — PR</p>
           </div>
         </div>
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-center gap-x-6 gap-y-2 px-4 pb-6">
+          <Link to="/politica-de-privacidade" className="text-xs text-muted-foreground transition-colors hover:text-foreground">
+            Política de Privacidade
+          </Link>
+          <Link to="/termos-de-uso" className="text-xs text-muted-foreground transition-colors hover:text-foreground">
+            Termos de Uso
+          </Link>
+          <Link to="/politica-de-trocas" className="text-xs text-muted-foreground transition-colors hover:text-foreground">
+            Trocas e Devoluções
+          </Link>
+        </div>
         <p className="border-t py-4 text-center text-xs text-muted-foreground">
           © {new Date().getFullYear()} Trapiche Pescados. Todos os direitos reservados.
         </p>
