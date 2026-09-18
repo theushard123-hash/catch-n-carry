@@ -48,6 +48,7 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [forgot, setForgot] = useState(false);
   const [customerType, setCustomerType] = useState("atacado");
+  const signUp = useServerFn(signUpCustomer);
 
   useEffect(() => {
     if (!loading && user) navigate({ to: safeRedirect(redirect), replace: true });
