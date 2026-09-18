@@ -12,10 +12,12 @@ import {
   Waves,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import heroImg from "@/assets/hero-seafood.jpg";
-import { supabase } from "@/integrations/supabase/client";
+import { getPublicSettings } from "@/lib/settings.functions";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,18 +69,13 @@ const steps = [
 ];
 
 function LandingPage() {
+  const fetchSettings = useServerFn(getPublicSettings);
   const settingsQ = useQuery({
     queryKey: ["public-settings"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("app_settings")
-        .select("hero_image_url, hero_title, hero_subtitle, logo_url, whatsapp")
-        .eq("id", 1)
-        .maybeSingle();
-      return data;
-    },
+    queryFn: () => fetchSettings(),
   });
   const s = settingsQ.data;
+
   const heroSrc = s?.hero_image_url || heroImg;
   const heroTitle = s?.hero_title?.trim();
   const heroSubtitle = s?.hero_subtitle?.trim();
