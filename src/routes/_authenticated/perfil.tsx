@@ -37,6 +37,7 @@ function ProfilePage() {
         full_name: String(fd.get("full_name")),
         company_name: String(fd.get("company_name")),
         document: String(fd.get("document")),
+        state_registration: String(fd.get("state_registration") ?? ""),
         phone: String(fd.get("phone")),
         address: String(fd.get("address")),
         city: String(fd.get("city")),
