@@ -165,6 +165,16 @@ function AuthPage() {
       toast.error("A senha deve ter pelo menos 12 caracteres.");
       return;
     }
+    if (password !== confirmPassword) {
+      setConfirmTouched(true);
+      toast.error("As senhas não conferem. Digite novamente.");
+      return;
+    }
+    const addressNumber = String(fd.get("address_number") ?? "").trim();
+    if (!addressNumber) {
+      toast.error("Informe o número do endereço.");
+      return;
+    }
     const stateRegistration = String(fd.get("state_registration") ?? "").trim();
     if (customerType === "atacado" && !stateRegistration) {
       toast.error("Informe a inscrição estadual para cadastro de atacado.");
@@ -193,6 +203,8 @@ function AuthPage() {
             customer_type: customerType === "atacado" ? "atacado" : "varejo",
             state_registration: stateRegistration,
             zip: cep,
+            address_number: addressNumber,
+            complement: String(fd.get("complement") ?? ""),
           },
         },
       });
