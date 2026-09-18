@@ -438,6 +438,24 @@ function AuthPage() {
                       {cepError && <p className="text-xs font-medium text-destructive">{cepError}</p>}
                       {!cepError && cepInfo && <p className="text-xs text-muted-foreground">{cepInfo}</p>}
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-number">Número</Label>
+                      <Input
+                        id="s-number"
+                        name="address_number"
+                        required
+                        inputMode="numeric"
+                        placeholder="Ex.: 1710"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-complement">Complemento (opcional)</Label>
+                      <Input
+                        id="s-complement"
+                        name="complement"
+                        placeholder="Sala, bloco, ponto de referência..."
+                      />
+                    </div>
                   </div>
 
                   {customerType === "atacado" && (
@@ -468,8 +486,31 @@ function AuthPage() {
                       required
                       minLength={12}
                       autoComplete="new-password"
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
                     />
                     <p className="text-xs text-muted-foreground">Use no mínimo 12 caracteres.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="s-password-confirm">Confirmar senha</Label>
+                    <Input
+                      id="s-password-confirm"
+                      name="password_confirm"
+                      type="password"
+                      required
+                      minLength={12}
+                      autoComplete="new-password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onBlur={() => setConfirmTouched(true)}
+                      aria-invalid={passwordMismatch}
+                    />
+                    {passwordMismatch && (
+                      <p className="text-xs font-medium text-destructive">As senhas não conferem.</p>
+                    )}
+                    {!passwordMismatch && confirmTouched && confirmPassword.length > 0 && confirmPassword === signupPassword && (
+                      <p className="text-xs text-muted-foreground">Senhas conferem.</p>
+                    )}
                   </div>
                   <Button type="submit" className="w-full" size="lg" disabled={busy}>
                     Criar conta
