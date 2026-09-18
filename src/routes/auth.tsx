@@ -88,6 +88,18 @@ function AuthPage() {
       toast.error("Informe a inscrição estadual para cadastro de atacado.");
       return;
     }
+    const document = String(fd.get("document") ?? "");
+    const docError = documentError(document);
+    if (docError) {
+      toast.error(docError);
+      return;
+    }
+    const zip = String(fd.get("zip") ?? "");
+    const zipError = cepError(zip);
+    if (zipError) {
+      toast.error(zipError);
+      return;
+    }
     setBusy(true);
     try {
       const result = await signUp({
@@ -98,13 +110,19 @@ function AuthPage() {
           data: {
             full_name: String(fd.get("full_name")),
             company_name: String(fd.get("company_name") ?? ""),
-            document: String(fd.get("document")),
+            document,
             phone: String(fd.get("phone")),
             customer_type: customerType === "atacado" ? "atacado" : "varejo",
             state_registration: stateRegistration,
+            zip,
+            address: String(fd.get("address") ?? ""),
+            neighborhood: String(fd.get("neighborhood") ?? ""),
+            city: String(fd.get("city") ?? ""),
+            state: String(fd.get("state") ?? "").toUpperCase().slice(0, 2),
           },
         },
       });
+
       if (result.needsEmailConfirmation) {
         toast.success("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
       } else {
