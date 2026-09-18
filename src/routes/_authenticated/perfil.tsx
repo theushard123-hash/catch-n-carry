@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AddressFields, DocumentField } from "@/components/BrFields";
+import { cepError, documentError } from "@/lib/br-validators";
+
 
 export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
@@ -30,21 +33,35 @@ function ProfilePage() {
   async function save(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+    const document = String(fd.get("document") ?? "");
+    const docError = documentError(document);
+    if (docError) {
+      toast.error(docError);
+      return;
+    }
+    const zip = String(fd.get("zip") ?? "");
+    const zipError = cepError(zip);
+    if (zipError) {
+      toast.error(zipError);
+      return;
+    }
     setBusy(true);
     const { error } = await supabase
       .from("profiles")
       .update({
         full_name: String(fd.get("full_name")),
         company_name: String(fd.get("company_name")),
-        document: String(fd.get("document")),
+        document,
         state_registration: String(fd.get("state_registration") ?? ""),
         phone: String(fd.get("phone")),
         address: String(fd.get("address")),
+        neighborhood: String(fd.get("neighborhood") ?? ""),
         city: String(fd.get("city")),
         state: String(fd.get("state")).toUpperCase().slice(0, 2),
-        zip: String(fd.get("zip")),
+        zip,
       })
       .eq("user_id", user!.id);
+
     setBusy(false);
     if (error) toast.error("Não foi possível salvar.");
     else {
@@ -104,7 +121,7 @@ function ProfilePage() {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Seu nome" name="full_name" defaultValue={profile.full_name} required />
           <Field label="Empresa / Razão social" name="company_name" defaultValue={profile.company_name} />
-          <Field label="CNPJ ou CPF" name="document" defaultValue={profile.document} required />
+          <DocumentField id="p-doc" defaultValue={profile.document} />
           <Field label="Telefone / WhatsApp" name="phone" defaultValue={profile.phone} required />
           <Field
             label="Inscrição Estadual"
@@ -113,15 +130,20 @@ function ProfilePage() {
             required={profile.customer_type === "atacado"}
             placeholder={profile.customer_type === "atacado" ? "Obrigatória para atacado" : "Opcional"}
           />
-          <div className="sm:col-span-2">
-            <Field label="Endereço de entrega" name="address" defaultValue={profile.address} />
-          </div>
-          <Field label="Cidade" name="city" defaultValue={profile.city} />
-          <div className="grid grid-cols-2 gap-4">
-            <Field label="UF" name="state" defaultValue={profile.state} maxLength={2} />
-            <Field label="CEP" name="zip" defaultValue={profile.zip} />
-          </div>
         </div>
+        <div className="mt-4">
+          <AddressFields
+            idPrefix="p"
+            defaults={{
+              zip: profile.zip,
+              address: profile.address,
+              neighborhood: profile.neighborhood,
+              city: profile.city,
+              state: profile.state,
+            }}
+          />
+        </div>
+
         <div className="mt-6 flex justify-end">
           <Button type="submit" disabled={busy}>
             {busy ? "Salvando..." : "Salvar alterações"}
