@@ -67,18 +67,13 @@ const steps = [
 ];
 
 function LandingPage() {
+  const fetchSettings = useServerFn(getPublicSettings);
   const settingsQ = useQuery({
     queryKey: ["public-settings"],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from("app_settings")
-        .select("hero_image_url, hero_title, hero_subtitle, logo_url, whatsapp")
-        .eq("id", 1)
-        .maybeSingle();
-      return data;
-    },
+    queryFn: () => fetchSettings(),
   });
   const s = settingsQ.data;
+
   const heroSrc = s?.hero_image_url || heroImg;
   const heroTitle = s?.hero_title?.trim();
   const heroSubtitle = s?.hero_subtitle?.trim();
