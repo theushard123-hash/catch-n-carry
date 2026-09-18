@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/hooks/useAuth";
+import { useServerFn } from "@tanstack/react-start";
+import { signUpCustomer } from "@/lib/auth.functions";
 import { Fish, Store } from "lucide-react";
 
 const searchSchema = z.object({
@@ -46,6 +48,7 @@ function AuthPage() {
   const [busy, setBusy] = useState(false);
   const [forgot, setForgot] = useState(false);
   const [customerType, setCustomerType] = useState("atacado");
+  const signUp = useServerFn(signUpCustomer);
 
   useEffect(() => {
     if (!loading && user) navigate({ to: safeRedirect(redirect), replace: true });
@@ -73,8 +76,8 @@ function AuthPage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const password = String(fd.get("password"));
-    if (password.length < 6) {
-      toast.error("A senha deve ter pelo menos 6 caracteres.");
+    if (password.length < 12) {
+      toast.error("A senha deve ter pelo menos 12 caracteres.");
       return;
     }
     const stateRegistration = String(fd.get("state_registration") ?? "").trim();
@@ -83,34 +86,44 @@ function AuthPage() {
       return;
     }
     setBusy(true);
-    const { data, error } = await supabase.auth.signUp({
-      email: String(fd.get("email")),
-      password,
-      options: {
-        emailRedirectTo: window.location.origin,
+    try {
+      const result = await signUp({
         data: {
-          full_name: String(fd.get("full_name")),
-          company_name: String(fd.get("company_name")),
-          document: String(fd.get("document")),
-          phone: String(fd.get("phone")),
-          customer_type: customerType,
-          state_registration: stateRegistration,
+          email: String(fd.get("email")),
+          password,
+          redirectTo: window.location.origin,
+          data: {
+            full_name: String(fd.get("full_name")),
+            company_name: String(fd.get("company_name") ?? ""),
+            document: String(fd.get("document")),
+            phone: String(fd.get("phone")),
+            customer_type: customerType === "atacado" ? "atacado" : "varejo",
+            state_registration: stateRegistration,
+          },
         },
-      },
-    });
-    setBusy(false);
-    if (error) {
+      });
+      if (result.needsEmailConfirmation) {
+        toast.success("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: String(fd.get("email")),
+          password,
+        });
+        if (error) {
+          toast.success("Cadastro realizado! Faça login para continuar.");
+        } else {
+          navigate({ to: "/catalogo", replace: true });
+        }
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Não foi possível criar a conta.";
       toast.error(
-        error.message.includes("already registered")
+        message.includes("already registered")
           ? "Este e-mail já possui cadastro. Faça login."
-          : error.message,
+          : message,
       );
-      return;
-    }
-    if (data.session) {
-      navigate({ to: "/catalogo", replace: true });
-    } else {
-      toast.success("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -178,7 +191,7 @@ function AuthPage() {
           </Link>
 
           {forgot ? (
-            <form onSubmit={handleForgot} className="space-y-5">
+            <form method="post" onSubmit={handleForgot} className="space-y-5">
               <div>
                 <h2 className="text-2xl font-bold">Recuperar senha</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -204,7 +217,7 @@ function AuthPage() {
               </TabsList>
 
               <TabsContent value="entrar" className="mt-6">
-                <form onSubmit={handleLogin} className="space-y-5">
+                <form method="post" onSubmit={handleLogin} className="space-y-5">
                   <div>
                     <h2 className="text-2xl font-bold">Bem-vindo de volta</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
@@ -242,7 +255,7 @@ function AuthPage() {
               </TabsContent>
 
               <TabsContent value="cadastro" className="mt-6">
-                <form onSubmit={handleSignup} className="space-y-4">
+                <form method="post" onSubmit={handleSignup} className="space-y-4">
                   <div>
                     <h2 className="text-2xl font-bold">Criar cadastro</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
@@ -317,9 +330,10 @@ function AuthPage() {
                       name="password"
                       type="password"
                       required
-                      minLength={6}
+                      minLength={12}
                       autoComplete="new-password"
                     />
+                    <p className="text-xs text-muted-foreground">Use no mínimo 12 caracteres.</p>
                   </div>
                   <Button type="submit" className="w-full" size="lg" disabled={busy}>
                     Criar conta

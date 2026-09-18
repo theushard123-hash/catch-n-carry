@@ -41,6 +41,10 @@ function ResetPasswordPage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const password = String(fd.get("password"));
+    if (password.length < 12) {
+      toast.error("A senha deve ter pelo menos 12 caracteres.");
+      return;
+    }
     if (password !== String(fd.get("confirm"))) {
       toast.error("As senhas não conferem.");
       return;
@@ -65,15 +69,17 @@ function ResetPasswordPage() {
             Abra esta página pelo link enviado ao seu e-mail.
           </p>
         ) : (
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <form method="post" onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div className="space-y-2">
               <Label htmlFor="password">Nova senha</Label>
-              <Input id="password" name="password" type="password" required minLength={6} />
+              <Input id="password" name="password" type="password" required minLength={12} />
+              <p className="text-xs text-muted-foreground">Use no mínimo 12 caracteres.</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirm">Confirmar senha</Label>
-              <Input id="confirm" name="confirm" type="password" required minLength={6} />
+              <Input id="confirm" name="confirm" type="password" required minLength={12} />
             </div>
+
             <Button type="submit" className="w-full" disabled={busy}>
               Salvar nova senha
             </Button>
