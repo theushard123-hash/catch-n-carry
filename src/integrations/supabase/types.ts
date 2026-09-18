@@ -380,7 +380,36 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_site_settings: {
+        Row: {
+          company_name: string | null
+          hero_image_url: string | null
+          hero_subtitle: string | null
+          hero_title: string | null
+          id: number | null
+          logo_url: string | null
+          whatsapp: string | null
+        }
+        Insert: {
+          company_name?: string | null
+          hero_image_url?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: number | null
+          logo_url?: string | null
+          whatsapp?: string | null
+        }
+        Update: {
+          company_name?: string | null
+          hero_image_url?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: number | null
+          logo_url?: string | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
