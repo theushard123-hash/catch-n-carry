@@ -295,15 +295,15 @@ function AuthPage() {
                       <Label htmlFor="s-company">Empresa / Razão social</Label>
                       <Input id="s-company" name="company_name" placeholder="Opcional no varejo" />
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="s-doc">CNPJ ou CPF</Label>
-                      <Input id="s-doc" name="document" required inputMode="numeric" />
-                    </div>
+                    <DocumentField id="s-doc" />
                     <div className="space-y-2">
                       <Label htmlFor="s-phone">Telefone / WhatsApp</Label>
                       <Input id="s-phone" name="phone" required inputMode="tel" />
                     </div>
                   </div>
+
+                  <AddressFields idPrefix="s" />
+
                   {customerType === "atacado" && (
                     <div className="space-y-2">
                       <Label htmlFor="s-ie">Inscrição Estadual</Label>
