@@ -68,6 +68,10 @@ function AuthPage() {
   const [cepError, setCepError] = useState<string | null>(null);
   const [cepInfo, setCepInfo] = useState<string | null>(null);
   const [cepChecking, setCepChecking] = useState(false);
+  const [signupPassword, setSignupPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmTouched, setConfirmTouched] = useState(false);
+  const passwordMismatch = confirmTouched && confirmPassword.length > 0 && confirmPassword !== signupPassword;
 
   const docLabel = isAtacado ? "CNPJ" : "CPF";
 
@@ -161,6 +165,16 @@ function AuthPage() {
       toast.error("A senha deve ter pelo menos 12 caracteres.");
       return;
     }
+    if (password !== confirmPassword) {
+      setConfirmTouched(true);
+      toast.error("As senhas não conferem. Digite novamente.");
+      return;
+    }
+    const addressNumber = String(fd.get("address_number") ?? "").trim();
+    if (!addressNumber) {
+      toast.error("Informe o número do endereço.");
+      return;
+    }
     const stateRegistration = String(fd.get("state_registration") ?? "").trim();
     if (customerType === "atacado" && !stateRegistration) {
       toast.error("Informe a inscrição estadual para cadastro de atacado.");
@@ -189,6 +203,8 @@ function AuthPage() {
             customer_type: customerType === "atacado" ? "atacado" : "varejo",
             state_registration: stateRegistration,
             zip: cep,
+            address_number: addressNumber,
+            complement: String(fd.get("complement") ?? ""),
           },
         },
       });
@@ -422,6 +438,24 @@ function AuthPage() {
                       {cepError && <p className="text-xs font-medium text-destructive">{cepError}</p>}
                       {!cepError && cepInfo && <p className="text-xs text-muted-foreground">{cepInfo}</p>}
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-number">Número</Label>
+                      <Input
+                        id="s-number"
+                        name="address_number"
+                        required
+                        inputMode="numeric"
+                        placeholder="Ex.: 1710"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-complement">Complemento (opcional)</Label>
+                      <Input
+                        id="s-complement"
+                        name="complement"
+                        placeholder="Sala, bloco, ponto de referência..."
+                      />
+                    </div>
                   </div>
 
                   {customerType === "atacado" && (
@@ -452,8 +486,31 @@ function AuthPage() {
                       required
                       minLength={12}
                       autoComplete="new-password"
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
                     />
                     <p className="text-xs text-muted-foreground">Use no mínimo 12 caracteres.</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="s-password-confirm">Confirmar senha</Label>
+                    <Input
+                      id="s-password-confirm"
+                      name="password_confirm"
+                      type="password"
+                      required
+                      minLength={12}
+                      autoComplete="new-password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      onBlur={() => setConfirmTouched(true)}
+                      aria-invalid={passwordMismatch}
+                    />
+                    {passwordMismatch && (
+                      <p className="text-xs font-medium text-destructive">As senhas não conferem.</p>
+                    )}
+                    {!passwordMismatch && confirmTouched && confirmPassword.length > 0 && confirmPassword === signupPassword && (
+                      <p className="text-xs text-muted-foreground">Senhas conferem.</p>
+                    )}
                   </div>
                   <Button type="submit" className="w-full" size="lg" disabled={busy}>
                     Criar conta
