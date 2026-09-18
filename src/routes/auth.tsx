@@ -14,6 +14,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { signUpCustomer } from "@/lib/auth.functions";
 import { Fish, Store } from "lucide-react";
+import { AddressFields, DocumentField } from "@/components/BrFields";
+import { cepError, documentError } from "@/lib/br-validators";
+
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
