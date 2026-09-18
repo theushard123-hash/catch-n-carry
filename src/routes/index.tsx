@@ -71,7 +71,7 @@ function LandingPage() {
     queryKey: ["public-settings"],
     queryFn: async () => {
       const { data } = await supabase
-        .from("public_site_settings")
+        .from("app_settings")
         .select("hero_image_url, hero_title, hero_subtitle, logo_url, whatsapp")
         .eq("id", 1)
         .maybeSingle();
