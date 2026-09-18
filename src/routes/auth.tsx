@@ -387,14 +387,43 @@ function AuthPage() {
                       <Input id="s-company" name="company_name" placeholder="Opcional no varejo" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="s-doc">CNPJ ou CPF</Label>
-                      <Input id="s-doc" name="document" required inputMode="numeric" />
+                      <Label htmlFor="s-doc">{docLabel}</Label>
+                      <Input
+                        id="s-doc"
+                        name="document"
+                        required
+                        inputMode="numeric"
+                        value={document}
+                        onChange={(e) => handleDocumentChange(e.target.value)}
+                        onBlur={() => validateDocument()}
+                        placeholder={isAtacado ? "00.000.000/0000-00" : "000.000.000-00"}
+                        aria-invalid={!!documentError}
+                      />
+                      {documentError && <p className="text-xs font-medium text-destructive">{documentError}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="s-phone">Telefone / WhatsApp</Label>
                       <Input id="s-phone" name="phone" required inputMode="tel" />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-cep">CEP</Label>
+                      <Input
+                        id="s-cep"
+                        name="zip"
+                        required
+                        inputMode="numeric"
+                        value={cep}
+                        onChange={(e) => handleCepChange(e.target.value)}
+                        onBlur={() => void checkCep()}
+                        placeholder="00000-000"
+                        aria-invalid={!!cepError}
+                      />
+                      {cepChecking && <p className="text-xs text-muted-foreground">Verificando CEP...</p>}
+                      {cepError && <p className="text-xs font-medium text-destructive">{cepError}</p>}
+                      {!cepError && cepInfo && <p className="text-xs text-muted-foreground">{cepInfo}</p>}
+                    </div>
                   </div>
+
                   {customerType === "atacado" && (
                     <div className="space-y-2">
                       <Label htmlFor="s-ie">Inscrição Estadual</Label>
