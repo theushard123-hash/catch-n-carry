@@ -30,21 +30,35 @@ function ProfilePage() {
   async function save(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
+    const document = String(fd.get("document") ?? "");
+    const docError = documentError(document);
+    if (docError) {
+      toast.error(docError);
+      return;
+    }
+    const zip = String(fd.get("zip") ?? "");
+    const zipError = cepError(zip);
+    if (zipError) {
+      toast.error(zipError);
+      return;
+    }
     setBusy(true);
     const { error } = await supabase
       .from("profiles")
       .update({
         full_name: String(fd.get("full_name")),
         company_name: String(fd.get("company_name")),
-        document: String(fd.get("document")),
+        document,
         state_registration: String(fd.get("state_registration") ?? ""),
         phone: String(fd.get("phone")),
         address: String(fd.get("address")),
+        neighborhood: String(fd.get("neighborhood") ?? ""),
         city: String(fd.get("city")),
         state: String(fd.get("state")).toUpperCase().slice(0, 2),
-        zip: String(fd.get("zip")),
+        zip,
       })
       .eq("user_id", user!.id);
+
     setBusy(false);
     if (error) toast.error("Não foi possível salvar.");
     else {
