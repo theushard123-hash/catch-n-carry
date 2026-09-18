@@ -166,6 +166,14 @@ function AuthPage() {
       toast.error("Informe a inscrição estadual para cadastro de atacado.");
       return;
     }
+    if (!validateDocument()) {
+      toast.error(`${docLabel} inválido.`);
+      return;
+    }
+    if (!(await checkCep())) {
+      toast.error("Verifique o CEP informado.");
+      return;
+    }
     setBusy(true);
     try {
       const result = await signUp({
@@ -176,13 +184,15 @@ function AuthPage() {
           data: {
             full_name: String(fd.get("full_name")),
             company_name: String(fd.get("company_name") ?? ""),
-            document: String(fd.get("document")),
+            document,
             phone: String(fd.get("phone")),
             customer_type: customerType === "atacado" ? "atacado" : "varejo",
             state_registration: stateRegistration,
+            zip: cep,
           },
         },
       });
+
       if (result.needsEmailConfirmation) {
         toast.success("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
       } else {
