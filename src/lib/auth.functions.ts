@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { isValidDocument, onlyDigits } from "./br-validators";
 
 export const MIN_PASSWORD_LENGTH = 12;
 
@@ -10,12 +11,26 @@ const signupSchema = z.object({
   data: z.object({
     full_name: z.string().trim().min(1).max(120),
     company_name: z.string().trim().max(160).default(""),
-    document: z.string().trim().min(1).max(32),
+    document: z
+      .string()
+      .trim()
+      .min(1)
+      .max(32)
+      .refine((v) => isValidDocument(v), "CPF ou CNPJ inválido."),
     phone: z.string().trim().min(1).max(32),
     customer_type: z.enum(["atacado", "varejo"]),
     state_registration: z.string().trim().max(32).default(""),
+    zip: z
+      .string()
+      .trim()
+      .refine((v) => onlyDigits(v).length === 8, "CEP deve ter 8 dígitos."),
+    address: z.string().trim().max(200).default(""),
+    neighborhood: z.string().trim().max(120).default(""),
+    city: z.string().trim().max(120).default(""),
+    state: z.string().trim().max(2).default(""),
   }),
 });
+
 
 /**
  * Server-side signup: enforces the password policy (and field validation) on the
