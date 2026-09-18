@@ -57,8 +57,8 @@ function ProfilePage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const password = String(fd.get("new_password"));
-    if (password.length < 6) {
-      toast.error("A nova senha deve ter ao menos 6 caracteres.");
+    if (password.length < 12) {
+      toast.error("A nova senha deve ter ao menos 12 caracteres.");
       return;
     }
     setPwBusy(true);
@@ -99,7 +99,7 @@ function ProfilePage() {
         </p>
       </div>
 
-      <form onSubmit={save} className="rounded-2xl border bg-card p-6 shadow-soft">
+      <form method="post" onSubmit={save} className="rounded-2xl border bg-card p-6 shadow-soft">
         <h2 className="mb-4 text-lg font-bold">Dados da empresa</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Seu nome" name="full_name" defaultValue={profile.full_name} required />
@@ -129,11 +129,11 @@ function ProfilePage() {
         </div>
       </form>
 
-      <form onSubmit={changePassword} className="rounded-2xl border bg-card p-6 shadow-soft">
+      <form method="post" onSubmit={changePassword} className="rounded-2xl border bg-card p-6 shadow-soft">
         <h2 className="mb-4 text-lg font-bold">Alterar senha</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Senha atual" name="current_password" type="password" autoComplete="current-password" />
-          <Field label="Nova senha" name="new_password" type="password" autoComplete="new-password" minLength={6} required />
+          <Field label="Nova senha (mín. 12 caracteres)" name="new_password" type="password" autoComplete="new-password" minLength={12} required />
         </div>
         <div className="mt-6 flex justify-end">
           <Button type="submit" variant="outline" disabled={pwBusy}>

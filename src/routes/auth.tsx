@@ -73,8 +73,8 @@ function AuthPage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const password = String(fd.get("password"));
-    if (password.length < 6) {
-      toast.error("A senha deve ter pelo menos 6 caracteres.");
+    if (password.length < 12) {
+      toast.error("A senha deve ter pelo menos 12 caracteres.");
       return;
     }
     const stateRegistration = String(fd.get("state_registration") ?? "").trim();
@@ -178,7 +178,7 @@ function AuthPage() {
           </Link>
 
           {forgot ? (
-            <form onSubmit={handleForgot} className="space-y-5">
+            <form method="post" onSubmit={handleForgot} className="space-y-5">
               <div>
                 <h2 className="text-2xl font-bold">Recuperar senha</h2>
                 <p className="mt-1 text-sm text-muted-foreground">
@@ -204,7 +204,7 @@ function AuthPage() {
               </TabsList>
 
               <TabsContent value="entrar" className="mt-6">
-                <form onSubmit={handleLogin} className="space-y-5">
+                <form method="post" onSubmit={handleLogin} className="space-y-5">
                   <div>
                     <h2 className="text-2xl font-bold">Bem-vindo de volta</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
@@ -242,7 +242,7 @@ function AuthPage() {
               </TabsContent>
 
               <TabsContent value="cadastro" className="mt-6">
-                <form onSubmit={handleSignup} className="space-y-4">
+                <form method="post" onSubmit={handleSignup} className="space-y-4">
                   <div>
                     <h2 className="text-2xl font-bold">Criar cadastro</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
@@ -317,9 +317,10 @@ function AuthPage() {
                       name="password"
                       type="password"
                       required
-                      minLength={6}
+                      minLength={12}
                       autoComplete="new-password"
                     />
+                    <p className="text-xs text-muted-foreground">Use no mínimo 12 caracteres.</p>
                   </div>
                   <Button type="submit" className="w-full" size="lg" disabled={busy}>
                     Criar conta
