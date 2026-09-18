@@ -12,7 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-privacidade'
+import { Route as PoliticaDeTrocasRouteImport } from './routes/politica-de-trocas'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedCatalogoRouteImport } from './routes/_authenticated/catalogo'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
@@ -39,9 +42,24 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PoliticaDePrivacidadeRoute = PoliticaDePrivacidadeRouteImport.update({
+  id: '/politica-de-privacidade',
+  path: '/politica-de-privacidade',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PoliticaDeTrocasRoute = PoliticaDeTrocasRouteImport.update({
+  id: '/politica-de-trocas',
+  path: '/politica-de-trocas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TermosDeUsoRoute = TermosDeUsoRouteImport.update({
+  id: '/termos-de-uso',
+  path: '/termos-de-uso',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
@@ -109,7 +127,10 @@ const AuthenticatedPedidosIdRoute = AuthenticatedPedidosIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/politica-de-trocas': typeof PoliticaDeTrocasRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
@@ -125,7 +146,10 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/politica-de-trocas': typeof PoliticaDeTrocasRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
@@ -142,7 +166,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
+  '/politica-de-trocas': typeof PoliticaDeTrocasRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/termos-de-uso': typeof TermosDeUsoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/_authenticated/catalogo': typeof AuthenticatedCatalogoRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
@@ -160,7 +187,10 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/politica-de-privacidade'
+    | '/politica-de-trocas'
     | '/reset-password'
+    | '/termos-de-uso'
     | '/admin'
     | '/catalogo'
     | '/perfil'
@@ -176,7 +206,10 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/politica-de-privacidade'
+    | '/politica-de-trocas'
     | '/reset-password'
+    | '/termos-de-uso'
     | '/catalogo'
     | '/perfil'
     | '/admin/clientes'
@@ -192,7 +225,10 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/politica-de-privacidade'
+    | '/politica-de-trocas'
     | '/reset-password'
+    | '/termos-de-uso'
     | '/_authenticated/admin'
     | '/_authenticated/catalogo'
     | '/_authenticated/perfil'
@@ -210,7 +246,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  PoliticaDePrivacidadeRoute: typeof PoliticaDePrivacidadeRoute
+  PoliticaDeTrocasRoute: typeof PoliticaDeTrocasRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  TermosDeUsoRoute: typeof TermosDeUsoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -236,11 +275,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/politica-de-privacidade': {
+      id: '/politica-de-privacidade'
+      path: '/politica-de-privacidade'
+      fullPath: '/politica-de-privacidade'
+      preLoaderRoute: typeof PoliticaDePrivacidadeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/politica-de-trocas': {
+      id: '/politica-de-trocas'
+      path: '/politica-de-trocas'
+      fullPath: '/politica-de-trocas'
+      preLoaderRoute: typeof PoliticaDeTrocasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/termos-de-uso': {
+      id: '/termos-de-uso'
+      path: '/termos-de-uso'
+      fullPath: '/termos-de-uso'
+      preLoaderRoute: typeof TermosDeUsoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin': {
@@ -370,7 +430,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  PoliticaDePrivacidadeRoute: PoliticaDePrivacidadeRoute,
+  PoliticaDeTrocasRoute: PoliticaDeTrocasRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  TermosDeUsoRoute: TermosDeUsoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
