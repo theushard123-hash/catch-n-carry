@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { AddressFields, DocumentField } from "@/components/BrFields";
+import { cepError, documentError } from "@/lib/br-validators";
+
 
 export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
