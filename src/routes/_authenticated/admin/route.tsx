@@ -41,7 +41,7 @@ function AdminLayout() {
           <Link
             key={t.to}
             to={t.to}
-            activeOptions={{ exact: t.exact }}
+            activeOptions={{ exact: t.exact === true }}
             activeProps={{ className: "bg-primary text-primary-foreground shadow-soft" }}
             className={cn(
               "inline-flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground",

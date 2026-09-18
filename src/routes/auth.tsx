@@ -254,7 +254,8 @@ function AuthPage() {
                     <Label>Tipo de cliente</Label>
                     <RadioGroup
                       name="customer_type"
-                      defaultValue="atacado"
+                      value={customerType}
+                      onValueChange={setCustomerType}
                       className="grid grid-cols-2 gap-3"
                     >
                       <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-input bg-card p-3 text-sm has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-secondary">
@@ -290,6 +291,21 @@ function AuthPage() {
                       <Input id="s-phone" name="phone" required inputMode="tel" />
                     </div>
                   </div>
+                  {customerType === "atacado" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="s-ie">Inscrição Estadual</Label>
+                      <Input
+                        id="s-ie"
+                        name="state_registration"
+                        required
+                        inputMode="numeric"
+                        placeholder="Obrigatória para atacado"
+                      />
+                      <p className="text-xs text-muted-foreground">
+                        Necessária para emissão da nota fiscal de atacado.
+                      </p>
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="s-email">E-mail</Label>
                     <Input id="s-email" name="email" type="email" required autoComplete="email" />

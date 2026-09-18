@@ -37,6 +37,7 @@ function ProfilePage() {
         full_name: String(fd.get("full_name")),
         company_name: String(fd.get("company_name")),
         document: String(fd.get("document")),
+        state_registration: String(fd.get("state_registration") ?? ""),
         phone: String(fd.get("phone")),
         address: String(fd.get("address")),
         city: String(fd.get("city")),
@@ -105,6 +106,13 @@ function ProfilePage() {
           <Field label="Empresa / Razão social" name="company_name" defaultValue={profile.company_name} />
           <Field label="CNPJ ou CPF" name="document" defaultValue={profile.document} required />
           <Field label="Telefone / WhatsApp" name="phone" defaultValue={profile.phone} required />
+          <Field
+            label="Inscrição Estadual"
+            name="state_registration"
+            defaultValue={profile.state_registration}
+            required={profile.customer_type === "atacado"}
+            placeholder={profile.customer_type === "atacado" ? "Obrigatória para atacado" : "Opcional"}
+          />
           <div className="sm:col-span-2">
             <Field label="Endereço de entrega" name="address" defaultValue={profile.address} />
           </div>
