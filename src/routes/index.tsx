@@ -24,7 +24,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Faça seus pedidos de pescados e frutos do mar online. Catálogo completo, condições de pagamento flexíveis e acompanhamento de pedidos. Trapiche Pescados, Paranaguá - PR.",
+          "Faça seus pedidos de pescados e frutos do mar online. Catálogo completo, condições de pagamento flexíveis e acompanhamento de pedidos. Trapiche Pescados, Curitiba - PR.",
       },
       { property: "og:title", content: "Trapiche Pescados — Portal de Pedidos" },
       {
@@ -221,7 +221,7 @@ function LandingPage() {
             <a href="tel:+554130147701" className="inline-flex items-center gap-2 hover:text-foreground">
               <Phone className="h-4 w-4" /> (41) 3014-7701
             </a>
-            <p>Paranaguá — Paraná</p>
+            <p>Alameda Princesa Izabel, 1710 — Bigorrilho, Curitiba — PR</p>
           </div>
         </div>
         <p className="border-t py-4 text-center text-xs text-muted-foreground">
