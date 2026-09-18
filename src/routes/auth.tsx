@@ -14,9 +14,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { signUpCustomer } from "@/lib/auth.functions";
 import { Fish, Store } from "lucide-react";
-import { AddressFields, DocumentField } from "@/components/BrFields";
-import { cepError, documentError } from "@/lib/br-validators";
-
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -88,18 +85,6 @@ function AuthPage() {
       toast.error("Informe a inscrição estadual para cadastro de atacado.");
       return;
     }
-    const document = String(fd.get("document") ?? "");
-    const docError = documentError(document);
-    if (docError) {
-      toast.error(docError);
-      return;
-    }
-    const zip = String(fd.get("zip") ?? "");
-    const zipError = cepError(zip);
-    if (zipError) {
-      toast.error(zipError);
-      return;
-    }
     setBusy(true);
     try {
       const result = await signUp({
@@ -110,19 +95,13 @@ function AuthPage() {
           data: {
             full_name: String(fd.get("full_name")),
             company_name: String(fd.get("company_name") ?? ""),
-            document,
+            document: String(fd.get("document")),
             phone: String(fd.get("phone")),
             customer_type: customerType === "atacado" ? "atacado" : "varejo",
             state_registration: stateRegistration,
-            zip,
-            address: String(fd.get("address") ?? ""),
-            neighborhood: String(fd.get("neighborhood") ?? ""),
-            city: String(fd.get("city") ?? ""),
-            state: String(fd.get("state") ?? "").toUpperCase().slice(0, 2),
           },
         },
       });
-
       if (result.needsEmailConfirmation) {
         toast.success("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
       } else {
@@ -316,15 +295,15 @@ function AuthPage() {
                       <Label htmlFor="s-company">Empresa / Razão social</Label>
                       <Input id="s-company" name="company_name" placeholder="Opcional no varejo" />
                     </div>
-                    <DocumentField id="s-doc" />
+                    <div className="space-y-2">
+                      <Label htmlFor="s-doc">CNPJ ou CPF</Label>
+                      <Input id="s-doc" name="document" required inputMode="numeric" />
+                    </div>
                     <div className="space-y-2">
                       <Label htmlFor="s-phone">Telefone / WhatsApp</Label>
                       <Input id="s-phone" name="phone" required inputMode="tel" />
                     </div>
                   </div>
-
-                  <AddressFields idPrefix="s" />
-
                   {customerType === "atacado" && (
                     <div className="space-y-2">
                       <Label htmlFor="s-ie">Inscrição Estadual</Label>

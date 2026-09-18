@@ -308,7 +308,6 @@ export type Database = {
           external_code: string | null
           full_name: string
           id: string
-          neighborhood: string
           phone: string
           state: string
           state_registration: string
@@ -329,7 +328,6 @@ export type Database = {
           external_code?: string | null
           full_name?: string
           id?: string
-          neighborhood?: string
           phone?: string
           state?: string
           state_registration?: string
@@ -350,7 +348,6 @@ export type Database = {
           external_code?: string | null
           full_name?: string
           id?: string
-          neighborhood?: string
           phone?: string
           state?: string
           state_registration?: string
