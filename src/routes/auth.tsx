@@ -14,6 +14,17 @@ import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { signUpCustomer } from "@/lib/auth.functions";
 import { Fish, Store } from "lucide-react";
+import {
+  digits,
+  formatCep,
+  formatCnpj,
+  formatCpf,
+  isValidCep,
+  isValidCnpj,
+  isValidCpf,
+  lookupCep,
+} from "@/lib/br-validation";
+
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -50,9 +61,79 @@ function AuthPage() {
   const [customerType, setCustomerType] = useState("atacado");
   const signUp = useServerFn(signUpCustomer);
 
+  const isAtacado = customerType === "atacado";
+  const [document, setDocument] = useState("");
+  const [documentError, setDocumentError] = useState<string | null>(null);
+  const [cep, setCep] = useState("");
+  const [cepError, setCepError] = useState<string | null>(null);
+  const [cepInfo, setCepInfo] = useState<string | null>(null);
+  const [cepChecking, setCepChecking] = useState(false);
+
+  const docLabel = isAtacado ? "CNPJ" : "CPF";
+
+  function validateDocument(value = document) {
+    const d = digits(value);
+    if (!d) {
+      setDocumentError(`Informe o ${docLabel}.`);
+      return false;
+    }
+    const ok = isAtacado ? isValidCnpj(d) : isValidCpf(d);
+    setDocumentError(ok ? null : `${docLabel} inválido.`);
+    return ok;
+  }
+
+  function handleDocumentChange(value: string) {
+    const masked = isAtacado ? formatCnpj(value) : formatCpf(value);
+    setDocument(masked);
+    const d = digits(masked);
+    const full = isAtacado ? 14 : 11;
+    if (d.length === 0) setDocumentError(null);
+    else if (d.length === full) setDocumentError((isAtacado ? isValidCnpj(d) : isValidCpf(d)) ? null : `${docLabel} inválido.`);
+    else setDocumentError(null);
+  }
+
+  async function checkCep(value = cep) {
+    const masked = formatCep(value);
+    if (!isValidCep(masked)) {
+      setCepInfo(null);
+      setCepError(digits(masked).length ? "CEP deve ter 8 dígitos." : "Informe o CEP.");
+      return false;
+    }
+    setCepChecking(true);
+    const found = await lookupCep(masked);
+    setCepChecking(false);
+    if (!found) {
+      setCepInfo(null);
+      setCepError("CEP não encontrado.");
+      return false;
+    }
+    setCepError(null);
+    setCepInfo(
+      [found.address, found.neighborhood, found.city && `${found.city} - ${found.state}`]
+        .filter(Boolean)
+        .join(", "),
+    );
+    return true;
+  }
+
+  function handleCepChange(value: string) {
+    const masked = formatCep(value);
+    setCep(masked);
+    setCepInfo(null);
+    setCepError(null);
+    if (digits(masked).length === 8) void checkCep(masked);
+  }
+
+  // Trocar o tipo de cliente muda a regra do documento (CNPJ x CPF).
+  useEffect(() => {
+    setDocument("");
+    setDocumentError(null);
+  }, [customerType]);
+
   useEffect(() => {
     if (!loading && user) navigate({ to: safeRedirect(redirect), replace: true });
   }, [user, loading, redirect, navigate]);
+
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -85,6 +166,14 @@ function AuthPage() {
       toast.error("Informe a inscrição estadual para cadastro de atacado.");
       return;
     }
+    if (!validateDocument()) {
+      toast.error(`${docLabel} inválido.`);
+      return;
+    }
+    if (!(await checkCep())) {
+      toast.error("Verifique o CEP informado.");
+      return;
+    }
     setBusy(true);
     try {
       const result = await signUp({
@@ -95,13 +184,15 @@ function AuthPage() {
           data: {
             full_name: String(fd.get("full_name")),
             company_name: String(fd.get("company_name") ?? ""),
-            document: String(fd.get("document")),
+            document,
             phone: String(fd.get("phone")),
             customer_type: customerType === "atacado" ? "atacado" : "varejo",
             state_registration: stateRegistration,
+            zip: cep,
           },
         },
       });
+
       if (result.needsEmailConfirmation) {
         toast.success("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
       } else {
@@ -296,14 +387,43 @@ function AuthPage() {
                       <Input id="s-company" name="company_name" placeholder="Opcional no varejo" />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="s-doc">CNPJ ou CPF</Label>
-                      <Input id="s-doc" name="document" required inputMode="numeric" />
+                      <Label htmlFor="s-doc">{docLabel}</Label>
+                      <Input
+                        id="s-doc"
+                        name="document"
+                        required
+                        inputMode="numeric"
+                        value={document}
+                        onChange={(e) => handleDocumentChange(e.target.value)}
+                        onBlur={() => validateDocument()}
+                        placeholder={isAtacado ? "00.000.000/0000-00" : "000.000.000-00"}
+                        aria-invalid={!!documentError}
+                      />
+                      {documentError && <p className="text-xs font-medium text-destructive">{documentError}</p>}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="s-phone">Telefone / WhatsApp</Label>
                       <Input id="s-phone" name="phone" required inputMode="tel" />
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="s-cep">CEP</Label>
+                      <Input
+                        id="s-cep"
+                        name="zip"
+                        required
+                        inputMode="numeric"
+                        value={cep}
+                        onChange={(e) => handleCepChange(e.target.value)}
+                        onBlur={() => void checkCep()}
+                        placeholder="00000-000"
+                        aria-invalid={!!cepError}
+                      />
+                      {cepChecking && <p className="text-xs text-muted-foreground">Verificando CEP...</p>}
+                      {cepError && <p className="text-xs font-medium text-destructive">{cepError}</p>}
+                      {!cepError && cepInfo && <p className="text-xs text-muted-foreground">{cepInfo}</p>}
+                    </div>
                   </div>
+
                   {customerType === "atacado" && (
                     <div className="space-y-2">
                       <Label htmlFor="s-ie">Inscrição Estadual</Label>

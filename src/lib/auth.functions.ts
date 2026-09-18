@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
+import { digits, isValidCep, isValidCnpj, isValidCpf } from "@/lib/br-validation";
 
 export const MIN_PASSWORD_LENGTH = 12;
 
@@ -14,6 +15,7 @@ const signupSchema = z.object({
     phone: z.string().trim().min(1).max(32),
     customer_type: z.enum(["atacado", "varejo"]),
     state_registration: z.string().trim().max(32).default(""),
+    zip: z.string().trim().max(12),
   }),
 });
 
@@ -27,6 +29,18 @@ export const signUpCustomer = createServerFn({ method: "POST" })
     if (data.data.customer_type === "atacado" && !data.data.state_registration) {
       throw new Error("Informe a inscrição estadual para cadastro de atacado.");
     }
+
+    if (!isValidCep(data.data.zip)) {
+      throw new Error("Informe um CEP válido com 8 dígitos.");
+    }
+
+    const doc = digits(data.data.document);
+    if (data.data.customer_type === "atacado" ? !isValidCnpj(doc) : !isValidCpf(doc)) {
+      throw new Error(
+        data.data.customer_type === "atacado" ? "CNPJ inválido." : "CPF inválido.",
+      );
+    }
+
 
     const url = process.env["SUPABASE_URL"]!;
     const key = process.env["SUPABASE_PUBLISHABLE_KEY"]!;
