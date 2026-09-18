@@ -68,6 +68,10 @@ function AuthPage() {
   const [cepError, setCepError] = useState<string | null>(null);
   const [cepInfo, setCepInfo] = useState<string | null>(null);
   const [cepChecking, setCepChecking] = useState(false);
+  const [signupPassword, setSignupPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmTouched, setConfirmTouched] = useState(false);
+  const passwordMismatch = confirmTouched && confirmPassword.length > 0 && confirmPassword !== signupPassword;
 
   const docLabel = isAtacado ? "CNPJ" : "CPF";
 

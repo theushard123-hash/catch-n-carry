@@ -16,6 +16,8 @@ const signupSchema = z.object({
     customer_type: z.enum(["atacado", "varejo"]),
     state_registration: z.string().trim().max(32).default(""),
     zip: z.string().trim().max(12),
+    address_number: z.string().trim().min(1, "Informe o número do endereço.").max(20),
+    complement: z.string().trim().max(120).default(""),
   }),
 });
 
