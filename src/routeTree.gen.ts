@@ -23,6 +23,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 import { Route as AuthenticatedAdminCondicoesRouteImport } from './routes/_authenticated/admin/condicoes'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
+import { Route as AuthenticatedAdminNovidadesRouteImport } from './routes/_authenticated/admin/novidades'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
 import { Route as AuthenticatedAdminProdutosRouteImport } from './routes/_authenticated/admin/produtos'
 import { Route as AuthenticatedPedidosIndexRouteImport } from './routes/_authenticated/pedidos/index'
@@ -100,6 +101,12 @@ const AuthenticatedAdminConfiguracoesRoute =
     path: '/configuracoes',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminNovidadesRoute =
+  AuthenticatedAdminNovidadesRouteImport.update({
+    id: '/novidades',
+    path: '/novidades',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminPedidosRoute =
   AuthenticatedAdminPedidosRouteImport.update({
     id: '/pedidos',
@@ -137,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/admin/novidades': typeof AuthenticatedAdminNovidadesRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/pedidos/$id': typeof AuthenticatedPedidosIdRoute
@@ -155,6 +163,7 @@ export interface FileRoutesByTo {
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/admin/novidades': typeof AuthenticatedAdminNovidadesRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/pedidos/$id': typeof AuthenticatedPedidosIdRoute
@@ -176,6 +185,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/_authenticated/admin/novidades': typeof AuthenticatedAdminNovidadesRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/produtos': typeof AuthenticatedAdminProdutosRoute
   '/_authenticated/pedidos/$id': typeof AuthenticatedPedidosIdRoute
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/admin/clientes'
     | '/admin/condicoes'
     | '/admin/configuracoes'
+    | '/admin/novidades'
     | '/admin/pedidos'
     | '/admin/produtos'
     | '/pedidos/$id'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/admin/clientes'
     | '/admin/condicoes'
     | '/admin/configuracoes'
+    | '/admin/novidades'
     | '/admin/pedidos'
     | '/admin/produtos'
     | '/pedidos/$id'
@@ -235,6 +247,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/condicoes'
     | '/_authenticated/admin/configuracoes'
+    | '/_authenticated/admin/novidades'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/produtos'
     | '/_authenticated/pedidos/$id'
@@ -352,6 +365,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminConfiguracoesRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/novidades': {
+      id: '/_authenticated/admin/novidades'
+      path: '/novidades'
+      fullPath: '/admin/novidades'
+      preLoaderRoute: typeof AuthenticatedAdminNovidadesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/pedidos': {
       id: '/_authenticated/admin/pedidos'
       path: '/pedidos'
@@ -387,6 +407,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminCondicoesRoute: typeof AuthenticatedAdminCondicoesRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
+  AuthenticatedAdminNovidadesRoute: typeof AuthenticatedAdminNovidadesRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminProdutosRoute: typeof AuthenticatedAdminProdutosRoute
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
@@ -397,6 +418,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
     AuthenticatedAdminCondicoesRoute: AuthenticatedAdminCondicoesRoute,
     AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
+    AuthenticatedAdminNovidadesRoute: AuthenticatedAdminNovidadesRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminProdutosRoute: AuthenticatedAdminProdutosRoute,
     AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,

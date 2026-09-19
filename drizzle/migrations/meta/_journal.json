@@ -43,6 +43,13 @@
       "when": 1789755367559,
       "tag": "0005_move_role_helpers_to_private_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1789852683151,
+      "tag": "0006_create_banners",
+      "breakpoints": true
     }
   ]
 }

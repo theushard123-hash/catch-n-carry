@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
-import { LayoutDashboard, Package, Settings, ShoppingCart, Users, Wallet } from "lucide-react";
+import { Images, LayoutDashboard, Package, Settings, ShoppingCart, Users, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 
@@ -26,6 +26,7 @@ const tabs: { to: string; label: string; icon: typeof LayoutDashboard; exact?: b
   { to: "/admin/produtos", label: "Produtos", icon: Package },
   { to: "/admin/condicoes", label: "Pagamento", icon: Wallet },
   { to: "/admin/clientes", label: "Clientes", icon: Users },
+  { to: "/admin/novidades", label: "Novidades", icon: Images },
   { to: "/admin/configuracoes", label: "Configurações", icon: Settings },
 ];
 
