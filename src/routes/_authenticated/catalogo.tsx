@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { PromoBanners } from "@/components/PromoBanners";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/catalogo")({
@@ -274,6 +275,8 @@ function CatalogPage() {
           <p>{settingsQ.data.notice}</p>
         </div>
       )}
+      <PromoBanners customerType={customerType} />
+
 
       <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
         <section>
