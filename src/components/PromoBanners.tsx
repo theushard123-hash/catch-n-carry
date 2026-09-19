@@ -6,15 +6,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 type Banner = Tables<"banners">;
 
-function isVisible(b: Banner, customerType: "atacado" | "varejo") {
+function isVisible(b: Banner, customerType?: "atacado" | "varejo" | null) {
   const today = new Date().toISOString().slice(0, 10);
-  if (b.customer_type && b.customer_type !== customerType) return false;
+  // Visitante (não logado): só banners para todos os públicos
+  if (b.customer_type && (!customerType || b.customer_type !== customerType)) return false;
   if (b.starts_at && b.starts_at > today) return false;
   if (b.ends_at && b.ends_at < today) return false;
   return true;
 }
 
-export function PromoBanners({ customerType }: { customerType: "atacado" | "varejo" }) {
+export function PromoBanners({ customerType }: { customerType?: "atacado" | "varejo" | null }) {
   const q = useQuery({
     queryKey: ["banners", "active"],
     queryFn: async () => {

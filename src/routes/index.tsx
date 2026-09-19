@@ -16,6 +16,7 @@ import { useServerFn } from "@tanstack/react-start";
 import heroImg from "@/assets/hero-seafood.jpg";
 import { getPublicSettings } from "@/lib/settings.functions";
 import { BrandLogo } from "@/components/BrandLogo";
+import { PromoBanners } from "@/components/PromoBanners";
 import { Button } from "@/components/ui/button";
 
 
@@ -147,6 +148,11 @@ function LandingPage() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* Novidades / Ofertas */}
+      <section className="mx-auto max-w-6xl px-4 pt-14">
+        <PromoBanners />
       </section>
 
       {/* Features */}
