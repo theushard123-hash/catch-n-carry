@@ -62,6 +62,51 @@ export type Database = {
         }
         Relationships: []
       }
+      banners: {
+        Row: {
+          active: boolean
+          created_at: string
+          customer_type: Database["public"]["Enums"]["customer_type"] | null
+          description: string
+          ends_at: string | null
+          id: string
+          image_url: string
+          link_url: string
+          sort_order: number
+          starts_at: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          customer_type?: Database["public"]["Enums"]["customer_type"] | null
+          description?: string
+          ends_at?: string | null
+          id?: string
+          image_url: string
+          link_url?: string
+          sort_order?: number
+          starts_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          customer_type?: Database["public"]["Enums"]["customer_type"] | null
+          description?: string
+          ends_at?: string | null
+          id?: string
+          image_url?: string
+          link_url?: string
+          sort_order?: number
+          starts_at?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           active: boolean
