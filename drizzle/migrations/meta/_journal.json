@@ -78,6 +78,13 @@
       "when": 1789995604788,
       "tag": "0010_no_auto_admin_promotion",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1789995771734,
+      "tag": "0011_harden_imagens_public_read",
+      "breakpoints": true
     }
   ]
 }
