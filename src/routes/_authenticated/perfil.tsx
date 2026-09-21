@@ -89,9 +89,10 @@ function ProfilePage() {
           </div>
           <div className="ml-auto flex gap-2">
             <Badge variant="aqua">{CUSTOMER_TYPE_LABEL[profile.customer_type]}</Badge>
-            <Badge variant={profile.approved ? "success" : "warning"}>
-              {profile.approved ? "Cadastro aprovado" : "Aguardando aprovação"}
+            <Badge variant={approvalOk ? "success" : "warning"}>
+              {approvalOk ? "Cadastro aprovado" : "Aguardando aprovação"}
             </Badge>
+
           </div>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">

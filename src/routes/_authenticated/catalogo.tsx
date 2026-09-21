@@ -127,7 +127,10 @@ function CatalogPage() {
   const subtotal = cartLines.reduce((s, l) => s + priceOf(l.product) * l.qty, 0);
   const itemCount = cartLines.length;
 
-  const blocked = !!settingsQ.data?.require_approval && !profile?.approved;
+  // Apenas atacado depende de aprovação; varejo compra direto.
+  const blocked =
+    !!settingsQ.data?.require_approval && profile?.customer_type === "atacado" && !profile?.approved;
+
   const minOrder = Number(
     customerType === "atacado" ? settingsQ.data?.min_order_atacado ?? 0 : settingsQ.data?.min_order_varejo ?? 0,
   );

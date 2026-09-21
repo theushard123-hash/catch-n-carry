@@ -37,9 +37,11 @@ export const createOrder = createServerFn({ method: "POST" })
     if (pErr || !profile) throw new Error("Perfil não encontrado.");
 
     const { data: settings } = await supabase.from("app_settings").select("*").eq("id", 1).maybeSingle();
-    if (settings?.require_approval && !profile.approved) {
-      throw new Error("Seu cadastro ainda não foi aprovado. Aguarde a liberação da Trapiche.");
+    // Somente clientes de atacado passam por análise de aprovação.
+    if (settings?.require_approval && profile.customer_type === "atacado" && !profile.approved) {
+      throw new Error("Seu cadastro de atacado ainda não foi aprovado. Aguarde a liberação da Trapiche.");
     }
+
 
     const { data: cond, error: cErr } = await supabase
       .from("payment_conditions")
