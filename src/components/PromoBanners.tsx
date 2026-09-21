@@ -45,7 +45,7 @@ export function PromoBanners({ customerType }: { customerType?: "atacado" | "var
                 <img
                   src={b.image_url}
                   alt={b.title || "Novidade Trapiche Pescados"}
-                  className="h-48 w-full object-cover sm:h-64"
+                  className="h-auto max-h-[280px] w-full object-contain sm:max-h-[380px]"
                   loading="lazy"
                 />
                 {(b.title || b.description) && (
