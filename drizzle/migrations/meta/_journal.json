@@ -57,6 +57,20 @@
       "when": 1789853020183,
       "tag": "0007_public_read_active_banners",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789991959824,
+      "tag": "0008_protect_order_fields_trigger",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1789991965261,
+      "tag": "0009_imagens_public_read_policy",
+      "breakpoints": true
     }
   ]
 }
