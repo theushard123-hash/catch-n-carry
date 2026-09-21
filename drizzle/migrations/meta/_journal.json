@@ -85,6 +85,13 @@
       "when": 1789995771734,
       "tag": "0011_harden_imagens_public_read",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1789998981215,
+      "tag": "0012_varejo_auto_approved",
+      "breakpoints": true
     }
   ]
 }
