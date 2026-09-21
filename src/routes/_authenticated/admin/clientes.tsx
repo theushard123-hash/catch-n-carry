@@ -163,19 +163,22 @@ function AdminCustomersPage() {
                   <TableCell>{p.external_code || "—"}</TableCell>
                   <TableCell>{formatDate(p.created_at)}</TableCell>
                   <TableCell>
-                    {p.approved ? (
-                      <Badge variant="success">Aprovado</Badge>
-                    ) : (
+                    {isPending(p) ? (
                       <Badge variant="warning">Pendente</Badge>
+                    ) : (
+                      <Badge variant="success">
+                        {p.customer_type === "varejo" ? "Liberado" : "Aprovado"}
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      {!p.approved && (
+                      {isPending(p) && (
                         <Button variant="outline" size="sm" onClick={() => approve.mutate(p)}>
                           <Check className="h-4 w-4" /> Aprovar
                         </Button>
                       )}
+
                       <Button variant="ghost" size="iconSm" aria-label="Editar" onClick={() => setEdit(p)}>
                         <Pencil className="h-4 w-4" />
                       </Button>
