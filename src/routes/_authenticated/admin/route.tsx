@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, redirect } from "@tanstack/react-router";
 import { Images, LayoutDashboard, Package, Settings, ShoppingCart, Users, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { checkAdminAccess } from "@/lib/admin.functions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/admin")({
@@ -12,13 +13,21 @@ export const Route = createFileRoute("/_authenticated/admin")({
   }),
   beforeLoad: async () => {
     const { data } = await supabase.auth.getSession();
-    const uid = data.session?.user.id;
-    if (!uid) throw redirect({ to: "/auth" });
-    const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", uid).eq("role", "admin");
-    if (!roles || roles.length === 0) throw redirect({ to: "/catalogo" });
+    if (!data.session) throw redirect({ to: "/auth" });
+
+    // Authorization is decided on the server (token validated + roles read
+    // under RLS); the client never grants itself admin access.
+    let allowed = false;
+    try {
+      allowed = (await checkAdminAccess()).isAdmin;
+    } catch {
+      allowed = false;
+    }
+    if (!allowed) throw redirect({ to: "/catalogo" });
   },
   component: AdminLayout,
 });
+
 
 const tabs: { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean }[] = [
   { to: "/admin", label: "Visão geral", icon: LayoutDashboard, exact: true },
