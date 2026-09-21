@@ -78,11 +78,15 @@ function AdminCustomersPage() {
     onError: () => toast.error("Não foi possível salvar o cliente."),
   });
 
+  // Varejo não passa por análise: apenas atacado pode ficar pendente.
+  const isPending = (p: Profile) => p.customer_type === "atacado" && !p.approved;
+
   const rows = (q.data ?? []).filter((p) => {
-    if (filter === "pendentes" && p.approved) return false;
-    if (filter === "aprovados" && !p.approved) return false;
+    if (filter === "pendentes" && !isPending(p)) return false;
+    if (filter === "aprovados" && isPending(p)) return false;
     if (filter === "atacado" && p.customer_type !== "atacado") return false;
     if (filter === "varejo" && p.customer_type !== "varejo") return false;
+
     if (!term.trim()) return true;
     const t = term.toLowerCase();
     return [p.full_name, p.company_name, p.email ?? "", p.document, p.city].some((v) =>
@@ -159,19 +163,22 @@ function AdminCustomersPage() {
                   <TableCell>{p.external_code || "—"}</TableCell>
                   <TableCell>{formatDate(p.created_at)}</TableCell>
                   <TableCell>
-                    {p.approved ? (
-                      <Badge variant="success">Aprovado</Badge>
-                    ) : (
+                    {isPending(p) ? (
                       <Badge variant="warning">Pendente</Badge>
+                    ) : (
+                      <Badge variant="success">
+                        {p.customer_type === "varejo" ? "Liberado" : "Aprovado"}
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-1">
-                      {!p.approved && (
+                      {isPending(p) && (
                         <Button variant="outline" size="sm" onClick={() => approve.mutate(p)}>
                           <Check className="h-4 w-4" /> Aprovar
                         </Button>
                       )}
+
                       <Button variant="ghost" size="iconSm" aria-label="Editar" onClick={() => setEdit(p)}>
                         <Pencil className="h-4 w-4" />
                       </Button>

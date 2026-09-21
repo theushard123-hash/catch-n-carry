@@ -70,11 +70,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                   <Badge variant="aqua" className="px-2 py-0 text-[10px]">
                     {CUSTOMER_TYPE_LABEL[profile.customer_type]}
                   </Badge>
-                  {!profile.approved && (
+                  {profile.customer_type === "atacado" && !profile.approved && (
                     <Badge variant="warning" className="px-2 py-0 text-[10px]">
                       Aguardando aprovação
                     </Badge>
                   )}
+
                 </div>
               </div>
             )}

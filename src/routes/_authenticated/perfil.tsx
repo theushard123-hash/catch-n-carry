@@ -27,6 +27,10 @@ function ProfilePage() {
 
   if (!profile || !user) return <Skeleton className="h-96 rounded-2xl" />;
 
+  // Varejo não passa por análise: só atacado precisa de aprovação.
+  const approvalOk = profile.customer_type !== "atacado" || profile.approved;
+
+
   async function save(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
@@ -89,14 +93,18 @@ function ProfilePage() {
           </div>
           <div className="ml-auto flex gap-2">
             <Badge variant="aqua">{CUSTOMER_TYPE_LABEL[profile.customer_type]}</Badge>
-            <Badge variant={profile.approved ? "success" : "warning"}>
-              {profile.approved ? "Cadastro aprovado" : "Aguardando aprovação"}
+            <Badge variant={approvalOk ? "success" : "warning"}>
+              {approvalOk ? "Cadastro aprovado" : "Aguardando aprovação"}
             </Badge>
+
           </div>
         </div>
         <p className="mt-3 text-xs text-muted-foreground">
-          Tipo de cliente e aprovação são definidos pela equipe Trapiche. Fale conosco para alterar.
+          {profile.customer_type === "atacado"
+            ? "Cadastros de atacado passam por análise da equipe Trapiche antes de liberar pedidos."
+            : "Cadastros de varejo já estão liberados para pedidos."}
         </p>
+
       </div>
 
       <form method="post" onSubmit={save} className="rounded-2xl border bg-card p-6 shadow-soft">
