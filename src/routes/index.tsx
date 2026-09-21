@@ -17,6 +17,7 @@ import heroImg from "@/assets/hero-seafood.jpg";
 import { getPublicSettings } from "@/lib/settings.functions";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PromoBanners } from "@/components/PromoBanners";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Button } from "@/components/ui/button";
 
 
@@ -242,6 +243,8 @@ function LandingPage() {
           © {new Date().getFullYear()} Trapiche Pescados. Todos os direitos reservados.
         </p>
       </footer>
+
+      <WhatsAppButton />
     </div>
   );
 }
