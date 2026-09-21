@@ -1,4 +1,3 @@
-// ============= Full file contents =============
 import { useEffect, useState } from "react";
 
 const WHATSAPP_URL =
