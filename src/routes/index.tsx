@@ -243,6 +243,8 @@ function LandingPage() {
           © {new Date().getFullYear()} Trapiche Pescados. Todos os direitos reservados.
         </p>
       </footer>
+
+      <WhatsAppButton />
     </div>
   );
 }
