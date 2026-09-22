@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { signUpCustomer } from "@/lib/auth.functions";
+import { WaveLoader } from "@/components/WaveLoader";
 import { Fish, Store } from "lucide-react";
 import {
   digits,
@@ -57,7 +58,21 @@ function AuthPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [busyLabel, setBusyLabel] = useState("Carregando...");
+  const busyStarted = useRef(0);
   const [forgot, setForgot] = useState(false);
+
+  // Garante que a animação de ondas apareça por pelo menos ~1s (sem "piscar").
+  function startBusy(label: string) {
+    busyStarted.current = Date.now();
+    setBusyLabel(label);
+    setBusy(true);
+  }
+  async function stopBusy() {
+    const elapsed = Date.now() - busyStarted.current;
+    if (elapsed < 1000) await new Promise((r) => setTimeout(r, 1000 - elapsed));
+    setBusy(false);
+  }
   const [customerType, setCustomerType] = useState("atacado");
   const signUp = useServerFn(signUpCustomer);
 
@@ -142,12 +157,12 @@ function AuthPage() {
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    setBusy(true);
+    startBusy("Entrando no portal...");
     const { error } = await supabase.auth.signInWithPassword({
       email: String(fd.get("email")),
       password: String(fd.get("password")),
     });
-    setBusy(false);
+    await stopBusy();
     if (error) {
       toast.error(
         error.message.includes("Invalid login") ? "E-mail ou senha incorretos." : error.message,
@@ -188,7 +203,7 @@ function AuthPage() {
       toast.error("Verifique o CEP informado.");
       return;
     }
-    setBusy(true);
+    startBusy("Criando seu cadastro...");
     try {
       const result = await signUp({
         data: {
@@ -230,18 +245,18 @@ function AuthPage() {
           : message,
       );
     } finally {
-      setBusy(false);
+      await stopBusy();
     }
   }
 
   async function handleForgot(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    setBusy(true);
+    startBusy("Enviando link de recuperação...");
     const { error } = await supabase.auth.resetPasswordForEmail(String(fd.get("email")), {
       redirectTo: `${window.location.origin}/reset-password`,
     });
-    setBusy(false);
+    await stopBusy();
     if (error) toast.error(error.message);
     else {
       toast.success("Enviamos um link de redefinição para seu e-mail.");
@@ -263,6 +278,7 @@ function AuthPage() {
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
+      {busy && <WaveLoader label={busyLabel} />}
       <aside className="relative hidden overflow-hidden bg-gradient-ocean p-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
         <Link to="/">
           <BrandLogo light size="md" />
