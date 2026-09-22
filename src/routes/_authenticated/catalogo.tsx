@@ -14,10 +14,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PromoBanners } from "@/components/PromoBanners";
+import { ProductCardsSkeleton } from "@/components/ProductCardSkeleton";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/catalogo")({
@@ -317,11 +317,7 @@ function CatalogPage() {
           </div>
 
           {productsQ.isLoading ? (
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="h-72 rounded-2xl" />
-              ))}
-            </div>
+            <ProductCardsSkeleton />
           ) : filtered.length === 0 ? (
             <div className="rounded-2xl border border-dashed p-12 text-center text-muted-foreground">
               Nenhum produto encontrado.
