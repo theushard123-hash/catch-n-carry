@@ -68,7 +68,8 @@ function AuthPage() {
   const busyStarted = useRef(0);
   const [forgot, setForgot] = useState(false);
 
-  // Garante que a animação de ondas apareça por pelo menos ~1s (sem "piscar").
+  // Garante que a animação de ondas apareça por pelo menos ~2,8s (dá tempo de
+  // ver o peixe nadar e ao menos duas mensagens, sem "piscar").
   function startBusy(label: string | string[]) {
     busyStarted.current = Date.now();
     setBusyLabel(Array.isArray(label) ? label : [label]);
@@ -76,7 +77,7 @@ function AuthPage() {
   }
   async function stopBusy() {
     const elapsed = Date.now() - busyStarted.current;
-    if (elapsed < 1000) await new Promise((r) => setTimeout(r, 1000 - elapsed));
+    if (elapsed < 2800) await new Promise((r) => setTimeout(r, 2800 - elapsed));
     setBusy(false);
   }
   const [customerType, setCustomerType] = useState("atacado");
