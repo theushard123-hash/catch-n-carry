@@ -278,6 +278,7 @@ function AuthPage() {
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
+      {busy && <WaveLoader label={busyLabel} />}
       <aside className="relative hidden overflow-hidden bg-gradient-ocean p-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
         <Link to="/">
           <BrandLogo light size="md" />
