@@ -38,7 +38,7 @@ export const createOrder = createServerFn({ method: "POST" })
 
     const { data: settings } = await supabase
       .from("app_settings_customer")
-      .select("require_approval")
+      .select("require_approval, min_order_atacado, min_order_varejo")
       .eq("id", 1)
       .maybeSingle();
     // Somente clientes de atacado passam por análise de aprovação.
