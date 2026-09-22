@@ -163,7 +163,7 @@ function AuthPage() {
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    startBusy("Entrando no portal...");
+    startBusy(BUSY_MESSAGES);
     const { error } = await supabase.auth.signInWithPassword({
       email: String(fd.get("email")),
       password: String(fd.get("password")),
@@ -209,7 +209,7 @@ function AuthPage() {
       toast.error("Verifique o CEP informado.");
       return;
     }
-    startBusy("Criando seu cadastro...");
+    startBusy(BUSY_MESSAGES);
     try {
       const result = await signUp({
         data: {
@@ -284,7 +284,7 @@ function AuthPage() {
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      {busy && <WaveLoader label={busyLabel} />}
+      {busy && <WaveLoader labels={busyLabel} />}
       <aside className="relative hidden overflow-hidden bg-gradient-ocean p-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
         <Link to="/">
           <BrandLogo light size="md" />
