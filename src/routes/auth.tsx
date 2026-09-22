@@ -157,12 +157,12 @@ function AuthPage() {
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    setBusy(true);
+    startBusy("Entrando no portal...");
     const { error } = await supabase.auth.signInWithPassword({
       email: String(fd.get("email")),
       password: String(fd.get("password")),
     });
-    setBusy(false);
+    await stopBusy();
     if (error) {
       toast.error(
         error.message.includes("Invalid login") ? "E-mail ou senha incorretos." : error.message,
@@ -203,7 +203,7 @@ function AuthPage() {
       toast.error("Verifique o CEP informado.");
       return;
     }
-    setBusy(true);
+    startBusy("Criando seu cadastro...");
     try {
       const result = await signUp({
         data: {
@@ -245,18 +245,18 @@ function AuthPage() {
           : message,
       );
     } finally {
-      setBusy(false);
+      await stopBusy();
     }
   }
 
   async function handleForgot(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    setBusy(true);
+    startBusy("Enviando link de recuperação...");
     const { error } = await supabase.auth.resetPasswordForEmail(String(fd.get("email")), {
       redirectTo: `${window.location.origin}/reset-password`,
     });
-    setBusy(false);
+    await stopBusy();
     if (error) toast.error(error.message);
     else {
       toast.success("Enviamos um link de redefinição para seu e-mail.");
