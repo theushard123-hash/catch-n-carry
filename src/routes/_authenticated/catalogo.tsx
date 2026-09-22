@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { PromoBanners } from "@/components/PromoBanners";
+import { ProductCardsSkeleton } from "@/components/ProductCardSkeleton";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/catalogo")({
