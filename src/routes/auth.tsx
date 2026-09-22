@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { signUpCustomer } from "@/lib/auth.functions";
+import { WaveLoader } from "@/components/WaveLoader";
 import { Fish, Store } from "lucide-react";
 import {
   digits,
@@ -57,7 +58,21 @@ function AuthPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [busyLabel, setBusyLabel] = useState("Carregando...");
+  const busyStarted = useRef(0);
   const [forgot, setForgot] = useState(false);
+
+  // Garante que a animação de ondas apareça por pelo menos ~1s (sem "piscar").
+  function startBusy(label: string) {
+    busyStarted.current = Date.now();
+    setBusyLabel(label);
+    setBusy(true);
+  }
+  async function stopBusy() {
+    const elapsed = Date.now() - busyStarted.current;
+    if (elapsed < 1000) await new Promise((r) => setTimeout(r, 1000 - elapsed));
+    setBusy(false);
+  }
   const [customerType, setCustomerType] = useState("atacado");
   const signUp = useServerFn(signUpCustomer);
 
