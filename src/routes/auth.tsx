@@ -58,14 +58,14 @@ function AuthPage() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [busy, setBusy] = useState(false);
-  const [busyLabel, setBusyLabel] = useState("Carregando...");
+  const [busyLabel, setBusyLabel] = useState<string[]>(["Carregando..."]);
   const busyStarted = useRef(0);
   const [forgot, setForgot] = useState(false);
 
   // Garante que a animação de ondas apareça por pelo menos ~1s (sem "piscar").
-  function startBusy(label: string) {
+  function startBusy(label: string | string[]) {
     busyStarted.current = Date.now();
-    setBusyLabel(label);
+    setBusyLabel(Array.isArray(label) ? label : [label]);
     setBusy(true);
   }
   async function stopBusy() {
