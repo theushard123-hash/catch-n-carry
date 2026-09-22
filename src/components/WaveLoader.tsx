@@ -1,13 +1,33 @@
+import { useEffect, useState } from "react";
 import { Fish } from "lucide-react";
 
 /**
  * WaveLoader — animação de carregamento com o tema da Trapiche (mar/ondas).
- * Peixe flutuando + ondas turquesa se movendo na base da tela.
+ * Peixe nadando + ondas turquesa na base. Fundo fica visível (sem vidro fosco),
+ * com mensagens que se alternam suavemente.
  */
-export function WaveLoader({ label = "Carregando..." }: { label?: string }) {
+export function WaveLoader({
+  labels,
+  label = "Carregando...",
+}: {
+  labels?: string[];
+  label?: string;
+}) {
+  const messages = labels && labels.length > 0 ? labels : [label];
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    if (messages.length < 2) return;
+    const timer = setInterval(
+      () => setIndex((v) => (v + 1) % messages.length),
+      1900,
+    );
+    return () => clearInterval(timer);
+  }, [messages.length]);
+
   return (
     <div
-      className="fixed inset-0 z-[90] flex flex-col items-center justify-center overflow-hidden bg-background/90 backdrop-blur-sm"
+      className="pointer-events-none fixed inset-0 z-[90] flex flex-col items-center justify-center overflow-hidden"
       role="status"
       aria-live="polite"
     >
@@ -25,18 +45,27 @@ export function WaveLoader({ label = "Carregando..." }: { label?: string }) {
           70% { transform: scale(1.5); opacity: 0; }
           100% { transform: scale(1.5); opacity: 0; }
         }
+ @keyframes trapiche-fish-swim {
+          0% { transform: translateX(-14px); }
+          50% { transform: translateX(14px); }
+          100% { transform: translateX(-14px); }
+        }
       `}</style>
 
-      <div className="relative mb-4 flex h-20 w-20 items-center justify-center">
+      {/* Peixe nadando, sem escurecer a tela */}
+      <div className="relative mb-4 flex h-24 w-24 items-center justify-center">
         <span
-          className="absolute inset-0 rounded-full bg-aqua/30"
+          className="absolute inset-0 rounded-full bg-aqua/25"
           style={{ animation: "trapiche-ring-pulse 1.8s ease-out infinite" }}
         />
         <span
-          className="absolute inset-0 rounded-full bg-aqua/20"
+          className="absolute inset-0 rounded-full bg-aqua/15"
           style={{ animation: "trapiche-ring-pulse 1.8s ease-out 0.6s infinite" }}
         />
-        <span className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-ocean shadow-lg">
+        <span
+          className="relative flex h-16 w-16 items-center justify-center rounded-full bg-gradient-ocean shadow-lg"
+          style={{ animation: "trapiche-fish-swim 2.6s ease-in-out infinite" }}
+        >
           <Fish
             className="h-8 w-8 text-aqua"
             style={{ animation: "trapiche-fish-bob 1.6s ease-in-out infinite" }}
@@ -44,7 +73,13 @@ export function WaveLoader({ label = "Carregando..." }: { label?: string }) {
         </span>
       </div>
 
-      <p className="animate-pulse text-sm font-semibold text-muted-foreground">{label}</p>
+      {/* Mensagem rotativa em pílula legível */}
+      <div
+        key={messages[index]}
+        className="animate-fade-in rounded-full border border-border/60 bg-background/85 px-5 py-2 shadow-sm"
+      >
+        <p className="text-sm font-semibold text-foreground">{messages[index]}</p>
+      </div>
 
       {/* Ondas animadas na base */}
       <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-24 overflow-hidden" aria-hidden>

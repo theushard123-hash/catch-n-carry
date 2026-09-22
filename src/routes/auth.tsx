@@ -53,19 +53,25 @@ function safeRedirect(r?: string) {
   return "/catalogo";
 }
 
+const BUSY_MESSAGES = [
+  "Quase pronto! O mar está para peixe...",
+  "Carregando as delícias da Trapiche...",
+  "Puxando as redes com os melhores peixes...",
+];
+
 function AuthPage() {
   const { redirect, tab } = Route.useSearch();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [busy, setBusy] = useState(false);
-  const [busyLabel, setBusyLabel] = useState("Carregando...");
+  const [busyLabel, setBusyLabel] = useState<string[]>(["Carregando..."]);
   const busyStarted = useRef(0);
   const [forgot, setForgot] = useState(false);
 
   // Garante que a animação de ondas apareça por pelo menos ~1s (sem "piscar").
-  function startBusy(label: string) {
+  function startBusy(label: string | string[]) {
     busyStarted.current = Date.now();
-    setBusyLabel(label);
+    setBusyLabel(Array.isArray(label) ? label : [label]);
     setBusy(true);
   }
   async function stopBusy() {
@@ -157,7 +163,7 @@ function AuthPage() {
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
-    startBusy("Entrando no portal...");
+    startBusy(BUSY_MESSAGES);
     const { error } = await supabase.auth.signInWithPassword({
       email: String(fd.get("email")),
       password: String(fd.get("password")),
@@ -203,7 +209,7 @@ function AuthPage() {
       toast.error("Verifique o CEP informado.");
       return;
     }
-    startBusy("Criando seu cadastro...");
+    startBusy(BUSY_MESSAGES);
     try {
       const result = await signUp({
         data: {
@@ -278,7 +284,7 @@ function AuthPage() {
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      {busy && <WaveLoader label={busyLabel} />}
+      {busy && <WaveLoader labels={busyLabel} />}
       <aside className="relative hidden overflow-hidden bg-gradient-ocean p-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
         <Link to="/">
           <BrandLogo light size="md" />
