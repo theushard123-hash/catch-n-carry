@@ -102,7 +102,11 @@ function CatalogPage() {
   const settingsQ = useQuery({
     queryKey: ["app_settings"],
     queryFn: async () => {
-      const { data, error } = await supabase.from("app_settings").select("*").eq("id", 1).maybeSingle();
+      const { data, error } = await supabase
+        .from("app_settings_customer")
+        .select("*")
+        .eq("id", 1)
+        .maybeSingle();
       if (error) throw error;
       return data;
     },

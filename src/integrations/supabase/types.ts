@@ -428,7 +428,48 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      app_settings_customer: {
+        Row: {
+          company_name: string | null
+          hero_image_url: string | null
+          hero_subtitle: string | null
+          hero_title: string | null
+          id: number | null
+          logo_url: string | null
+          min_order_atacado: number | null
+          min_order_varejo: number | null
+          notice: string | null
+          require_approval: boolean | null
+          whatsapp: string | null
+        }
+        Insert: {
+          company_name?: string | null
+          hero_image_url?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: number | null
+          logo_url?: string | null
+          min_order_atacado?: number | null
+          min_order_varejo?: number | null
+          notice?: string | null
+          require_approval?: boolean | null
+          whatsapp?: string | null
+        }
+        Update: {
+          company_name?: string | null
+          hero_image_url?: string | null
+          hero_subtitle?: string | null
+          hero_title?: string | null
+          id?: number | null
+          logo_url?: string | null
+          min_order_atacado?: number | null
+          min_order_varejo?: number | null
+          notice?: string | null
+          require_approval?: boolean | null
+          whatsapp?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
