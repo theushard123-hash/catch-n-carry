@@ -99,6 +99,13 @@
       "when": 1789999165859,
       "tag": "0013_profiles_insert_own_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1790084574074,
+      "tag": "0014_restrict_settings_and_storage_reads",
+      "breakpoints": true
     }
   ]
 }
