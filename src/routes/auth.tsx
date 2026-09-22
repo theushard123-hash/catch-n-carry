@@ -53,6 +53,12 @@ function safeRedirect(r?: string) {
   return "/catalogo";
 }
 
+const BUSY_MESSAGES = [
+  "Quase pronto! O mar está para peixe...",
+  "Carregando as delícias da Trapiche...",
+  "Puxando as redes com os melhores peixes...",
+];
+
 function AuthPage() {
   const { redirect, tab } = Route.useSearch();
   const navigate = useNavigate();
