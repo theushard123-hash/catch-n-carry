@@ -9,6 +9,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { createOrder } from "@/lib/orders.functions";
 import { useAuth } from "@/hooks/useAuth";
 import { formatBRL, formatQty } from "@/lib/format";
+import { formatCep, isValidCep } from "@/lib/br-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -69,7 +70,17 @@ function CatalogPage() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
   const [addrMode, setAddrMode] = useState<"cadastro" | "outro">("cadastro");
-  const [customAddress, setCustomAddress] = useState("");
+  const [addrFields, setAddrFields] = useState({
+    rua: "",
+    numero: "",
+    complemento: "",
+    bairro: "",
+    municipio: "",
+    estado: "",
+    cep: "",
+  });
+  const setAddr = (key: keyof typeof addrFields) => (e: React.ChangeEvent<HTMLInputElement>) =>
+    setAddrFields((f) => ({ ...f, [key]: e.target.value }));
 
   useEffect(() => {
     try {
@@ -180,7 +191,19 @@ function CatalogPage() {
     return parts.join(", ");
   }, [profile]);
 
-  const deliveryAddress = addrMode === "cadastro" ? profileAddress : customAddress.trim();
+  const customAddress = useMemo(() => {
+    const f = addrFields;
+    const parts = [
+      [f.rua.trim(), f.numero.trim()].filter(Boolean).join(", "),
+      f.complemento.trim(),
+      f.bairro.trim(),
+      [f.municipio.trim(), f.estado.trim().toUpperCase()].filter(Boolean).join(" - "),
+      f.cep.trim() ? `CEP ${formatCep(f.cep)}` : "",
+    ].filter(Boolean);
+    return parts.join(", ");
+  }, [addrFields]);
+
+  const deliveryAddress = addrMode === "cadastro" ? profileAddress : customAddress;
 
   const createOrderFn = useServerFn(createOrder);
   const submit = useMutation({
@@ -225,9 +248,18 @@ function CatalogPage() {
       setAddrMode("outro");
       return;
     }
-    if (deliveryAddress.trim().length < 10) {
-      toast.error("Informe o endereço de entrega completo (rua, número, bairro e cidade).");
-      return;
+    if (addrMode === "outro") {
+      const missing: string[] = [];
+      if (!addrFields.rua.trim()) missing.push("rua");
+      if (!addrFields.numero.trim()) missing.push("número");
+      if (!addrFields.bairro.trim()) missing.push("bairro");
+      if (!addrFields.municipio.trim()) missing.push("município");
+      if (!addrFields.estado.trim()) missing.push("estado");
+      if (!isValidCep(addrFields.cep)) missing.push("CEP válido");
+      if (missing.length > 0) {
+        toast.error(`Preencha o endereço de entrega: ${missing.join(", ")}.`);
+        return;
+      }
     }
     setSheetOpen(false);
     setReviewOpen(true);
@@ -316,12 +348,48 @@ function CatalogPage() {
             </label>
           </RadioGroup>
           {addrMode === "outro" && (
-            <Textarea
-              rows={2}
-              placeholder="Rua, número, complemento, bairro, cidade e CEP"
-              value={customAddress}
-              onChange={(e) => setCustomAddress(e.target.value)}
-            />
+            <div className="grid gap-3 rounded-xl border bg-secondary/30 p-3 sm:grid-cols-2">
+              <div className="space-y-1.5 sm:col-span-2">
+                <Label htmlFor="addr-rua">Rua *</Label>
+                <Input id="addr-rua" placeholder="Ex.: Alameda Princesa Izabel" value={addrFields.rua} onChange={setAddr("rua")} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="addr-numero">Número *</Label>
+                <Input id="addr-numero" inputMode="numeric" placeholder="1710" value={addrFields.numero} onChange={setAddr("numero")} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="addr-complemento">Complemento</Label>
+                <Input id="addr-complemento" placeholder="Opcional" value={addrFields.complemento} onChange={setAddr("complemento")} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="addr-bairro">Bairro *</Label>
+                <Input id="addr-bairro" placeholder="Bigorrilho" value={addrFields.bairro} onChange={setAddr("bairro")} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="addr-cep">CEP *</Label>
+                <Input
+                  id="addr-cep"
+                  inputMode="numeric"
+                  placeholder="00000-000"
+                  value={addrFields.cep}
+                  onChange={(e) => setAddrFields((f) => ({ ...f, cep: formatCep(e.target.value) }))}
+                />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="addr-municipio">Município *</Label>
+                <Input id="addr-municipio" placeholder="Curitiba" value={addrFields.municipio} onChange={setAddr("municipio")} />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="addr-estado">Estado (UF) *</Label>
+                <Input
+                  id="addr-estado"
+                  maxLength={2}
+                  placeholder="PR"
+                  value={addrFields.estado}
+                  onChange={(e) => setAddrFields((f) => ({ ...f, estado: e.target.value.toUpperCase().replace(/[^A-Z]/g, "") }))}
+                />
+              </div>
+            </div>
           )}
         </div>
         <div className="space-y-1.5">
