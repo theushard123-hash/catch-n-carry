@@ -9,6 +9,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { createOrder } from "@/lib/orders.functions";
 import { useAuth } from "@/hooks/useAuth";
 import { formatBRL, formatQty } from "@/lib/format";
+import { formatCep, isValidCep } from "@/lib/br-validation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
