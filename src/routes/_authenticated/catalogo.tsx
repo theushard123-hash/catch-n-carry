@@ -26,6 +26,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PromoBanners } from "@/components/PromoBanners";
 import { ProductCardsSkeleton } from "@/components/ProductCardSkeleton";
 import { cn } from "@/lib/utils";
@@ -67,6 +68,8 @@ function CatalogPage() {
   const [notes, setNotes] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
+  const [addrMode, setAddrMode] = useState<"cadastro" | "outro">("cadastro");
+  const [customAddress, setCustomAddress] = useState("");
 
   useEffect(() => {
     try {
@@ -166,6 +169,19 @@ function CatalogPage() {
     });
   }
 
+  const profileAddress = useMemo(() => {
+    if (!profile) return "";
+    const parts = [
+      profile.address,
+      profile.neighborhood,
+      [profile.city, profile.state].filter(Boolean).join(" - "),
+      profile.zip ? `CEP ${profile.zip}` : "",
+    ].filter((p) => p && String(p).trim());
+    return parts.join(", ");
+  }, [profile]);
+
+  const deliveryAddress = addrMode === "cadastro" ? profileAddress : customAddress.trim();
+
   const createOrderFn = useServerFn(createOrder);
   const submit = useMutation({
     mutationFn: async () => {
@@ -176,6 +192,7 @@ function CatalogPage() {
           paymentConditionId: paymentId,
           notes,
           deliveryDate: deliveryDate || null,
+          deliveryAddress,
           items: cartLines.map((l) => ({ productId: l.productId, qty: l.qty })),
         },
       });
@@ -201,6 +218,15 @@ function CatalogPage() {
     }
     if (!paymentId) {
       toast.error("Selecione a condição de pagamento.");
+      return;
+    }
+    if (addrMode === "cadastro" && !profileAddress) {
+      toast.error("Seu cadastro não tem endereço. Informe o endereço de entrega.");
+      setAddrMode("outro");
+      return;
+    }
+    if (deliveryAddress.trim().length < 10) {
+      toast.error("Informe o endereço de entrega completo (rua, número, bairro e cidade).");
       return;
     }
     setSheetOpen(false);
@@ -261,6 +287,42 @@ function CatalogPage() {
               ))}
             </SelectContent>
           </Select>
+        </div>
+        <div className="space-y-2">
+          <Label>Endereço de entrega *</Label>
+          <RadioGroup value={addrMode} onValueChange={(v) => setAddrMode(v as "cadastro" | "outro")} className="gap-2">
+            <label
+              className={cn(
+                "flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-sm transition-colors",
+                addrMode === "cadastro" ? "border-primary bg-primary/5" : "bg-card hover:bg-secondary/60",
+              )}
+            >
+              <RadioGroupItem value="cadastro" className="mt-0.5" />
+              <span>
+                <span className="font-medium">Usar endereço do cadastro</span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">
+                  {profileAddress || "Endereço não informado no cadastro."}
+                </span>
+              </span>
+            </label>
+            <label
+              className={cn(
+                "flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-sm transition-colors",
+                addrMode === "outro" ? "border-primary bg-primary/5" : "bg-card hover:bg-secondary/60",
+              )}
+            >
+              <RadioGroupItem value="outro" className="mt-0.5" />
+              <span className="font-medium">Entregar em outro endereço</span>
+            </label>
+          </RadioGroup>
+          {addrMode === "outro" && (
+            <Textarea
+              rows={2}
+              placeholder="Rua, número, complemento, bairro, cidade e CEP"
+              value={customAddress}
+              onChange={(e) => setCustomAddress(e.target.value)}
+            />
+          )}
         </div>
         <div className="space-y-1.5">
           <Label htmlFor="delivery">Data de entrega desejada</Label>
@@ -468,6 +530,10 @@ function CatalogPage() {
             <div className="flex justify-between gap-4">
               <dt className="text-muted-foreground">Condição de pagamento</dt>
               <dd className="text-right font-medium">{paymentName ?? "—"}</dd>
+            </div>
+            <div className="flex justify-between gap-4">
+              <dt className="shrink-0 text-muted-foreground">Endereço de entrega</dt>
+              <dd className="text-right font-medium">{deliveryAddress}</dd>
             </div>
             {deliveryDate && (
               <div className="flex justify-between gap-4">

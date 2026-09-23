@@ -118,6 +118,12 @@ function OrderDetailPage() {
               <dd className="font-semibold">{order.external_id}</dd>
             </div>
           )}
+          {order.delivery_address && (
+            <div className="sm:col-span-3">
+              <dt className="text-muted-foreground">Endereço de entrega</dt>
+              <dd className="whitespace-pre-wrap font-semibold">{order.delivery_address}</dd>
+            </div>
+          )}
           {order.notes && (
             <div className="sm:col-span-3">
               <dt className="text-muted-foreground">Observações</dt>

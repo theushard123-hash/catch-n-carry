@@ -171,6 +171,9 @@ function AdminOrdersPage() {
                   <span className="text-muted-foreground">Documento: </span>
                   {selected.customer?.document ?? "—"}
                 </p>
+                {selected.delivery_address && (
+                  <p className="whitespace-pre-wrap sm:col-span-2">Entrega em: {selected.delivery_address}</p>
+                )}
                 {selected.notes && <p className="sm:col-span-2 whitespace-pre-wrap">Obs: {selected.notes}</p>}
               </div>
               <div className="overflow-hidden rounded-xl border">
