@@ -13,6 +13,16 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -38,6 +48,11 @@ function roundQty(n: number) {
   return Math.round(n * 1000) / 1000;
 }
 
+function formatDatePtBR(iso: string) {
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
 function CatalogPage() {
   const { profile } = useAuth();
   const navigate = useNavigate();
@@ -51,6 +66,7 @@ function CatalogPage() {
   const [deliveryDate, setDeliveryDate] = useState("");
   const [notes, setNotes] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -176,6 +192,20 @@ function CatalogPage() {
   });
 
   const today = new Date().toISOString().slice(0, 10);
+  const paymentName = (conditionsQ.data ?? []).find((c) => c.id === paymentId)?.name;
+
+  function openReview() {
+    if (cartLines.length === 0) {
+      toast.error("Adicione produtos ao pedido.");
+      return;
+    }
+    if (!paymentId) {
+      toast.error("Selecione a condição de pagamento.");
+      return;
+    }
+    setSheetOpen(false);
+    setReviewOpen(true);
+  }
 
   const cartPanel = (
     <div className="flex h-full min-h-0 flex-col">
@@ -251,7 +281,7 @@ function CatalogPage() {
           variant="aqua"
           className="w-full"
           disabled={blocked || cartLines.length === 0 || submit.isPending}
-          onClick={() => submit.mutate()}
+          onClick={openReview}
         >
           {submit.isPending ? "Enviando..." : "Enviar pedido"}
         </Button>
@@ -405,6 +435,70 @@ function CatalogPage() {
           </SheetContent>
         </Sheet>
       </div>
+
+      {/* Conferência antes de finalizar */}
+      <AlertDialog open={reviewOpen} onOpenChange={setReviewOpen}>
+        <AlertDialogContent className="max-h-[88vh] overflow-y-auto sm:max-w-lg">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Fish className="h-5 w-5 text-ocean" /> Confira seu pedido
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Uma última olhada antes de puxar as redes — depois é só aguardar o contato da equipe Trapiche.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          {cartLines.length > 0 && (
+            <div className="max-h-52 space-y-2 overflow-y-auto rounded-xl border bg-secondary/50 p-3">
+              {cartLines.map((l) => (
+                <div key={l.productId} className="flex items-start justify-between gap-2 text-sm">
+                  <div className="min-w-0">
+                    <p className="truncate font-medium">{l.product.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {formatQty(l.qty, l.product.unit)} × {formatBRL(priceOf(l.product))}
+                    </p>
+                  </div>
+                  <p className="shrink-0 font-semibold">{formatBRL(priceOf(l.product) * l.qty)}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <dl className="space-y-1.5 text-sm">
+            <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Condição de pagamento</dt>
+              <dd className="text-right font-medium">{paymentName ?? "—"}</dd>
+            </div>
+            {deliveryDate && (
+              <div className="flex justify-between gap-4">
+                <dt className="text-muted-foreground">Entrega desejada</dt>
+                <dd className="font-medium">{formatDatePtBR(deliveryDate)}</dd>
+              </div>
+            )}
+            {notes.trim() && (
+              <div className="flex justify-between gap-4">
+                <dt className="shrink-0 text-muted-foreground">Observações</dt>
+                <dd className="text-right">{notes.trim()}</dd>
+              </div>
+            )}
+            <div className="flex justify-between gap-4 border-t pt-2">
+              <dt className="font-semibold">Total</dt>
+              <dd className="text-lg font-bold text-primary">{formatBRL(subtotal)}</dd>
+            </div>
+          </dl>
+
+          <AlertDialogFooter>
+            <AlertDialogCancel>Voltar e revisar</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+              disabled={submit.isPending}
+              onClick={() => submit.mutate()}
+            >
+              {submit.isPending ? "Enviando..." : "Confirmar e enviar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
