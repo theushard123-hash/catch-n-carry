@@ -26,6 +26,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PromoBanners } from "@/components/PromoBanners";
 import { ProductCardsSkeleton } from "@/components/ProductCardSkeleton";
 import { cn } from "@/lib/utils";
@@ -67,6 +68,8 @@ function CatalogPage() {
   const [notes, setNotes] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
+  const [addrMode, setAddrMode] = useState<"cadastro" | "outro">("cadastro");
+  const [customAddress, setCustomAddress] = useState("");
 
   useEffect(() => {
     try {
