@@ -288,6 +288,42 @@ function CatalogPage() {
             </SelectContent>
           </Select>
         </div>
+        <div className="space-y-2">
+          <Label>Endereço de entrega *</Label>
+          <RadioGroup value={addrMode} onValueChange={(v) => setAddrMode(v as "cadastro" | "outro")} className="gap-2">
+            <label
+              className={cn(
+                "flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-sm transition-colors",
+                addrMode === "cadastro" ? "border-primary bg-primary/5" : "bg-card hover:bg-secondary/60",
+              )}
+            >
+              <RadioGroupItem value="cadastro" className="mt-0.5" />
+              <span>
+                <span className="font-medium">Usar endereço do cadastro</span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">
+                  {profileAddress || "Endereço não informado no cadastro."}
+                </span>
+              </span>
+            </label>
+            <label
+              className={cn(
+                "flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-sm transition-colors",
+                addrMode === "outro" ? "border-primary bg-primary/5" : "bg-card hover:bg-secondary/60",
+              )}
+            >
+              <RadioGroupItem value="outro" className="mt-0.5" />
+              <span className="font-medium">Entregar em outro endereço</span>
+            </label>
+          </RadioGroup>
+          {addrMode === "outro" && (
+            <Textarea
+              rows={2}
+              placeholder="Rua, número, complemento, bairro, cidade e CEP"
+              value={customAddress}
+              onChange={(e) => setCustomAddress(e.target.value)}
+            />
+          )}
+        </div>
         <div className="space-y-1.5">
           <Label htmlFor="delivery">Data de entrega desejada</Label>
           <Input id="delivery" type="date" min={today} value={deliveryDate} onChange={(e) => setDeliveryDate(e.target.value)} />
