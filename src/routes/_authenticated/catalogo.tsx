@@ -192,6 +192,7 @@ function CatalogPage() {
           paymentConditionId: paymentId,
           notes,
           deliveryDate: deliveryDate || null,
+          deliveryAddress,
           items: cartLines.map((l) => ({ productId: l.productId, qty: l.qty })),
         },
       });
@@ -217,6 +218,15 @@ function CatalogPage() {
     }
     if (!paymentId) {
       toast.error("Selecione a condição de pagamento.");
+      return;
+    }
+    if (addrMode === "cadastro" && !profileAddress) {
+      toast.error("Seu cadastro não tem endereço. Informe o endereço de entrega.");
+      setAddrMode("outro");
+      return;
+    }
+    if (deliveryAddress.trim().length < 10) {
+      toast.error("Informe o endereço de entrega completo (rua, número, bairro e cidade).");
       return;
     }
     setSheetOpen(false);
