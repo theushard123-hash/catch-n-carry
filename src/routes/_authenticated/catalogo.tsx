@@ -531,6 +531,10 @@ function CatalogPage() {
               <dt className="text-muted-foreground">Condição de pagamento</dt>
               <dd className="text-right font-medium">{paymentName ?? "—"}</dd>
             </div>
+            <div className="flex justify-between gap-4">
+              <dt className="shrink-0 text-muted-foreground">Endereço de entrega</dt>
+              <dd className="text-right font-medium">{deliveryAddress}</dd>
+            </div>
             {deliveryDate && (
               <div className="flex justify-between gap-4">
                 <dt className="text-muted-foreground">Entrega desejada</dt>
