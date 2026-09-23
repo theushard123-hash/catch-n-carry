@@ -190,6 +190,7 @@ export type Database = {
           admin_notes: string
           created_at: string
           customer_type: Database["public"]["Enums"]["customer_type"]
+          delivery_address: string
           delivery_date: string | null
           external_id: string | null
           id: string
@@ -207,6 +208,7 @@ export type Database = {
           admin_notes?: string
           created_at?: string
           customer_type: Database["public"]["Enums"]["customer_type"]
+          delivery_address?: string
           delivery_date?: string | null
           external_id?: string | null
           id?: string
@@ -224,6 +226,7 @@ export type Database = {
           admin_notes?: string
           created_at?: string
           customer_type?: Database["public"]["Enums"]["customer_type"]
+          delivery_address?: string
           delivery_date?: string | null
           external_id?: string | null
           id?: string
