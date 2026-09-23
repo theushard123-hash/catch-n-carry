@@ -169,6 +169,19 @@ function CatalogPage() {
     });
   }
 
+  const profileAddress = useMemo(() => {
+    if (!profile) return "";
+    const parts = [
+      profile.address,
+      profile.neighborhood,
+      [profile.city, profile.state].filter(Boolean).join(" - "),
+      profile.zip ? `CEP ${profile.zip}` : "",
+    ].filter((p) => p && String(p).trim());
+    return parts.join(", ");
+  }, [profile]);
+
+  const deliveryAddress = addrMode === "cadastro" ? profileAddress : customAddress.trim();
+
   const createOrderFn = useServerFn(createOrder);
   const submit = useMutation({
     mutationFn: async () => {
