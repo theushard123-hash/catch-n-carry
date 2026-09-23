@@ -6,6 +6,7 @@ const createOrderSchema = z.object({
   paymentConditionId: z.string().uuid(),
   notes: z.string().max(2000).optional().default(""),
   deliveryDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
+  deliveryAddress: z.string().trim().min(10, "Informe o endereço de entrega completo.").max(500),
   items: z
     .array(
       z.object({
@@ -103,6 +104,7 @@ export const createOrder = createServerFn({ method: "POST" })
         total: subtotal,
         notes: data.notes ?? "",
         delivery_date: data.deliveryDate ?? null,
+        delivery_address: data.deliveryAddress,
       })
       .select("id, order_number")
       .single();
