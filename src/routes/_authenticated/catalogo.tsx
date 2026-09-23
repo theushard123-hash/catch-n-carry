@@ -48,6 +48,11 @@ function roundQty(n: number) {
   return Math.round(n * 1000) / 1000;
 }
 
+function formatDatePtBR(iso: string) {
+  const [y, m, d] = iso.split("-");
+  return `${d}/${m}/${y}`;
+}
+
 function CatalogPage() {
   const { profile } = useAuth();
   const navigate = useNavigate();
@@ -187,6 +192,20 @@ function CatalogPage() {
   });
 
   const today = new Date().toISOString().slice(0, 10);
+  const paymentName = (conditionsQ.data ?? []).find((c) => c.id === paymentId)?.name;
+
+  function openReview() {
+    if (cartLines.length === 0) {
+      toast.error("Adicione produtos ao pedido.");
+      return;
+    }
+    if (!paymentId) {
+      toast.error("Selecione a condição de pagamento.");
+      return;
+    }
+    setSheetOpen(false);
+    setReviewOpen(true);
+  }
 
   const cartPanel = (
     <div className="flex h-full min-h-0 flex-col">
@@ -262,7 +281,7 @@ function CatalogPage() {
           variant="aqua"
           className="w-full"
           disabled={blocked || cartLines.length === 0 || submit.isPending}
-          onClick={() => submit.mutate()}
+          onClick={openReview}
         >
           {submit.isPending ? "Enviando..." : "Enviar pedido"}
         </Button>
