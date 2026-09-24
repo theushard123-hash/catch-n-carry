@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/hooks/useAuth";
 import { CUSTOMER_TYPE_LABEL } from "@/lib/format";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
   { to: "/catalogo", label: "Catálogo", icon: ShoppingBasket },
@@ -79,20 +80,23 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </div>
               </div>
             )}
+            <ThemeToggle />
             <Button variant="ghost" size="icon" onClick={handleSignOut} aria-label="Sair">
               <LogOut />
             </Button>
           </div>
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setOpen((o) => !o)}
-            aria-label="Menu"
-          >
-            <Menu />
-          </Button>
+          <div className="flex items-center md:hidden">
+            <ThemeToggle />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setOpen((o) => !o)}
+              aria-label="Menu"
+            >
+              <Menu />
+            </Button>
+          </div>
         </div>
 
         {open && (

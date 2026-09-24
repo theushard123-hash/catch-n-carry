@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { signUpCustomer } from "@/lib/auth.functions";
 import { WaveLoader } from "@/components/WaveLoader";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { Fish, Store } from "lucide-react";
 import {
   digits,
@@ -288,7 +289,8 @@ function AuthPage() {
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
       {busy && <WaveLoader labels={busyLabel} />}
-      <aside className="relative hidden overflow-hidden bg-gradient-ocean p-12 text-primary-foreground lg:flex lg:flex-col lg:justify-between">
+      <ThemeToggle className="fixed right-4 top-4 z-40 border bg-background/80 shadow-soft backdrop-blur" />
+      <aside className="relative hidden overflow-hidden bg-gradient-ocean p-12 text-sidebar-foreground lg:flex lg:flex-col lg:justify-between">
         <Link to="/">
           <BrandLogo light size="md" />
         </Link>
@@ -296,11 +298,11 @@ function AuthPage() {
           <h1 className="text-4xl font-bold leading-tight text-balance">
             Do mar para a sua mesa, agora com pedidos online.
           </h1>
-          <p className="mt-4 text-lg text-primary-foreground/75">
+          <p className="mt-4 text-lg text-sidebar-foreground/75">
             Restaurantes, mercados e clientes do varejo fazem seus pedidos com poucos cliques e
             acompanham tudo em um só lugar.
           </p>
-          <ul className="mt-8 space-y-3 text-sm text-primary-foreground/80">
+          <ul className="mt-8 space-y-3 text-sm text-sidebar-foreground/80">
             <li className="flex items-center gap-3">
               <span className="h-2 w-2 rounded-full bg-aqua" /> Preços por tipo de cliente
             </li>
@@ -312,7 +314,7 @@ function AuthPage() {
             </li>
           </ul>
         </div>
-        <p className="text-xs text-primary-foreground/50">© Trapiche Pescados · Curitiba - PR</p>
+        <p className="text-xs text-sidebar-foreground/50">© Trapiche Pescados · Curitiba - PR</p>
         <div className="pointer-events-none absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-aqua/20 blur-3xl" />
       </aside>
 
