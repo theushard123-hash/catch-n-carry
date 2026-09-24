@@ -20,7 +20,7 @@ export function WaveLoader({
     if (messages.length < 2) return;
     const timer = setInterval(
       () => setIndex((v) => (v + 1) % messages.length),
-      1900,
+      2500,
     );
     return () => clearInterval(timer);
   }, [messages.length]);
