@@ -88,15 +88,16 @@ function LandingPage() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
-          <BrandLogo />
-          <div className="flex items-center gap-2">
+          <BrandLogo size="sm" />
+          <div className="flex items-center gap-1 sm:gap-2">
             <ThemeToggle />
-            <Button asChild variant="ghost">
+            <Button asChild variant="ghost" className="px-2 sm:px-4">
               <Link to="/auth">Entrar</Link>
             </Button>
-            <Button asChild variant="aqua">
+            <Button asChild variant="aqua" className="px-3 sm:px-4">
               <Link to="/auth" search={{ tab: "cadastro" }}>
-                Criar cadastro
+                <span className="sm:hidden">Cadastrar</span>
+                <span className="hidden sm:inline">Criar cadastro</span>
               </Link>
             </Button>
           </div>
@@ -111,7 +112,7 @@ function LandingPage() {
             <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-aqua/20 px-3 py-1 text-xs font-semibold text-aqua">
               <Waves className="h-3.5 w-3.5" /> Portal de pedidos Trapiche Pescados
             </p>
-            <h1 className="font-display text-4xl font-bold leading-tight text-primary-foreground md:text-5xl">
+            <h1 className="font-display text-4xl font-bold leading-tight text-sidebar-foreground md:text-5xl">
               {heroTitle ? (
                 heroTitle
               ) : (
@@ -120,7 +121,7 @@ function LandingPage() {
                 </>
               )}
             </h1>
-            <p className="mt-4 max-w-lg text-lg text-primary-foreground/80">
+            <p className="mt-4 max-w-lg text-lg text-sidebar-foreground/80">
               {heroSubtitle ||
                 "Restaurantes, mercados e revendedores: montem seus pedidos direto no portal, escolham a condição de pagamento e acompanhem até o faturamento."}
             </p>
@@ -130,7 +131,7 @@ function LandingPage() {
                   Fazer meu primeiro pedido <ArrowRight />
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="heroOutline">
+              <Button asChild size="lg" variant="heroOutline" className="border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground/15">
                 <Link to="/auth">Já tenho cadastro</Link>
               </Button>
             </div>
@@ -204,10 +205,10 @@ function LandingPage() {
       <section className="mx-auto max-w-6xl px-4 py-16">
         <div className="grid items-center gap-8 rounded-3xl bg-gradient-ocean p-8 md:grid-cols-[1fr_auto] md:p-12">
           <div>
-            <h2 className="font-display text-2xl font-bold text-primary-foreground md:text-3xl">
+            <h2 className="font-display text-2xl font-bold text-sidebar-foreground md:text-3xl">
               Compra em atacado? Temos condições especiais.
             </h2>
-            <p className="mt-2 max-w-xl text-primary-foreground/80">
+            <p className="mt-2 max-w-xl text-sidebar-foreground/80">
               Boletos faturados, pedido mínimo diferenciado e tabela exclusiva para restaurantes e revendedores.
               Cadastre-se como atacado e aguarde a aprovação da nossa equipe.
             </p>
