@@ -12,7 +12,6 @@ import {
   Waves,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import heroImg from "@/assets/hero-seafood.jpg";
 import { getPublicSettings } from "@/lib/settings.functions";
