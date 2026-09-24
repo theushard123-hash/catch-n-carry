@@ -76,8 +76,10 @@ function AuthPage() {
     setBusy(true);
   }
   async function stopBusy() {
+    // Dá tempo de ver o peixe nadar e as três frases se alternarem com calma.
+    const MIN_BUSY_MS = 7400;
     const elapsed = Date.now() - busyStarted.current;
-    if (elapsed < 2800) await new Promise((r) => setTimeout(r, 2800 - elapsed));
+    if (elapsed < MIN_BUSY_MS) await new Promise((r) => setTimeout(r, MIN_BUSY_MS - elapsed));
     setBusy(false);
   }
   const [customerType, setCustomerType] = useState("atacado");

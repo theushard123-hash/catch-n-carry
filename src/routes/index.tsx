@@ -12,14 +12,12 @@ import {
   Waves,
 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import heroImg from "@/assets/hero-seafood.jpg";
 import { getPublicSettings } from "@/lib/settings.functions";
 import { BrandLogo } from "@/components/BrandLogo";
 import { PromoBanners } from "@/components/PromoBanners";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
-import { WaveLoader } from "@/components/WaveLoader";
 import { Button } from "@/components/ui/button";
 
 
@@ -80,21 +78,12 @@ function LandingPage() {
   });
   const s = settingsQ.data;
 
-  // Pequeno atraso mínimo para a animação de ondas não "piscar" na entrada.
-  const [minDelayDone, setMinDelayDone] = useState(false);
-  useEffect(() => {
-    const t = setTimeout(() => setMinDelayDone(true), 900);
-    return () => clearTimeout(t);
-  }, []);
-  const showSplash = settingsQ.isLoading || !minDelayDone;
-
   const heroSrc = s?.hero_image_url || heroImg;
   const heroTitle = s?.hero_title?.trim();
   const heroSubtitle = s?.hero_subtitle?.trim();
 
   return (
     <div className="min-h-screen bg-background">
-      {showSplash && <WaveLoader label="Preparando o portal..." />}
       {/* Header */}
       <header className="sticky top-0 z-40 border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
