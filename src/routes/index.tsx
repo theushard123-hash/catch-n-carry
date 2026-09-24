@@ -19,6 +19,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { PromoBanners } from "@/components/PromoBanners";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 
 export const Route = createFileRoute("/")({
@@ -89,6 +90,7 @@ function LandingPage() {
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4">
           <BrandLogo />
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Button asChild variant="ghost">
               <Link to="/auth">Entrar</Link>
             </Button>

@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export type LegalSection = {
   heading: string;
@@ -25,11 +26,14 @@ export function LegalPage({
           <Link to="/" className="shrink-0">
             <BrandLogo size="sm" />
           </Link>
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/">
-              <ArrowLeft className="h-4 w-4" /> Voltar
-            </Link>
-          </Button>
+          <div className="flex items-center gap-1">
+            <ThemeToggle />
+            <Button asChild variant="ghost" size="sm">
+              <Link to="/">
+                <ArrowLeft className="h-4 w-4" /> Voltar
+              </Link>
+            </Button>
+          </div>
         </div>
       </header>
 

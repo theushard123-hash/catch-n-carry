@@ -6,6 +6,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export const Route = createFileRoute("/reset-password")({
   ssr: false,
@@ -61,6 +62,7 @@ function ResetPasswordPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background bg-waves p-6">
+      <ThemeToggle className="fixed right-4 top-4 border bg-background/80 shadow-soft backdrop-blur" />
       <div className="w-full max-w-sm rounded-2xl border bg-card p-8 shadow-soft">
         <BrandLogo size="sm" className="mb-6" />
         <h1 className="text-2xl font-bold">Nova senha</h1>
