@@ -7,6 +7,7 @@ import { AlertTriangle, Fish, Info, Minus, Plus, Search, ShoppingBasket, Trash2 
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { createOrder } from "@/lib/orders.functions";
+import { findShippingFee } from "@/lib/shipping";
 import { useAuth } from "@/hooks/useAuth";
 import { formatBRL, formatQty } from "@/lib/format";
 import { formatCep, isValidCep } from "@/lib/br-validation";
@@ -211,6 +212,19 @@ function CatalogPage() {
   }, [addrFields]);
 
   const deliveryAddress = addrMode === "cadastro" ? profileAddress : customAddress;
+  const deliveryCity = addrMode === "cadastro" ? profile?.city ?? "" : addrFields.municipio;
+  const deliveryNeighborhood = addrMode === "cadastro" ? profile?.neighborhood ?? "" : addrFields.bairro;
+  const ratesQ = useQuery({
+    queryKey: ["shipping-rates"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("shipping_rates").select("city, neighborhood, fee, active");
+      if (error) throw error;
+      return data;
+    },
+  });
+  const shippingFee = findShippingFee(ratesQ.data ?? [], deliveryCity, deliveryNeighborhood);
+  const shippingLabel = shippingFee === null ? "A consultar com o vendedor" : formatBRL(shippingFee);
+  const orderTotal = subtotal + (shippingFee ?? 0);
 
   function specText(productId: string) {
     const sp = specs[productId];
@@ -236,6 +250,8 @@ function CatalogPage() {
           notes: fullNotes.slice(0, 2000),
           deliveryDate: deliveryDate || null,
           deliveryAddress,
+          deliveryCity,
+          deliveryNeighborhood,
           items: cartLines.map((l) => ({ productId: l.productId, qty: l.qty })),
         },
       });
@@ -255,6 +271,7 @@ function CatalogPage() {
         "*Itens:*",
         ...lines,
         "",
+        `*Frete:* ${res.shippingFee == null ? "a consultar" : formatBRL(res.shippingFee)}`,
         `*Total estimado:* ${formatBRL(res.total)}`,
         paymentName ? `*Pagamento:* ${paymentName}` : "",
         deliveryDate ? `*Entrega:* ${formatDatePtBR(deliveryDate)}` : "",
@@ -349,6 +366,10 @@ function CatalogPage() {
         <div className="flex items-center justify-between text-sm">
           <span className="text-muted-foreground">Subtotal</span>
           <span className="text-lg font-bold">{formatBRL(subtotal)}</span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span className="text-muted-foreground">Frete{deliveryNeighborhood ? ` (${deliveryNeighborhood})` : ""}</span>
+          <span className={cn("font-semibold", shippingFee === null && "text-warning-foreground text-xs")}>{shippingLabel}</span>
         </div>
         {minOrder > 0 && (
           <p className={cn("text-xs", subtotal < minOrder ? "text-warning-foreground" : "text-muted-foreground")}>
@@ -665,6 +686,10 @@ function CatalogPage() {
               <dd className="text-right font-medium">{paymentName ?? "—"}</dd>
             </div>
             <div className="flex justify-between gap-4">
+              <dt className="text-muted-foreground">Frete</dt>
+              <dd className="text-right font-medium">{shippingLabel}</dd>
+            </div>
+            <div className="flex justify-between gap-4">
               <dt className="shrink-0 text-muted-foreground">Endereço de entrega</dt>
               <dd className="text-right font-medium">{deliveryAddress}</dd>
             </div>
@@ -682,7 +707,7 @@ function CatalogPage() {
             )}
             <div className="flex justify-between gap-4 border-t pt-2">
               <dt className="font-semibold">Total</dt>
-              <dd className="text-lg font-bold text-primary">{formatBRL(subtotal)}</dd>
+              <dd className="text-lg font-bold text-primary">{formatBRL(orderTotal)}</dd>
             </div>
           </dl>
 
