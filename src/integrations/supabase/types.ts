@@ -297,6 +297,7 @@ export type Database = {
           step_qty: number
           unit: string
           updated_at: string
+          variable_weight: boolean
         }
         Insert: {
           active?: boolean
@@ -314,6 +315,7 @@ export type Database = {
           step_qty?: number
           unit?: string
           updated_at?: string
+          variable_weight?: boolean
         }
         Update: {
           active?: boolean
@@ -331,6 +333,7 @@ export type Database = {
           step_qty?: number
           unit?: string
           updated_at?: string
+          variable_weight?: boolean
         }
         Relationships: [
           {
