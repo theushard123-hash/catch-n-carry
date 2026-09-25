@@ -159,6 +159,7 @@ function OrderDetailPage() {
         </div>
 
         <div className="mt-4 flex items-center justify-end gap-6">
+          <p className="mb-2 text-right text-sm text-muted-foreground">Frete: {order.shipping_fee == null ? "a consultar com o vendedor" : formatBRL(order.shipping_fee)}</p>
           <span className="text-sm text-muted-foreground">Total do pedido</span>
           <span className="text-2xl font-bold text-primary">{formatBRL(order.total)}</span>
         </div>

@@ -199,6 +199,7 @@ function AdminOrdersPage() {
                   </TableBody>
                 </Table>
               </div>
+          <p className="mb-2 text-right text-sm text-muted-foreground">Frete: {selected.shipping_fee == null ? "a consultar com o vendedor" : formatBRL(selected.shipping_fee)}</p>
               <div className="flex items-center justify-between">
                 <span className="text-xl font-bold text-primary">{formatBRL(selected.total)}</span>
                 <div className="flex gap-2">

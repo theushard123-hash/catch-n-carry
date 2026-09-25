@@ -198,6 +198,8 @@ export type Database = {
           order_number: number
           payment_condition_id: string | null
           payment_condition_name: string
+          shipping_fee: number | null
+          shipping_note: string
           status: Database["public"]["Enums"]["order_status"]
           subtotal: number
           total: number
@@ -216,6 +218,8 @@ export type Database = {
           order_number?: never
           payment_condition_id?: string | null
           payment_condition_name?: string
+          shipping_fee?: number | null
+          shipping_note?: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
@@ -234,6 +238,8 @@ export type Database = {
           order_number?: never
           payment_condition_id?: string | null
           payment_condition_name?: string
+          shipping_fee?: number | null
+          shipping_note?: string
           status?: Database["public"]["Enums"]["order_status"]
           subtotal?: number
           total?: number
@@ -411,6 +417,33 @@ export type Database = {
           updated_at?: string
           user_id?: string
           zip?: string
+        }
+        Relationships: []
+      }
+      shipping_rates: {
+        Row: {
+          active: boolean
+          city: string
+          created_at: string
+          fee: number
+          id: string
+          neighborhood: string
+        }
+        Insert: {
+          active?: boolean
+          city?: string
+          created_at?: string
+          fee?: number
+          id?: string
+          neighborhood?: string
+        }
+        Update: {
+          active?: boolean
+          city?: string
+          created_at?: string
+          fee?: number
+          id?: string
+          neighborhood?: string
         }
         Relationships: []
       }

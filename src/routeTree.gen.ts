@@ -23,6 +23,7 @@ import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authentic
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 import { Route as AuthenticatedAdminCondicoesRouteImport } from './routes/_authenticated/admin/condicoes'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
+import { Route as AuthenticatedAdminFretesRouteImport } from './routes/_authenticated/admin/fretes'
 import { Route as AuthenticatedAdminNovidadesRouteImport } from './routes/_authenticated/admin/novidades'
 import { Route as AuthenticatedAdminPedidosRouteImport } from './routes/_authenticated/admin/pedidos'
 import { Route as AuthenticatedAdminProdutosRouteImport } from './routes/_authenticated/admin/produtos'
@@ -101,6 +102,12 @@ const AuthenticatedAdminConfiguracoesRoute =
     path: '/configuracoes',
     getParentRoute: () => AuthenticatedAdminRouteRoute,
   } as any)
+const AuthenticatedAdminFretesRoute =
+  AuthenticatedAdminFretesRouteImport.update({
+    id: '/fretes',
+    path: '/fretes',
+    getParentRoute: () => AuthenticatedAdminRouteRoute,
+  } as any)
 const AuthenticatedAdminNovidadesRoute =
   AuthenticatedAdminNovidadesRouteImport.update({
     id: '/novidades',
@@ -144,6 +151,7 @@ export interface FileRoutesByFullPath {
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/admin/fretes': typeof AuthenticatedAdminFretesRoute
   '/admin/novidades': typeof AuthenticatedAdminNovidadesRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
@@ -163,6 +171,7 @@ export interface FileRoutesByTo {
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/admin/fretes': typeof AuthenticatedAdminFretesRoute
   '/admin/novidades': typeof AuthenticatedAdminNovidadesRoute
   '/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/admin/produtos': typeof AuthenticatedAdminProdutosRoute
@@ -185,6 +194,7 @@ export interface FileRoutesById {
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
+  '/_authenticated/admin/fretes': typeof AuthenticatedAdminFretesRoute
   '/_authenticated/admin/novidades': typeof AuthenticatedAdminNovidadesRoute
   '/_authenticated/admin/pedidos': typeof AuthenticatedAdminPedidosRoute
   '/_authenticated/admin/produtos': typeof AuthenticatedAdminProdutosRoute
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/admin/clientes'
     | '/admin/condicoes'
     | '/admin/configuracoes'
+    | '/admin/fretes'
     | '/admin/novidades'
     | '/admin/pedidos'
     | '/admin/produtos'
@@ -226,6 +237,7 @@ export interface FileRouteTypes {
     | '/admin/clientes'
     | '/admin/condicoes'
     | '/admin/configuracoes'
+    | '/admin/fretes'
     | '/admin/novidades'
     | '/admin/pedidos'
     | '/admin/produtos'
@@ -247,6 +259,7 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/condicoes'
     | '/_authenticated/admin/configuracoes'
+    | '/_authenticated/admin/fretes'
     | '/_authenticated/admin/novidades'
     | '/_authenticated/admin/pedidos'
     | '/_authenticated/admin/produtos'
@@ -365,6 +378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminConfiguracoesRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/fretes': {
+      id: '/_authenticated/admin/fretes'
+      path: '/fretes'
+      fullPath: '/admin/fretes'
+      preLoaderRoute: typeof AuthenticatedAdminFretesRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/novidades': {
       id: '/_authenticated/admin/novidades'
       path: '/novidades'
@@ -407,6 +427,7 @@ interface AuthenticatedAdminRouteRouteChildren {
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminCondicoesRoute: typeof AuthenticatedAdminCondicoesRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
+  AuthenticatedAdminFretesRoute: typeof AuthenticatedAdminFretesRoute
   AuthenticatedAdminNovidadesRoute: typeof AuthenticatedAdminNovidadesRoute
   AuthenticatedAdminPedidosRoute: typeof AuthenticatedAdminPedidosRoute
   AuthenticatedAdminProdutosRoute: typeof AuthenticatedAdminProdutosRoute
@@ -418,6 +439,7 @@ const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren
     AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
     AuthenticatedAdminCondicoesRoute: AuthenticatedAdminCondicoesRoute,
     AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
+    AuthenticatedAdminFretesRoute: AuthenticatedAdminFretesRoute,
     AuthenticatedAdminNovidadesRoute: AuthenticatedAdminNovidadesRoute,
     AuthenticatedAdminPedidosRoute: AuthenticatedAdminPedidosRoute,
     AuthenticatedAdminProdutosRoute: AuthenticatedAdminProdutosRoute,

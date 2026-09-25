@@ -127,6 +127,13 @@
       "when": 1790355466120,
       "tag": "0017_products_cut_options",
       "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1790357942223,
+      "tag": "0018_shipping_rates",
+      "breakpoints": true
     }
   ]
 }
