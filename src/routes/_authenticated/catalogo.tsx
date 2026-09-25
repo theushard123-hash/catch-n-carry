@@ -271,7 +271,14 @@ function CatalogPage() {
       setDeliveryDate("");
       setSheetOpen(false);
     },
-    onError: (e: Error) => toast.error(e.message),
+    onError: (e: Error) => {
+      let msg = e.message;
+      try {
+        const parsed = JSON.parse(msg);
+        if (Array.isArray(parsed) && parsed[0]?.message) msg = parsed[0].message;
+      } catch {}
+      toast.error(msg);
+    },
   });
 
   const today = new Date().toISOString().slice(0, 10);
@@ -286,8 +293,8 @@ function CatalogPage() {
       toast.error("Selecione a condição de pagamento.");
       return;
     }
-    if (addrMode === "cadastro" && !profileAddress) {
-      toast.error("Seu cadastro não tem endereço. Informe o endereço de entrega.");
+    if (addrMode === "cadastro" && (!profile?.address?.trim() || !profile?.city?.trim() || profileAddress.length < 10)) {
+      toast.error("O endereço do seu cadastro está incompleto. Informe o endereço de entrega abaixo.");
       setAddrMode("outro");
       return;
     }
