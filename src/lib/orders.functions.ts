@@ -7,6 +7,8 @@ const createOrderSchema = z.object({
   notes: z.string().max(2000).optional().default(""),
   deliveryDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional().nullable(),
   deliveryAddress: z.string().trim().min(10, "Informe o endereço de entrega completo.").max(500),
+  deliveryCity: z.string().trim().max(120).optional().default(""),
+  deliveryNeighborhood: z.string().trim().max(120).optional().default(""),
   items: z
     .array(
       z.object({
@@ -93,6 +95,10 @@ export const createOrder = createServerFn({ method: "POST" })
       throw new Error(`Pedido mínimo para ${profile.customer_type} é R$ ${minOrder.toFixed(2)}.`);
     }
 
+    const { data: rates } = await supabase.from("shipping_rates").select("city, neighborhood, fee, active");
+    const shippingFee = findShippingFee(rates ?? [], data.deliveryCity, data.deliveryNeighborhood);
+    const total = Math.round((subtotal + (shippingFee ?? 0)) * 100) / 100;
+
     const { data: order, error: oErr } = await supabase
       .from("orders")
       .insert({
@@ -101,7 +107,9 @@ export const createOrder = createServerFn({ method: "POST" })
         payment_condition_id: cond.id,
         payment_condition_name: cond.name,
         subtotal,
-        total: subtotal,
+        total,
+        shipping_fee: shippingFee,
+        shipping_note: shippingFee === null ? "Frete a consultar com o vendedor" : "",
         notes: data.notes ?? "",
         delivery_date: data.deliveryDate ?? null,
         delivery_address: data.deliveryAddress,
