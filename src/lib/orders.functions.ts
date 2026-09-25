@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { findShippingFee } from "@/lib/shipping";
 
 const createOrderSchema = z.object({
   paymentConditionId: z.string().uuid(),
@@ -126,5 +127,5 @@ export const createOrder = createServerFn({ method: "POST" })
       throw new Error("Não foi possível salvar os itens do pedido.");
     }
 
-    return { id: order.id, orderNumber: order.order_number, total: subtotal };
+    return { id: order.id, orderNumber: order.order_number, total, shippingFee };
   });
