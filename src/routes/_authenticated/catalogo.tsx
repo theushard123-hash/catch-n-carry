@@ -31,6 +31,10 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { PromoBanners } from "@/components/PromoBanners";
 import { ProductCardsSkeleton } from "@/components/ProductCardSkeleton";
 import { cn } from "@/lib/utils";
+import { WeightPickerDialog, formatWeight, type ItemSpec } from "@/components/WeightPickerDialog";
+
+const DEFAULT_WHATSAPP = "554130147701";
+const isWeighted = (p: { unit: string }) => p.unit.trim().toLowerCase() === "kg";
 
 export const Route = createFileRoute("/_authenticated/catalogo")({
   head: () => ({
@@ -69,6 +73,9 @@ function CatalogPage() {
   const [notes, setNotes] = useState("");
   const [sheetOpen, setSheetOpen] = useState(false);
   const [reviewOpen, setReviewOpen] = useState(false);
+  const [specs, setSpecs] = useState<Record<string, ItemSpec>>({});
+  const [weightFor, setWeightFor] = useState<Product | null>(null);
+  const [waOrder, setWaOrder] = useState<{ id: string; text: string } | null>(null);
   const [addrMode, setAddrMode] = useState<"cadastro" | "outro">("cadastro");
   const [addrFields, setAddrFields] = useState({
     rua: "",
@@ -205,6 +212,19 @@ function CatalogPage() {
 
   const deliveryAddress = addrMode === "cadastro" ? profileAddress : customAddress;
 
+  function specText(productId: string) {
+    const sp = specs[productId];
+    if (!sp) return "";
+    return [sp.cut && `separar em: ${sp.cut}`, sp.note && `obs.: ${sp.note}`].filter(Boolean).join("; ");
+  }
+  const itemsSpecNotes = cartLines
+    .filter((l) => specText(l.productId))
+    .map((l) => `- ${l.product.name}: ${specText(l.productId)}`)
+    .join("\n");
+  const fullNotes = [notes.trim(), itemsSpecNotes && `Especificações dos itens:\n${itemsSpecNotes}`]
+    .filter(Boolean)
+    .join("\n\n");
+
   const createOrderFn = useServerFn(createOrder);
   const submit = useMutation({
     mutationFn: async () => {
@@ -213,7 +233,7 @@ function CatalogPage() {
       return createOrderFn({
         data: {
           paymentConditionId: paymentId,
-          notes,
+          notes: fullNotes.slice(0, 2000),
           deliveryDate: deliveryDate || null,
           deliveryAddress,
           items: cartLines.map((l) => ({ productId: l.productId, qty: l.qty })),
@@ -221,12 +241,35 @@ function CatalogPage() {
       });
     },
     onSuccess: (res) => {
-      toast.success(`Pedido #${String(res.orderNumber).padStart(4, "0")} enviado!`);
+      const num = String(res.orderNumber).padStart(4, "0");
+      toast.success(`Pedido #${num} enviado!`);
+      const lines = cartLines.map((l) => {
+        const q = isWeighted(l.product) ? formatWeight(l.qty) : formatQty(l.qty, l.product.unit);
+        const sp = specText(l.productId);
+        return `• ${l.product.name} — ${q}${sp ? ` (${sp})` : ""}`;
+      });
+      const text = [
+        `Olá! Acabei de fazer o pré-pedido *#${num}* no portal da Trapiche Pescados e gostaria de confirmar as especificações e gramaturas.`,
+        "",
+        `*Cliente:* ${profile?.company_name || profile?.full_name || ""}`,
+        "*Itens:*",
+        ...lines,
+        "",
+        `*Total estimado:* ${formatBRL(res.total)}`,
+        paymentName ? `*Pagamento:* ${paymentName}` : "",
+        deliveryDate ? `*Entrega:* ${formatDatePtBR(deliveryDate)}` : "",
+        deliveryAddress ? `*Endereço:* ${deliveryAddress}` : "",
+        notes.trim() ? `*Observações:* ${notes.trim()}` : "",
+      ]
+        .filter((x, i, a) => x !== "" || a[i - 1] !== "")
+        .join("\n");
+      setWaOrder({ id: res.id, text });
+      setSpecs({});
+      setReviewOpen(false);
       setCart([]);
       setNotes("");
       setDeliveryDate("");
       setSheetOpen(false);
-      navigate({ to: "/pedidos/$id", params: { id: res.id } });
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -520,9 +563,24 @@ function CatalogPage() {
                       <p className="text-[11px] text-muted-foreground">Mín. {formatQty(p.min_qty, p.unit)}</p>
                       <div className="mt-auto pt-4">
                         {inCart ? (
-                          <QtyStepper product={p} qty={inCart.qty} onChange={(q) => setQty(p, q)} />
+                          isWeighted(p) ? (
+                            <div className="space-y-2">
+                              <Button variant="outline" className="w-full" onClick={() => setWeightFor(p)}>
+                                {formatWeight(inCart.qty)}
+                                {specs[p.id]?.cut ? ` · ${specs[p.id]!.cut}` : ""} — alterar
+                              </Button>
+                              <Button variant="ghost" size="sm" className="w-full" onClick={() => setQty(p, 0)}>
+                                <Trash2 /> Remover
+                              </Button>
+                            </div>
+                          ) : (
+                            <QtyStepper product={p} qty={inCart.qty} onChange={(q) => setQty(p, q)} />
+                          )
                         ) : (
-                          <Button className="w-full" onClick={() => setQty(p, Number(p.min_qty))}>
+                          <Button
+                            className="w-full"
+                            onClick={() => (isWeighted(p) ? setWeightFor(p) : setQty(p, Number(p.min_qty)))}
+                          >
                             <Plus /> Adicionar
                           </Button>
                         )}
@@ -629,6 +687,56 @@ function CatalogPage() {
               onClick={() => submit.mutate()}
             >
               {submit.isPending ? "Enviando..." : "Confirmar e enviar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <WeightPickerDialog
+        open={!!weightFor}
+        onOpenChange={(o) => !o && setWeightFor(null)}
+        productName={weightFor?.name ?? ""}
+        minQty={Number(weightFor?.min_qty ?? 0.1)}
+        initialQty={weightFor ? cart.find((c) => c.productId === weightFor.id)?.qty : undefined}
+        initialSpec={weightFor ? specs[weightFor.id] : undefined}
+        onConfirm={(q, sp) => {
+          if (!weightFor) return;
+          setQty(weightFor, q);
+          setSpecs((prev) => ({ ...prev, [weightFor.id]: sp }));
+        }}
+      />
+
+      <AlertDialog open={!!waOrder}>
+        <AlertDialogContent className="sm:max-w-md">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <Fish className="h-5 w-5 text-ocean" /> Pedido recebido! As redes já foram lançadas.
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Quer confirmar seu pedido com o vendedor? Ele confere as especificações e gramaturas pelo WhatsApp
+              com você — a mensagem do pré-pedido já vai pronta.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                const id = waOrder!.id;
+                setWaOrder(null);
+                navigate({ to: "/pedidos/$id", params: { id } });
+              }}
+            >
+              Agora não
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-success text-success-foreground hover:bg-success/90"
+              onClick={() => {
+                const o = waOrder!;
+                const phone = (settingsQ.data?.whatsapp || "").replace(/\D/g, "") || DEFAULT_WHATSAPP;
+                window.open(`https://wa.me/${phone}?text=${encodeURIComponent(o.text)}`, "_blank", "noopener");
+                setWaOrder(null);
+                navigate({ to: "/pedidos/$id", params: { id: o.id } });
+              }}
+            >
+              Confirmar pelo WhatsApp
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
