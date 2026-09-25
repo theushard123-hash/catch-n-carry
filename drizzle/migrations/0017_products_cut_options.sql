@@ -1,0 +1,2 @@
+ALTER TABLE public.products ADD COLUMN cut_options text[] NOT NULL DEFAULT '{}'::text[];
+UPDATE public.products SET cut_options = ARRAY['Inteiro','Limpo / eviscerado','Filé','Postas','Em cubos','Sem pele','Sem espinha'] WHERE variable_weight = true;
