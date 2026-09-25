@@ -218,7 +218,14 @@ function CatalogPage() {
   const deliveryCity = isPickup ? "" : addrMode === "cadastro" ? profile?.city ?? "" : addrFields.municipio;
   const deliveryNeighborhood = isPickup ? "" : addrMode === "cadastro" ? profile?.neighborhood ?? "" : addrFields.bairro;
 ...
-  const shippingFee = isPickup ? 0 : findShippingFee(ratesQ.data ?? [], deliveryCity, deliveryNeighborhood);
+  const ratesQ = useQuery({
+    queryKey: ["shipping-rates"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("shipping_rates").select("city, neighborhood, fee, active");
+      if (error) throw error;
+      return data;
+    },
+  });
   const shippingLabel = isPickup ? "Retirada na loja (grátis)" : shippingFee === null ? "A consultar com o vendedor" : formatBRL(shippingFee);
   const orderTotal = subtotal + (shippingFee ?? 0);
 
