@@ -37,6 +37,8 @@ import { WeightPickerDialog, formatWeight, type ItemSpec } from "@/components/We
 const DEFAULT_WHATSAPP = "554130147701";
 const isWeighted = (p: { variable_weight?: boolean | null }) => p.variable_weight === true;
 
+const STORE_ADDRESS = "Alameda Princesa Izabel, 1710 — Bigorrilho, Curitiba — PR";
+
 export const Route = createFileRoute("/_authenticated/catalogo")({
   head: () => ({
     meta: [
@@ -77,7 +79,7 @@ function CatalogPage() {
   const [specs, setSpecs] = useState<Record<string, ItemSpec>>({});
   const [weightFor, setWeightFor] = useState<Product | null>(null);
   const [waOrder, setWaOrder] = useState<{ id: string; text: string } | null>(null);
-  const [addrMode, setAddrMode] = useState<"cadastro" | "outro">("cadastro");
+  const [addrMode, setAddrMode] = useState<"cadastro" | "outro" | "retirada">("cadastro");
   const [addrFields, setAddrFields] = useState({
     rua: "",
     numero: "",
@@ -211,9 +213,10 @@ function CatalogPage() {
     return parts.join(", ");
   }, [addrFields]);
 
-  const deliveryAddress = addrMode === "cadastro" ? profileAddress : customAddress;
-  const deliveryCity = addrMode === "cadastro" ? profile?.city ?? "" : addrFields.municipio;
-  const deliveryNeighborhood = addrMode === "cadastro" ? profile?.neighborhood ?? "" : addrFields.bairro;
+  const isPickup = addrMode === "retirada";
+  const deliveryAddress = isPickup ? `Retirada na loja — ${STORE_ADDRESS}` : addrMode === "cadastro" ? profileAddress : customAddress;
+  const deliveryCity = isPickup ? "" : addrMode === "cadastro" ? profile?.city ?? "" : addrFields.municipio;
+  const deliveryNeighborhood = isPickup ? "" : addrMode === "cadastro" ? profile?.neighborhood ?? "" : addrFields.bairro;
   const ratesQ = useQuery({
     queryKey: ["shipping-rates"],
     queryFn: async () => {
@@ -222,8 +225,8 @@ function CatalogPage() {
       return data;
     },
   });
-  const shippingFee = findShippingFee(ratesQ.data ?? [], deliveryCity, deliveryNeighborhood);
-  const shippingLabel = shippingFee === null ? "A consultar com o vendedor" : formatBRL(shippingFee);
+  const shippingFee = isPickup ? 0 : findShippingFee(ratesQ.data ?? [], deliveryCity, deliveryNeighborhood);
+  const shippingLabel = isPickup ? "Retirada na loja (grátis)" : shippingFee === null ? "A consultar com o vendedor" : formatBRL(shippingFee);
   const orderTotal = subtotal + (shippingFee ?? 0);
 
   function specText(productId: string) {
@@ -252,6 +255,7 @@ function CatalogPage() {
           deliveryAddress,
           deliveryCity,
           deliveryNeighborhood,
+          pickup: isPickup,
           items: cartLines.map((l) => ({ productId: l.productId, qty: l.qty })),
         },
       });
@@ -392,8 +396,8 @@ function CatalogPage() {
           </Select>
         </div>
         <div className="space-y-2">
-          <Label>Endereço de entrega *</Label>
-          <RadioGroup value={addrMode} onValueChange={(v) => setAddrMode(v as "cadastro" | "outro")} className="gap-2">
+          <Label>Entrega ou retirada *</Label>
+          <RadioGroup value={addrMode} onValueChange={(v) => setAddrMode(v as "cadastro" | "outro" | "retirada")} className="gap-2">
             <label
               className={cn(
                 "flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-sm transition-colors",
@@ -416,6 +420,18 @@ function CatalogPage() {
             >
               <RadioGroupItem value="outro" className="mt-0.5" />
               <span className="font-medium">Entregar em outro endereço</span>
+            </label>
+            <label
+              className={cn(
+                "flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-sm transition-colors",
+                addrMode === "retirada" ? "border-primary bg-primary/5" : "bg-card hover:bg-secondary/60",
+              )}
+            >
+              <RadioGroupItem value="retirada" className="mt-0.5" />
+              <span>
+                <span className="font-medium">Retirar na loja (sem frete)</span>
+                <span className="mt-0.5 block text-xs text-muted-foreground">{STORE_ADDRESS}</span>
+              </span>
             </label>
           </RadioGroup>
           {addrMode === "outro" && (
