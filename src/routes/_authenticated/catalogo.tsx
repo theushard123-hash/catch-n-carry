@@ -217,7 +217,6 @@ function CatalogPage() {
   const deliveryAddress = isPickup ? `Retirada na loja — ${STORE_ADDRESS}` : addrMode === "cadastro" ? profileAddress : customAddress;
   const deliveryCity = isPickup ? "" : addrMode === "cadastro" ? profile?.city ?? "" : addrFields.municipio;
   const deliveryNeighborhood = isPickup ? "" : addrMode === "cadastro" ? profile?.neighborhood ?? "" : addrFields.bairro;
-...
   const ratesQ = useQuery({
     queryKey: ["shipping-rates"],
     queryFn: async () => {
@@ -226,6 +225,7 @@ function CatalogPage() {
       return data;
     },
   });
+  const shippingFee = isPickup ? 0 : findShippingFee(ratesQ.data ?? [], deliveryCity, deliveryNeighborhood);
   const shippingLabel = isPickup ? "Retirada na loja (grátis)" : shippingFee === null ? "A consultar com o vendedor" : formatBRL(shippingFee);
   const orderTotal = subtotal + (shippingFee ?? 0);
 
