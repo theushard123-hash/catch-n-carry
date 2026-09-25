@@ -702,6 +702,7 @@ function CatalogPage() {
         open={!!weightFor}
         onOpenChange={(o) => !o && setWeightFor(null)}
         productName={weightFor?.name ?? ""}
+        cutOptions={weightFor?.cut_options ?? []}
         minQty={Number(weightFor?.min_qty ?? 0.1)}
         initialQty={weightFor ? cart.find((c) => c.productId === weightFor.id)?.qty : undefined}
         initialSpec={weightFor ? specs[weightFor.id] : undefined}
