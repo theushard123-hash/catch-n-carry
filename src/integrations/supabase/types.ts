@@ -285,6 +285,7 @@ export type Database = {
           active: boolean
           category_id: string | null
           created_at: string
+          cut_options: string[]
           description: string
           id: string
           image_url: string | null
@@ -303,6 +304,7 @@ export type Database = {
           active?: boolean
           category_id?: string | null
           created_at?: string
+          cut_options?: string[]
           description?: string
           id?: string
           image_url?: string | null
@@ -321,6 +323,7 @@ export type Database = {
           active?: boolean
           category_id?: string | null
           created_at?: string
+          cut_options?: string[]
           description?: string
           id?: string
           image_url?: string | null

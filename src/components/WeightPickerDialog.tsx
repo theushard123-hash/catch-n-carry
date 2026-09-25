@@ -26,6 +26,7 @@ export function WeightPickerDialog({
   open,
   onOpenChange,
   productName,
+  cutOptions,
   minQty,
   initialQty,
   initialSpec,
@@ -34,6 +35,7 @@ export function WeightPickerDialog({
   open: boolean;
   onOpenChange: (o: boolean) => void;
   productName: string;
+  cutOptions: string[];
   minQty: number;
   initialQty?: number | undefined;
   initialSpec?: ItemSpec | undefined;
@@ -93,21 +95,23 @@ export function WeightPickerDialog({
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
-          <Label className="shrink-0">Separar em:</Label>
-          <Select value={cut} onValueChange={setCut}>
-            <SelectTrigger>
-              <SelectValue placeholder="Selecione" />
-            </SelectTrigger>
-            <SelectContent>
-              {CUT_OPTIONS.map((c) => (
-                <SelectItem key={c} value={c}>
-                  {c}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+        {cutOptions.length > 0 && (
+          <div className="flex items-center gap-3">
+            <Label className="shrink-0">Separar em:</Label>
+            <Select value={cut} onValueChange={setCut}>
+              <SelectTrigger>
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent>
+                {cutOptions.map((c) => (
+                  <SelectItem key={c} value={c}>
+                    {c}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {showNote ? (
           <Textarea

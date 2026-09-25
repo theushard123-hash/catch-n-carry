@@ -120,6 +120,13 @@
       "when": 1790355155874,
       "tag": "0016_products_variable_weight",
       "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1790355466120,
+      "tag": "0017_products_cut_options",
+      "breakpoints": true
     }
   ]
 }

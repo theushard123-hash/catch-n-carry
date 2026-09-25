@@ -45,6 +45,7 @@ const empty = {
   image_url: "",
   active: true,
   variable_weight: false,
+  cut_options: "",
   sort_order: "0",
 };
 type FormState = typeof empty;
@@ -91,6 +92,7 @@ function AdminProductsPage() {
         image_url: f.image_url.trim() || null,
         active: f.active,
         variable_weight: f.variable_weight,
+        cut_options: f.cut_options.split(/[\n,]/).map((c) => c.trim()).filter(Boolean),
         sort_order: Number(f.sort_order) || 0,
       };
       if (f.id) {
@@ -149,6 +151,7 @@ function AdminProductsPage() {
       image_url: p.image_url ?? "",
       active: p.active,
       variable_weight: p.variable_weight,
+      cut_options: (p.cut_options ?? []).join("\n"),
       sort_order: String(p.sort_order),
     });
   }
@@ -352,6 +355,19 @@ function AdminProductsPage() {
                   </p>
                 </div>
               </div>
+              {form.variable_weight && (
+                <div className="space-y-2 sm:col-span-2">
+                  <Label htmlFor="p-cuts">Opções de "Separar em" (uma por linha)</Label>
+                  <Textarea
+                    id="p-cuts"
+                    rows={5}
+                    placeholder={"Inteiro\nFilé\nPostas"}
+                    value={form.cut_options}
+                    onChange={(e) => setForm({ ...form, cut_options: e.target.value })}
+                  />
+                  <p className="text-xs text-muted-foreground">Deixe vazio para não mostrar a escolha de corte.</p>
+                </div>
+              )}
               <div className="flex items-center gap-3 sm:col-span-2">
                 <Switch
                   id="p-active"
