@@ -310,7 +310,7 @@ function CatalogPage() {
 
   const cartPanel = (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="min-h-0 flex-1 space-y-3 overflow-y-auto pr-1">
+      <div className="min-h-28 flex-1 space-y-3 overflow-y-auto pr-1">
         {cartLines.length === 0 ? (
           <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
             Seu pedido está vazio. Adicione produtos do catálogo.
@@ -594,7 +594,7 @@ function CatalogPage() {
         </section>
 
         <aside className="hidden lg:block">
-          <div className="sticky top-24 flex h-[calc(100vh-7rem)] flex-col rounded-2xl border bg-card p-5 shadow-soft">
+          <div className="sticky top-24 flex max-h-[calc(100vh-7rem)] h-[calc(100vh-7rem)] flex-col overflow-y-auto rounded-2xl border bg-card p-5 shadow-soft">
             <h2 className="mb-4 flex shrink-0 items-center gap-2 text-lg font-bold">
               <ShoppingBasket className="h-5 w-5 text-ocean" /> Seu pedido
               {itemCount > 0 && <Badge variant="aqua">{itemCount}</Badge>}
