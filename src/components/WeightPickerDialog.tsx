@@ -35,8 +35,8 @@ export function WeightPickerDialog({
   onOpenChange: (o: boolean) => void;
   productName: string;
   minQty: number;
-  initialQty?: number;
-  initialSpec?: ItemSpec;
+  initialQty?: number | undefined;
+  initialSpec?: ItemSpec | undefined;
   onConfirm: (qty: number, spec: ItemSpec) => void;
 }) {
   const options = buildOptions(minQty);
