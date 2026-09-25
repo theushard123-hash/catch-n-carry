@@ -10,6 +10,7 @@ const createOrderSchema = z.object({
   deliveryAddress: z.string().trim().min(10, "Informe o endereço de entrega completo.").max(500),
   deliveryCity: z.string().trim().max(120).optional().default(""),
   deliveryNeighborhood: z.string().trim().max(120).optional().default(""),
+  pickup: z.boolean().optional().default(false),
   items: z
     .array(
       z.object({
@@ -97,7 +98,7 @@ export const createOrder = createServerFn({ method: "POST" })
     }
 
     const { data: rates } = await supabase.from("shipping_rates").select("city, neighborhood, fee, active");
-    const shippingFee = findShippingFee(rates ?? [], data.deliveryCity, data.deliveryNeighborhood);
+    const shippingFee = data.pickup ? 0 : findShippingFee(rates ?? [], data.deliveryCity, data.deliveryNeighborhood);
     const total = Math.round((subtotal + (shippingFee ?? 0)) * 100) / 100;
 
     const { data: order, error: oErr } = await supabase
@@ -110,7 +111,7 @@ export const createOrder = createServerFn({ method: "POST" })
         subtotal,
         total,
         shipping_fee: shippingFee,
-        shipping_note: shippingFee === null ? "Frete a consultar com o vendedor" : "",
+        shipping_note: data.pickup ? "Retirada na loja" : shippingFee === null ? "Frete a consultar com o vendedor" : "",
         notes: data.notes ?? "",
         delivery_date: data.deliveryDate ?? null,
         delivery_address: data.deliveryAddress,

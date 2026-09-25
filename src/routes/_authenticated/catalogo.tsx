@@ -37,6 +37,8 @@ import { WeightPickerDialog, formatWeight, type ItemSpec } from "@/components/We
 const DEFAULT_WHATSAPP = "554130147701";
 const isWeighted = (p: { variable_weight?: boolean | null }) => p.variable_weight === true;
 
+const STORE_ADDRESS = "Alameda Princesa Izabel, 1710 — Bigorrilho, Curitiba — PR";
+
 export const Route = createFileRoute("/_authenticated/catalogo")({
   head: () => ({
     meta: [
@@ -246,6 +248,7 @@ function CatalogPage() {
           deliveryAddress,
           deliveryCity,
           deliveryNeighborhood,
+          pickup: isPickup,
           items: cartLines.map((l) => ({ productId: l.productId, qty: l.qty })),
         },
       });
