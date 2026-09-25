@@ -34,7 +34,7 @@ import { cn } from "@/lib/utils";
 import { WeightPickerDialog, formatWeight, type ItemSpec } from "@/components/WeightPickerDialog";
 
 const DEFAULT_WHATSAPP = "554130147701";
-const isWeighted = (p: { unit: string }) => p.unit.trim().toLowerCase() === "kg";
+const isWeighted = (p: { variable_weight?: boolean | null }) => p.variable_weight === true;
 
 export const Route = createFileRoute("/_authenticated/catalogo")({
   head: () => ({

@@ -44,6 +44,7 @@ const empty = {
   step_qty: "1",
   image_url: "",
   active: true,
+  variable_weight: false,
   sort_order: "0",
 };
 type FormState = typeof empty;
@@ -89,6 +90,7 @@ function AdminProductsPage() {
         step_qty: Number(f.step_qty.replace(",", ".")) || 1,
         image_url: f.image_url.trim() || null,
         active: f.active,
+        variable_weight: f.variable_weight,
         sort_order: Number(f.sort_order) || 0,
       };
       if (f.id) {
@@ -146,6 +148,7 @@ function AdminProductsPage() {
       step_qty: String(p.step_qty),
       image_url: p.image_url ?? "",
       active: p.active,
+      variable_weight: p.variable_weight,
       sort_order: String(p.sort_order),
     });
   }
@@ -335,6 +338,19 @@ function AdminProductsPage() {
                   onChange={(url) => setForm({ ...form, image_url: url })}
                   hint="A foto aparece no catálogo dos clientes."
                 />
+              </div>
+              <div className="flex items-start gap-3 rounded-xl border p-3 sm:col-span-2">
+                <Switch
+                  id="p-vw"
+                  checked={form.variable_weight}
+                  onCheckedChange={(v) => setForm({ ...form, variable_weight: v })}
+                />
+                <div>
+                  <Label htmlFor="p-vw">Peso variado</Label>
+                  <p className="text-xs text-muted-foreground">
+                    Quando ligado, o cliente escolhe a gramatura e o tipo de corte ao adicionar.
+                  </p>
+                </div>
               </div>
               <div className="flex items-center gap-3 sm:col-span-2">
                 <Switch
