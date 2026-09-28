@@ -337,8 +337,8 @@ function CatalogPage() {
   }
 
   const cartPanel = (
-    <div className="flex h-full min-h-0 flex-col">
-      <div className="min-h-28 flex-1 space-y-3 overflow-y-auto pr-1">
+    <div className="flex h-full min-h-0 flex-col overflow-y-auto overscroll-contain lg:overflow-hidden">
+      <div className="min-h-28 flex-none space-y-3 pr-1 lg:flex-1 lg:overflow-y-auto">
         {cartLines.length === 0 ? (
           <div className="rounded-xl border border-dashed p-6 text-center text-sm text-muted-foreground">
             Seu pedido está vazio. Adicione produtos do catálogo.
@@ -659,11 +659,14 @@ function CatalogPage() {
               <span>{formatBRL(subtotal)}</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="bottom" className="h-[88vh] overflow-hidden rounded-t-2xl">
-            <SheetHeader>
+          <SheetContent
+            side="bottom"
+            className="flex h-[92dvh] max-h-[92dvh] flex-col overflow-hidden rounded-t-2xl p-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+          >
+            <SheetHeader className="shrink-0">
               <SheetTitle>Seu pedido</SheetTitle>
             </SheetHeader>
-            <div className="mt-4 h-[calc(88vh-5rem)]">{cartPanel}</div>
+            <div className="mt-2 min-h-0 flex-1">{cartPanel}</div>
           </SheetContent>
         </Sheet>
       </div>
