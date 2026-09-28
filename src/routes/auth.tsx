@@ -54,6 +54,15 @@ function safeRedirect(r?: string) {
   return "/catalogo";
 }
 
+// Pedidos de autorização de agentes (MCP) precisam voltar à URL exata, com parâmetros.
+function isConsentRedirect(r?: string) {
+  return !!r && r.startsWith("/.lovable/oauth/consent");
+}
+
+function consentReturnUrl(r?: string) {
+  return isConsentRedirect(r) ? `${window.location.origin}${r}` : window.location.origin;
+}
+
 const BUSY_MESSAGES = [
   "Quase pronto! O mar está para peixe...",
   "Carregando as delícias da Trapiche...",
@@ -159,9 +168,18 @@ function AuthPage() {
     setDocumentError(null);
   }, [customerType]);
 
+  function goNext() {
+    if (isConsentRedirect(redirect)) {
+      window.location.href = consentReturnUrl(redirect);
+      return;
+    }
+    navigate({ to: safeRedirect(redirect), replace: true });
+  }
+
   useEffect(() => {
-    if (!loading && user) navigate({ to: safeRedirect(redirect), replace: true });
-  }, [user, loading, redirect, navigate]);
+    if (!loading && user) goNext();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, loading, redirect]);
 
 
   async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
@@ -179,7 +197,7 @@ function AuthPage() {
       );
       return;
     }
-    navigate({ to: safeRedirect(redirect), replace: true });
+    goNext();
   }
 
   async function handleSignup(e: React.FormEvent<HTMLFormElement>) {
@@ -219,7 +237,7 @@ function AuthPage() {
         data: {
           email: String(fd.get("email")),
           password,
-          redirectTo: window.location.origin,
+          redirectTo: consentReturnUrl(redirect),
           data: {
             full_name: String(fd.get("full_name")),
             company_name: String(fd.get("company_name") ?? ""),
@@ -244,7 +262,8 @@ function AuthPage() {
         if (error) {
           toast.success("Cadastro realizado! Faça login para continuar.");
         } else {
-          navigate({ to: "/catalogo", replace: true });
+          if (isConsentRedirect(redirect)) goNext();
+          else navigate({ to: "/catalogo", replace: true });
         }
       }
     } catch (err) {
@@ -276,14 +295,14 @@ function AuthPage() {
 
   async function handleGoogle() {
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: window.location.origin,
+      redirect_uri: consentReturnUrl(redirect),
     });
     if (result.error) {
       toast.error("Não foi possível entrar com o Google.");
       return;
     }
     if (result.redirected) return;
-    navigate({ to: safeRedirect(redirect), replace: true });
+    goNext();
   }
 
   return (
