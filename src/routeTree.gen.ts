@@ -12,13 +12,16 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as PoliticaDePrivacidadeRouteImport } from './routes/politica-de-privacidade'
 import { Route as PoliticaDeTrocasRouteImport } from './routes/politica-de-trocas'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
+import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
 import { Route as AuthenticatedCatalogoRouteImport } from './routes/_authenticated/catalogo'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
+import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 import { Route as AuthenticatedAdminCondicoesRouteImport } from './routes/_authenticated/admin/condicoes'
@@ -44,6 +47,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PoliticaDePrivacidadeRoute = PoliticaDePrivacidadeRouteImport.update({
   id: '/politica-de-privacidade',
   path: '/politica-de-privacidade',
@@ -64,6 +72,12 @@ const TermosDeUsoRoute = TermosDeUsoRouteImport.update({
   path: '/termos-de-uso',
   getParentRoute: () => rootRouteImport,
 } as any)
+const Char91DotwellKnownChar93OauthProtectedResourceRoute =
+  Char91DotwellKnownChar93OauthProtectedResourceRouteImport.update({
+    id: '/.well-known/oauth-protected-resource',
+    path: '/.well-known/oauth-protected-resource',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -78,6 +92,11 @@ const AuthenticatedPerfilRoute = AuthenticatedPerfilRouteImport.update({
   id: '/perfil',
   path: '/perfil',
   getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const DotlovableOauthConsentRoute = DotlovableOauthConsentRouteImport.update({
+  id: '/.lovable/oauth/consent',
+  path: '/.lovable/oauth/consent',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   id: '/',
@@ -141,13 +160,16 @@ const AuthenticatedPedidosIdRoute = AuthenticatedPedidosIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/mcp': typeof McpRoute
   '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/politica-de-trocas': typeof PoliticaDeTrocasRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -162,12 +184,15 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/mcp': typeof McpRoute
   '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/politica-de-trocas': typeof PoliticaDeTrocasRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -184,13 +209,16 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/mcp': typeof McpRoute
   '/politica-de-privacidade': typeof PoliticaDePrivacidadeRoute
   '/politica-de-trocas': typeof PoliticaDeTrocasRoute
   '/reset-password': typeof ResetPasswordRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
+  '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
   '/_authenticated/catalogo': typeof AuthenticatedCatalogoRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
+  '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -207,13 +235,16 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/mcp'
     | '/politica-de-privacidade'
     | '/politica-de-trocas'
     | '/reset-password'
     | '/termos-de-uso'
     | '/admin'
+    | '/.well-known/oauth-protected-resource'
     | '/catalogo'
     | '/perfil'
+    | '/.lovable/oauth/consent'
     | '/admin/clientes'
     | '/admin/condicoes'
     | '/admin/configuracoes'
@@ -228,12 +259,15 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/mcp'
     | '/politica-de-privacidade'
     | '/politica-de-trocas'
     | '/reset-password'
     | '/termos-de-uso'
+    | '/.well-known/oauth-protected-resource'
     | '/catalogo'
     | '/perfil'
+    | '/.lovable/oauth/consent'
     | '/admin/clientes'
     | '/admin/condicoes'
     | '/admin/configuracoes'
@@ -249,13 +283,16 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/mcp'
     | '/politica-de-privacidade'
     | '/politica-de-trocas'
     | '/reset-password'
     | '/termos-de-uso'
     | '/_authenticated/admin'
+    | '/.well-known/oauth-protected-resource'
     | '/_authenticated/catalogo'
     | '/_authenticated/perfil'
+    | '/.lovable/oauth/consent'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/condicoes'
     | '/_authenticated/admin/configuracoes'
@@ -272,10 +309,13 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  McpRoute: typeof McpRoute
   PoliticaDePrivacidadeRoute: typeof PoliticaDePrivacidadeRoute
   PoliticaDeTrocasRoute: typeof PoliticaDeTrocasRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TermosDeUsoRoute: typeof TermosDeUsoRoute
+  Char91DotwellKnownChar93OauthProtectedResourceRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  DotlovableOauthConsentRoute: typeof DotlovableOauthConsentRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -299,6 +339,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/politica-de-privacidade': {
@@ -329,6 +376,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TermosDeUsoRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/.well-known/oauth-protected-resource': {
+      id: '/.well-known/oauth-protected-resource'
+      path: '/.well-known/oauth-protected-resource'
+      fullPath: '/.well-known/oauth-protected-resource'
+      preLoaderRoute: typeof Char91DotwellKnownChar93OauthProtectedResourceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -349,6 +403,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/perfil'
       preLoaderRoute: typeof AuthenticatedPerfilRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/.lovable/oauth/consent': {
+      id: '/.lovable/oauth/consent'
+      path: '/.lovable/oauth/consent'
+      fullPath: '/.lovable/oauth/consent'
+      preLoaderRoute: typeof DotlovableOauthConsentRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_authenticated/admin/': {
       id: '/_authenticated/admin/'
@@ -474,10 +535,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  McpRoute: McpRoute,
   PoliticaDePrivacidadeRoute: PoliticaDePrivacidadeRoute,
   PoliticaDeTrocasRoute: PoliticaDeTrocasRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TermosDeUsoRoute: TermosDeUsoRoute,
+  Char91DotwellKnownChar93OauthProtectedResourceRoute:
+    Char91DotwellKnownChar93OauthProtectedResourceRoute,
+  DotlovableOauthConsentRoute: DotlovableOauthConsentRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
