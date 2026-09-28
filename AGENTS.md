@@ -9,3 +9,4 @@
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
 - MCP server lives in src/lib/mcp/ (mcp-js + Supabase OAuth, tools use supabaseForUser so RLS applies) — agents act as the signed-in user.
+- Cart items and per-product specifications persist through `src/lib/cart.ts` so catalog and checkout share one client-side source of truth.
