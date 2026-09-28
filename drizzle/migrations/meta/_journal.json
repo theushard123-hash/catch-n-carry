@@ -134,6 +134,13 @@
       "when": 1790357942223,
       "tag": "0018_shipping_rates",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1790625889150,
+      "tag": "0019_harden_new_customer_profile_policy",
+      "breakpoints": true
     }
   ]
 }

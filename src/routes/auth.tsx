@@ -92,7 +92,7 @@ function AuthPage() {
     if (elapsed < MIN_BUSY_MS) await new Promise((r) => setTimeout(r, MIN_BUSY_MS - elapsed));
     setBusy(false);
   }
-  const [customerType, setCustomerType] = useState("atacado");
+  const [customerType, setCustomerType] = useState("varejo");
   const signUp = useServerFn(signUpCustomer);
 
   const isAtacado = customerType === "atacado";
@@ -412,7 +412,9 @@ function AuthPage() {
                   <div>
                     <h2 className="text-2xl font-bold">Criar cadastro</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Seu cadastro será analisado pela equipe Trapiche antes do primeiro pedido.
+                      {isAtacado
+                        ? "Cadastros de atacado passam por análise antes do primeiro pedido."
+                        : "Cadastros de varejo são liberados automaticamente para pedidos."}
                     </p>
                   </div>
 
