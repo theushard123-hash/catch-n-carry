@@ -36,6 +36,22 @@ export const signUpCustomer = createServerFn({ method: "POST" })
       throw new Error("Informe um CEP válido com 8 dígitos.");
     }
 
+    const cep = digits(data.data.zip);
+    const cepResponse = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    if (!cepResponse.ok) {
+      throw new Error("Não foi possível validar o CEP. Tente novamente.");
+    }
+    const cepData = (await cepResponse.json()) as {
+      erro?: boolean | string;
+      logradouro?: string;
+      bairro?: string;
+      localidade?: string;
+      uf?: string;
+    };
+    if (cepData.erro || !cepData.localidade || !cepData.uf) {
+      throw new Error("CEP não encontrado.");
+    }
+
     const doc = digits(data.data.document);
     if (data.data.customer_type === "atacado" ? !isValidCnpj(doc) : !isValidCpf(doc)) {
       throw new Error(
@@ -49,10 +65,23 @@ export const signUpCustomer = createServerFn({ method: "POST" })
     const endpoint = new URL("/auth/v1/signup", url);
     if (data.redirectTo) endpoint.searchParams.set("redirect_to", data.redirectTo);
 
+    const addressParts = [cepData.logradouro, data.data.address_number, data.data.complement]
+      .map((part) => part?.trim())
+      .filter(Boolean);
+    const safeMetadata = {
+      ...data.data,
+      document: doc,
+      zip: cep,
+      address: addressParts.join(", "),
+      neighborhood: cepData.bairro?.trim() ?? "",
+      city: cepData.localidade.trim(),
+      state: cepData.uf.trim().toUpperCase().slice(0, 2),
+    };
+
     const res = await fetch(endpoint, {
       method: "POST",
       headers: { "content-type": "application/json", apikey: key },
-      body: JSON.stringify({ email: data.email, password: data.password, data: data.data }),
+      body: JSON.stringify({ email: data.email, password: data.password, data: safeMetadata }),
     });
 
     const body = (await res.json().catch(() => ({}))) as {
