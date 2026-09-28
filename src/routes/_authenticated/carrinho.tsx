@@ -96,12 +96,12 @@ function CartPage() {
   const fullNotes = [notes.trim(), lines.filter((line) => specText(line.productId)).map((line) => `- ${line.product.name}: ${specText(line.productId)}`).join("\n")].filter(Boolean).join("\n\n");
 
   function validateAndReview() {
-    if (!paymentId) return toast.error("Selecione a condição de pagamento.");
-    if (subtotal < minOrder) return toast.error(`O pedido mínimo é ${formatBRL(minOrder)}.`);
-    if (addressMode === "cadastro" && (!profile?.address?.trim() || !profile?.city?.trim() || profileAddress.length < 10)) { setAddressMode("outro"); return toast.error("O endereço cadastrado está incompleto. Informe outro endereço."); }
+    if (!paymentId) { toast.error("Selecione a condição de pagamento."); return; }
+    if (subtotal < minOrder) { toast.error(`O pedido mínimo é ${formatBRL(minOrder)}.`); return; }
+    if (addressMode === "cadastro" && (!profile?.address?.trim() || !profile?.city?.trim() || profileAddress.length < 10)) { setAddressMode("outro"); toast.error("O endereço cadastrado está incompleto. Informe outro endereço."); return; }
     if (addressMode === "outro") {
       const missing = [!address.rua.trim() && "rua", !address.numero.trim() && "número", !address.bairro.trim() && "bairro", !address.municipio.trim() && "município", !address.estado.trim() && "estado", !isValidCep(address.cep) && "CEP válido"].filter(Boolean);
-      if (missing.length) return toast.error(`Preencha: ${missing.join(", ")}.`);
+      if (missing.length) { toast.error(`Preencha: ${missing.join(", ")}.`); return; }
     }
     setReviewOpen(true);
   }
