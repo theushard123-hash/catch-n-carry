@@ -19,6 +19,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TermosDeUsoRouteImport } from './routes/termos-de-uso'
 import { Route as Char91DotwellKnownChar93OauthProtectedResourceRouteImport } from './routes/[.well-known]/oauth-protected-resource'
 import { Route as AuthenticatedAdminRouteRouteImport } from './routes/_authenticated/admin/route'
+import { Route as AuthenticatedCarrinhoRouteImport } from './routes/_authenticated/carrinho'
 import { Route as AuthenticatedCatalogoRouteImport } from './routes/_authenticated/catalogo'
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
@@ -81,6 +82,11 @@ const Char91DotwellKnownChar93OauthProtectedResourceRoute =
 const AuthenticatedAdminRouteRoute = AuthenticatedAdminRouteRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCarrinhoRoute = AuthenticatedCarrinhoRouteImport.update({
+  id: '/carrinho',
+  path: '/carrinho',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCatalogoRoute = AuthenticatedCatalogoRouteImport.update({
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/carrinho': typeof AuthenticatedCarrinhoRoute
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -190,6 +197,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/carrinho': typeof AuthenticatedCarrinhoRoute
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -216,6 +224,7 @@ export interface FileRoutesById {
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteRouteWithChildren
   '/.well-known/oauth-protected-resource': typeof Char91DotwellKnownChar93OauthProtectedResourceRoute
+  '/_authenticated/carrinho': typeof AuthenticatedCarrinhoRoute
   '/_authenticated/catalogo': typeof AuthenticatedCatalogoRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
@@ -242,6 +251,7 @@ export interface FileRouteTypes {
     | '/termos-de-uso'
     | '/admin'
     | '/.well-known/oauth-protected-resource'
+    | '/carrinho'
     | '/catalogo'
     | '/perfil'
     | '/.lovable/oauth/consent'
@@ -265,6 +275,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/termos-de-uso'
     | '/.well-known/oauth-protected-resource'
+    | '/carrinho'
     | '/catalogo'
     | '/perfil'
     | '/.lovable/oauth/consent'
@@ -290,6 +301,7 @@ export interface FileRouteTypes {
     | '/termos-de-uso'
     | '/_authenticated/admin'
     | '/.well-known/oauth-protected-resource'
+    | '/_authenticated/carrinho'
     | '/_authenticated/catalogo'
     | '/_authenticated/perfil'
     | '/.lovable/oauth/consent'
@@ -388,6 +400,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AuthenticatedAdminRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/carrinho': {
+      id: '/_authenticated/carrinho'
+      path: '/carrinho'
+      fullPath: '/carrinho'
+      preLoaderRoute: typeof AuthenticatedCarrinhoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/catalogo': {
@@ -514,6 +533,7 @@ const AuthenticatedAdminRouteRouteWithChildren =
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAdminRouteRoute: typeof AuthenticatedAdminRouteRouteWithChildren
+  AuthenticatedCarrinhoRoute: typeof AuthenticatedCarrinhoRoute
   AuthenticatedCatalogoRoute: typeof AuthenticatedCatalogoRoute
   AuthenticatedPerfilRoute: typeof AuthenticatedPerfilRoute
   AuthenticatedPedidosIdRoute: typeof AuthenticatedPedidosIdRoute
@@ -522,6 +542,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAdminRouteRoute: AuthenticatedAdminRouteRouteWithChildren,
+  AuthenticatedCarrinhoRoute: AuthenticatedCarrinhoRoute,
   AuthenticatedCatalogoRoute: AuthenticatedCatalogoRoute,
   AuthenticatedPerfilRoute: AuthenticatedPerfilRoute,
   AuthenticatedPedidosIdRoute: AuthenticatedPedidosIdRoute,

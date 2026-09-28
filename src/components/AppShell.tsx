@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "@tanstack/react-router";
-import { LogOut, Menu, Package, ShoppingBasket, User, Shield } from "lucide-react";
+import { LogOut, Menu, Package, ShoppingBasket, User, Shield, ShoppingCart } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 
 const navItems = [
   { to: "/catalogo", label: "Catálogo", icon: ShoppingBasket },
+  { to: "/carrinho", label: "Meu carrinho", icon: ShoppingCart },
   { to: "/pedidos", label: "Meus pedidos", icon: Package },
   { to: "/perfil", label: "Meu cadastro", icon: User },
 ] as const;
