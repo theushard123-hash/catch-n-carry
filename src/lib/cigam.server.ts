@@ -66,7 +66,7 @@ export async function cigamRequest<T = unknown>(
         accept: "application/json",
         ...(opts.body !== undefined ? { "content-type": "application/json" } : {}),
       },
-      body: opts.body !== undefined ? JSON.stringify(opts.body) : undefined,
+      body: opts.body !== undefined ? JSON.stringify(opts.body) : null,
       signal: AbortSignal.timeout(25000),
     });
 
