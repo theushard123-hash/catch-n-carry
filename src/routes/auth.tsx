@@ -15,7 +15,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { signUpCustomer } from "@/lib/auth.functions";
 import { WaveLoader } from "@/components/WaveLoader";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { Fish, Store } from "lucide-react";
+import { Fish, MailCheck, Store } from "lucide-react";
 import {
   digits,
   formatCep,
@@ -77,6 +77,7 @@ function AuthPage() {
   const [busyLabel, setBusyLabel] = useState<string[]>(["Carregando..."]);
   const busyStarted = useRef(0);
   const [forgot, setForgot] = useState(false);
+  const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
 
   // Garante que a animação de ondas apareça por pelo menos ~2,8s (dá tempo de
   // ver o peixe nadar e ao menos duas mensagens, sem "piscar").
@@ -253,6 +254,7 @@ function AuthPage() {
       });
 
       if (result.needsEmailConfirmation) {
+        setConfirmationEmail(String(fd.get("email")));
         toast.success("Cadastro realizado! Verifique seu e-mail para confirmar a conta.");
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -343,7 +345,37 @@ function AuthPage() {
             <BrandLogo size="sm" />
           </Link>
 
-          {forgot ? (
+          {confirmationEmail ? (
+            <section className="animate-fade-up text-center" aria-live="polite">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-secondary text-ocean">
+                <MailCheck className="h-8 w-8" aria-hidden="true" />
+              </div>
+              <h2 className="mt-5 text-2xl font-bold">Confirme seu e-mail</h2>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Enviamos uma mensagem de verificação para
+                <strong className="block break-all text-foreground">{confirmationEmail}</strong>
+              </p>
+              <div className="mt-6 rounded-xl border bg-card p-4 text-left shadow-soft">
+                <p className="text-sm font-semibold">Para liberar sua conta:</p>
+                <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
+                  <li>1. Abra a mensagem enviada pela Trapiche Pescados.</li>
+                  <li>2. Clique no botão de confirmação do e-mail.</li>
+                  <li>3. Volte ao portal e entre com sua senha.</li>
+                </ol>
+                <p className="mt-4 text-xs text-muted-foreground">
+                  Não encontrou? Verifique também as pastas Spam, Lixo eletrônico e Promoções.
+                </p>
+              </div>
+              <Button
+                type="button"
+                className="mt-6 w-full"
+                size="lg"
+                onClick={() => setConfirmationEmail(null)}
+              >
+                Ir para entrar
+              </Button>
+            </section>
+          ) : forgot ? (
             <form method="post" onSubmit={handleForgot} className="space-y-5">
               <div>
                 <h2 className="text-2xl font-bold">Recuperar senha</h2>
