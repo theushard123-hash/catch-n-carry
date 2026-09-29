@@ -141,6 +141,13 @@
       "when": 1790625889150,
       "tag": "0019_harden_new_customer_profile_policy",
       "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1790707798332,
+      "tag": "0020_cigam_integration",
+      "breakpoints": true
     }
   ]
 }

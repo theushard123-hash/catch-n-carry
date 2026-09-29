@@ -131,6 +131,36 @@ export type Database = {
         }
         Relationships: []
       }
+      cigam_sync_log: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          entity: string
+          entity_id: string | null
+          id: string
+          message: string | null
+          success: boolean
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          entity: string
+          entity_id?: string | null
+          id?: string
+          message?: string | null
+          success: boolean
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          entity?: string
+          entity_id?: string | null
+          id?: string
+          message?: string | null
+          success?: boolean
+        }
+        Relationships: []
+      }
       order_items: {
         Row: {
           created_at: string
@@ -188,6 +218,9 @@ export type Database = {
       orders: {
         Row: {
           admin_notes: string
+          cigam_sync_error: string | null
+          cigam_sync_status: string
+          cigam_synced_at: string | null
           created_at: string
           customer_type: Database["public"]["Enums"]["customer_type"]
           delivery_address: string
@@ -208,6 +241,9 @@ export type Database = {
         }
         Insert: {
           admin_notes?: string
+          cigam_sync_error?: string | null
+          cigam_sync_status?: string
+          cigam_synced_at?: string | null
           created_at?: string
           customer_type: Database["public"]["Enums"]["customer_type"]
           delivery_address?: string
@@ -228,6 +264,9 @@ export type Database = {
         }
         Update: {
           admin_notes?: string
+          cigam_sync_error?: string | null
+          cigam_sync_status?: string
+          cigam_synced_at?: string | null
           created_at?: string
           customer_type?: Database["public"]["Enums"]["customer_type"]
           delivery_address?: string
@@ -262,6 +301,7 @@ export type Database = {
           created_at: string
           customer_type: Database["public"]["Enums"]["customer_type"] | null
           description: string
+          external_code: string | null
           id: string
           name: string
           sort_order: number
@@ -271,6 +311,7 @@ export type Database = {
           created_at?: string
           customer_type?: Database["public"]["Enums"]["customer_type"] | null
           description?: string
+          external_code?: string | null
           id?: string
           name: string
           sort_order?: number
@@ -280,6 +321,7 @@ export type Database = {
           created_at?: string
           customer_type?: Database["public"]["Enums"]["customer_type"] | null
           description?: string
+          external_code?: string | null
           id?: string
           name?: string
           sort_order?: number
@@ -359,6 +401,9 @@ export type Database = {
           address: string
           admin_notes: string | null
           approved: boolean
+          cigam_sync_error: string | null
+          cigam_sync_status: string
+          cigam_synced_at: string | null
           city: string
           company_name: string
           created_at: string
@@ -380,6 +425,9 @@ export type Database = {
           address?: string
           admin_notes?: string | null
           approved?: boolean
+          cigam_sync_error?: string | null
+          cigam_sync_status?: string
+          cigam_synced_at?: string | null
           city?: string
           company_name?: string
           created_at?: string
@@ -401,6 +449,9 @@ export type Database = {
           address?: string
           admin_notes?: string | null
           approved?: boolean
+          cigam_sync_error?: string | null
+          cigam_sync_status?: string
+          cigam_synced_at?: string | null
           city?: string
           company_name?: string
           created_at?: string

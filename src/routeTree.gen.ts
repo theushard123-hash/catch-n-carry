@@ -24,6 +24,7 @@ import { Route as AuthenticatedCatalogoRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedPerfilRouteImport } from './routes/_authenticated/perfil'
 import { Route as DotlovableOauthConsentRouteImport } from './routes/[.]lovable.oauth.consent'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
+import { Route as AuthenticatedAdminCigamRouteImport } from './routes/_authenticated/admin/cigam'
 import { Route as AuthenticatedAdminClientesRouteImport } from './routes/_authenticated/admin/clientes'
 import { Route as AuthenticatedAdminCondicoesRouteImport } from './routes/_authenticated/admin/condicoes'
 import { Route as AuthenticatedAdminConfiguracoesRouteImport } from './routes/_authenticated/admin/configuracoes'
@@ -109,6 +110,11 @@ const AuthenticatedAdminIndexRoute = AuthenticatedAdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedAdminRouteRoute,
 } as any)
+const AuthenticatedAdminCigamRoute = AuthenticatedAdminCigamRouteImport.update({
+  id: '/cigam',
+  path: '/cigam',
+  getParentRoute: () => AuthenticatedAdminRouteRoute,
+} as any)
 const AuthenticatedAdminClientesRoute =
   AuthenticatedAdminClientesRouteImport.update({
     id: '/clientes',
@@ -177,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/admin/cigam': typeof AuthenticatedAdminCigamRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -201,6 +208,7 @@ export interface FileRoutesByTo {
   '/catalogo': typeof AuthenticatedCatalogoRoute
   '/perfil': typeof AuthenticatedPerfilRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/admin/cigam': typeof AuthenticatedAdminCigamRoute
   '/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -228,6 +236,7 @@ export interface FileRoutesById {
   '/_authenticated/catalogo': typeof AuthenticatedCatalogoRoute
   '/_authenticated/perfil': typeof AuthenticatedPerfilRoute
   '/.lovable/oauth/consent': typeof DotlovableOauthConsentRoute
+  '/_authenticated/admin/cigam': typeof AuthenticatedAdminCigamRoute
   '/_authenticated/admin/clientes': typeof AuthenticatedAdminClientesRoute
   '/_authenticated/admin/condicoes': typeof AuthenticatedAdminCondicoesRoute
   '/_authenticated/admin/configuracoes': typeof AuthenticatedAdminConfiguracoesRoute
@@ -255,6 +264,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/perfil'
     | '/.lovable/oauth/consent'
+    | '/admin/cigam'
     | '/admin/clientes'
     | '/admin/condicoes'
     | '/admin/configuracoes'
@@ -279,6 +289,7 @@ export interface FileRouteTypes {
     | '/catalogo'
     | '/perfil'
     | '/.lovable/oauth/consent'
+    | '/admin/cigam'
     | '/admin/clientes'
     | '/admin/condicoes'
     | '/admin/configuracoes'
@@ -305,6 +316,7 @@ export interface FileRouteTypes {
     | '/_authenticated/catalogo'
     | '/_authenticated/perfil'
     | '/.lovable/oauth/consent'
+    | '/_authenticated/admin/cigam'
     | '/_authenticated/admin/clientes'
     | '/_authenticated/admin/condicoes'
     | '/_authenticated/admin/configuracoes'
@@ -437,6 +449,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminIndexRouteImport
       parentRoute: typeof AuthenticatedAdminRouteRoute
     }
+    '/_authenticated/admin/cigam': {
+      id: '/_authenticated/admin/cigam'
+      path: '/cigam'
+      fullPath: '/admin/cigam'
+      preLoaderRoute: typeof AuthenticatedAdminCigamRouteImport
+      parentRoute: typeof AuthenticatedAdminRouteRoute
+    }
     '/_authenticated/admin/clientes': {
       id: '/_authenticated/admin/clientes'
       path: '/clientes'
@@ -504,6 +523,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedAdminRouteRouteChildren {
+  AuthenticatedAdminCigamRoute: typeof AuthenticatedAdminCigamRoute
   AuthenticatedAdminClientesRoute: typeof AuthenticatedAdminClientesRoute
   AuthenticatedAdminCondicoesRoute: typeof AuthenticatedAdminCondicoesRoute
   AuthenticatedAdminConfiguracoesRoute: typeof AuthenticatedAdminConfiguracoesRoute
@@ -516,6 +536,7 @@ interface AuthenticatedAdminRouteRouteChildren {
 
 const AuthenticatedAdminRouteRouteChildren: AuthenticatedAdminRouteRouteChildren =
   {
+    AuthenticatedAdminCigamRoute: AuthenticatedAdminCigamRoute,
     AuthenticatedAdminClientesRoute: AuthenticatedAdminClientesRoute,
     AuthenticatedAdminCondicoesRoute: AuthenticatedAdminCondicoesRoute,
     AuthenticatedAdminConfiguracoesRoute: AuthenticatedAdminConfiguracoesRoute,
