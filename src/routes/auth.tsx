@@ -354,7 +354,7 @@ function AuthPage() {
               </div>
               <h2 className="mt-5 text-2xl font-bold">Confirme seu e-mail</h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                Enviamos uma mensagem de verificação para
+                Enviamos um código de verificação para
                 <strong className="block break-all text-foreground">{confirmationEmail}</strong>
               </p>
               <form
