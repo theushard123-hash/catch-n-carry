@@ -46,7 +46,8 @@ export function PromoBanners({ customerType }: { customerType?: "atacado" | "var
                   src={b.image_url}
                   alt={b.title || "Novidade Trapiche Pescados"}
                   className="h-auto max-h-[280px] w-full object-contain sm:max-h-[380px]"
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
                 />
                 {(b.title || b.description) && (
                   <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-primary/90 to-transparent p-5">
