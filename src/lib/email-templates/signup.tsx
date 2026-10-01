@@ -1,58 +1,35 @@
 import * as React from 'react'
 
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Link,
-  Preview,
-  Text,
-} from '@react-email/components'
+import { Body, Container, Head, Heading, Html, Link, Preview, Section, Text } from '@react-email/components'
 
 interface SignupEmailProps {
   siteName: string
   siteUrl: string
   recipient: string
   confirmationUrl: string
+  token?: string
 }
 
-export const SignupEmail = ({
-  siteName,
-  siteUrl,
-  recipient,
-  confirmationUrl,
-}: SignupEmailProps) => (
-  <Html lang="en" dir="ltr">
-    <Head>
-      <style>{darkModeCss}</style>
-    </Head>
-    <Preview>Confirm your email for {siteName}</Preview>
+export const SignupEmail = ({ siteName, siteUrl, recipient, confirmationUrl, token }: SignupEmailProps) => (
+  <Html lang="pt-BR" dir="ltr">
+    <Head />
+    <Preview>Seu código de verificação: {token ?? ''}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Confirm your email</Heading>
+        <Text style={brand}>Trapiche Pescados</Text>
+        <Heading style={h1}>Confirme seu e-mail</Heading>
         <Text style={text}>
-          Thanks for signing up for{' '}
-          <Link href={siteUrl} style={link}>
-            <strong>{siteName}</strong>
-          </Link>
-          !
+          Olá! Recebemos o cadastro de <strong>{recipient}</strong> no portal{' '}
+          <Link href={siteUrl} style={link}>{siteName}</Link>. Digite o código abaixo na tela de cadastro para ativar sua conta:
         </Text>
-        <Text style={text}>
-          Please confirm your email address (
-          <Link href={`mailto:${recipient}`} style={link}>
-            {recipient}
-          </Link>
-          ) by clicking the button below:
+        <Section style={codeBox}>
+          <Text style={code}>{token || '------'}</Text>
+        </Section>
+        <Text style={small}>
+          O código expira em breve. Se preferir, você também pode{' '}
+          <Link href={confirmationUrl} style={link}>confirmar por este link</Link>.
         </Text>
-        <Button className="dm-btn" style={button} href={confirmationUrl}>
-          Verify Email
-        </Button>
-        <Text style={footer}>
-          If you didn't create an account, you can safely ignore this email.
-        </Text>
+        <Text style={footer}>Se você não fez este cadastro, ignore este e-mail.</Text>
       </Container>
     </Body>
   </Html>
@@ -61,35 +38,12 @@ export const SignupEmail = ({
 export default SignupEmail
 
 const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
-const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
-}
-const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
-}
-const link = { color: 'inherit', textDecoration: 'underline' }
-const button = {
-  backgroundColor: '#000000',
-  color: '#ffffff',
-  fontSize: '14px',
-  border: '1px solid #000000',
-  borderRadius: '8px',
-  padding: '12px 20px',
-  textDecoration: 'none',
-}
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
-// Rendered as a text child, which React may HTML-escape: keep this CSS free of >, &, and quotes.
-const darkModeCss = `
-  @media (prefers-color-scheme: dark) {
-    .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
-  }
-  [data-ogsc] .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
-  [data-ogsb] .dm-btn { background-color: #ffffff !important; color: #000000 !important; }
-`
+const container = { padding: '24px 28px', maxWidth: '520px' }
+const brand = { fontSize: '13px', fontWeight: 'bold' as const, color: '#0e9aa7', letterSpacing: '1px', textTransform: 'uppercase' as const, margin: '0 0 8px' }
+const h1 = { fontSize: '22px', fontWeight: 'bold' as const, color: '#0b2545', margin: '0 0 16px' }
+const text = { fontSize: '14px', color: '#44505f', lineHeight: '1.6', margin: '0 0 20px' }
+const codeBox = { backgroundColor: '#eef7f8', border: '1px solid #0e9aa7', borderRadius: '10px', padding: '8px', textAlign: 'center' as const, margin: '0 0 20px' }
+const code = { fontSize: '32px', fontWeight: 'bold' as const, letterSpacing: '8px', color: '#0b2545', margin: '8px 0', fontFamily: 'Courier New, monospace' }
+const link = { color: '#0e9aa7', textDecoration: 'underline' }
+const small = { fontSize: '12px', color: '#6b7280', lineHeight: '1.5', margin: '0 0 16px' }
+const footer = { fontSize: '12px', color: '#999999', margin: '24px 0 0' }
