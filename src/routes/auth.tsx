@@ -78,6 +78,8 @@ function AuthPage() {
   const busyStarted = useRef(0);
   const [forgot, setForgot] = useState(false);
   const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpBusy, setOtpBusy] = useState(false);
 
   // Garante que a animação de ondas apareça por pelo menos ~2,8s (dá tempo de
   // ver o peixe nadar e ao menos duas mensagens, sem "piscar").
@@ -352,27 +354,72 @@ function AuthPage() {
               </div>
               <h2 className="mt-5 text-2xl font-bold">Confirme seu e-mail</h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                Enviamos uma mensagem de verificação para
+                Enviamos um código de verificação para
                 <strong className="block break-all text-foreground">{confirmationEmail}</strong>
               </p>
-              <div className="mt-6 rounded-xl border bg-card p-4 text-left shadow-soft">
-                <p className="text-sm font-semibold">Para liberar sua conta:</p>
-                <ol className="mt-3 space-y-2 text-sm text-muted-foreground">
-                  <li>1. Abra a mensagem enviada pela Trapiche Pescados.</li>
-                  <li>2. Clique no botão de confirmação do e-mail.</li>
-                  <li>3. Volte ao portal e entre com sua senha.</li>
-                </ol>
-                <p className="mt-4 text-xs text-muted-foreground">
+              <form
+                method="post"
+                className="mt-6 space-y-3 rounded-xl border bg-card p-4 text-left shadow-soft"
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  const code = otpCode.replace(/\D/g, "");
+                  if (code.length < 6) {
+                    toast.error("Digite o código recebido por e-mail.");
+                    return;
+                  }
+                  setOtpBusy(true);
+                  const { error } = await supabase.auth.verifyOtp({
+                    email: confirmationEmail,
+                    token: code,
+                    type: "signup",
+                  });
+                  setOtpBusy(false);
+                  if (error) {
+                    toast.error("Código inválido ou expirado. Confira e tente novamente.");
+                    return;
+                  }
+                  toast.success("E-mail confirmado! Bem-vindo à Trapiche.");
+                  setConfirmationEmail(null);
+                  navigate({ to: "/catalogo" });
+                }}
+              >
+                <Label htmlFor="otp-code">Código de verificação</Label>
+                <Input
+                  id="otp-code"
+                  name="otp"
+                  inputMode="numeric"
+                  autoComplete="one-time-code"
+                  maxLength={8}
+                  placeholder="000000"
+                  className="text-center text-2xl tracking-[0.5em]"
+                  value={otpCode}
+                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                />
+                <Button type="submit" className="w-full" size="lg" disabled={otpBusy}>
+                  {otpBusy ? "Verificando..." : "Confirmar código"}
+                </Button>
+                <button
+                  type="button"
+                  className="w-full text-xs text-ocean underline"
+                  onClick={async () => {
+                    const { error } = await supabase.auth.resend({ type: "signup", email: confirmationEmail });
+                    if (error) toast.error("Aguarde um pouco antes de pedir outro código.");
+                    else toast.success("Novo código enviado.");
+                  }}
+                >
+                  Reenviar código
+                </button>
+                <p className="text-xs text-muted-foreground">
                   Não encontrou? Verifique também as pastas Spam, Lixo eletrônico e Promoções.
                 </p>
-              </div>
+              </form>
               <Button
                 type="button"
-                className="mt-6 w-full"
-                size="lg"
+                variant="ghost"
+                className="mt-4 w-full"
                 onClick={() => setConfirmationEmail(null)}
               >
-                Ir para entrar
+                Voltar para entrar
               </Button>
             </section>
           ) : forgot ? (
