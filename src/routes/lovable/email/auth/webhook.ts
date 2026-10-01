@@ -10,9 +10,9 @@ import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
 const SITE_NAME = "Trapiche Loja Virtual"
-const SENDER_DOMAIN = "notify.trapiche.com"
-const ROOT_DOMAIN = "trapiche.com"
-const FROM_DOMAIN = "trapiche.com"
+const SENDER_DOMAIN = "notify.app.trapichepescados.com.br"
+const ROOT_DOMAIN = "trapichepescados.com.br"
+const FROM_DOMAIN = "trapichepescados.com.br"
 const SITE_URL = `https://${ROOT_DOMAIN}`
 
 // The SDK handler owns verification, dispatch, and retry semantics; this file
