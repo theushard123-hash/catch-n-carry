@@ -84,17 +84,30 @@ export const signUpCustomer = createServerFn({ method: "POST" })
       body: JSON.stringify({ email: data.email, password: data.password, data: safeMetadata }),
     });
 
-    const body = (await res.json().catch(() => ({}))) as {
+    type U = { id?: string; identities?: unknown[] | null };
+    const body = (await res.json().catch(() => ({}))) as U & {
       msg?: string;
       error_description?: string;
       message?: string;
+      error_code?: string;
       access_token?: string;
-      user?: { id?: string } | null;
+      user?: U | null;
     };
 
     if (!res.ok) {
+      const raw = `${body.error_code ?? ""} ${body.msg ?? body.message ?? ""}`.toLowerCase();
+      if (raw.includes("already") || raw.includes("exists")) {
+        throw new Error("Este e-mail já está cadastrado. Faça login ou recupere sua senha.");
+      }
       const msg = body.msg ?? body.error_description ?? body.message ?? "Não foi possível criar a conta.";
       throw new Error(msg);
+    }
+
+    // Com confirmação de e-mail ativa, um e-mail já existente retorna "sucesso"
+    // com identities vazio (proteção contra enumeração). Detectamos e bloqueamos.
+    const user = body.user ?? body;
+    if (Array.isArray(user.identities) && user.identities.length === 0) {
+      throw new Error("Este e-mail já está cadastrado. Faça login ou recupere sua senha.");
     }
 
     return { needsEmailConfirmation: !body.access_token };
