@@ -121,6 +121,19 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  // Não manter login entre sessões do navegador: ao abrir o site em uma nova
+  // sessão (aba/janela nova após fechar), encerra qualquer sessão persistida.
+  useEffect(() => {
+    const FLAG = "trapiche-browser-session";
+    if (sessionStorage.getItem(FLAG)) return;
+    sessionStorage.setItem(FLAG, "1");
+    import("@/integrations/supabase/client").then(({ supabase }) => {
+      supabase.auth.getSession().then(({ data }) => {
+        if (data.session) supabase.auth.signOut();
+      });
+    });
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
