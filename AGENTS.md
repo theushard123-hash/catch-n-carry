@@ -11,3 +11,5 @@
 - MCP server lives in src/lib/mcp/ (mcp-js + Supabase OAuth, tools use supabaseForUser so RLS applies) — agents act as the signed-in user.
 - Cart items and per-product specifications persist through `src/lib/cart.ts` so catalog and checkout share one client-side source of truth.
 - Cigam ERP integration: server-only client in src/lib/cigam.server.ts, admin-gated server fns in src/lib/cigam.functions.ts — keeps ERP credentials out of the browser.
+- Storefront products use a bounded database RPC projection; catalog popularity returns authenticated-only ranks from invoiced orders, never private order data or wholesale prices to visitors.
+- Catalog filter/sort logic is isolated in a browser-safe pure module; shared product skeletons match the catalog grid to avoid layout shifts.
