@@ -16,6 +16,10 @@ export const Route = createFileRoute("/.lovable/oauth/consent")({
   ssr: false,
   head: () => ({
     meta: [
+      { property: "og:title", content: "Autorizar acesso — Trapiche Pescados" },
+      { property: "og:description", content: "Autorize um assistente a acessar sua conta da Trapiche Pescados." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Autorizar acesso — Trapiche Pescados" },
       { name: "description", content: "Autorize um assistente a acessar sua conta da Trapiche Pescados." },
     ],

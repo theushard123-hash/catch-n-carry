@@ -17,6 +17,10 @@ import type { Tables } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Pedidos — Administração Trapiche Pescados" },
+      { property: "og:description", content: "Aprove, fature e exporte os pedidos recebidos pelo portal." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Pedidos — Administração Trapiche Pescados" },
       { name: "description", content: "Aprove, fature e exporte os pedidos recebidos pelo portal." },
     ],

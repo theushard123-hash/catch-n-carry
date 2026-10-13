@@ -20,6 +20,10 @@ import type { Tables } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/_authenticated/admin/novidades")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Novidades e ofertas — Administração Trapiche Pescados" },
+      { property: "og:description", content: "Publique imagens de ofertas do dia e novidades exibidas para os clientes no catálogo." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Novidades e ofertas — Administração Trapiche Pescados" },
       {
         name: "description",

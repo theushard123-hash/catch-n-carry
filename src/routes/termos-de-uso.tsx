@@ -4,6 +4,8 @@ import { LegalPage, type LegalSection } from "@/components/LegalPage";
 export const Route = createFileRoute("/termos-de-uso")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Termos de Uso — Trapiche Pescados" },
       {
         name: "description",

@@ -13,6 +13,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Meu cadastro — Portal Trapiche Pescados" },
+      { property: "og:description", content: "Atualize os dados da sua empresa e endereço de entrega." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Meu cadastro — Portal Trapiche Pescados" },
       { name: "description", content: "Atualize os dados da sua empresa e endereço de entrega." },
     ],

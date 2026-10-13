@@ -23,6 +23,10 @@ import {
 export const Route = createFileRoute("/_authenticated/pedidos/$id")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Detalhes do pedido — Portal Trapiche Pescados" },
+      { property: "og:description", content: "Itens, pagamento e status do seu pedido na Trapiche Pescados." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Detalhes do pedido — Portal Trapiche Pescados" },
       { name: "description", content: "Itens, pagamento e status do seu pedido na Trapiche Pescados." },
     ],

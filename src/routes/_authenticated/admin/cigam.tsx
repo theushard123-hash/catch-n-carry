@@ -16,6 +16,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 export const Route = createFileRoute("/_authenticated/admin/cigam")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Integração Cigam — Administração Trapiche Pescados" },
+      { property: "og:description", content: "Envie pedidos e cadastros de clientes para o ERP Cigam." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Integração Cigam — Administração Trapiche Pescados" },
       { name: "description", content: "Envie pedidos e cadastros de clientes para o ERP Cigam." },
     ],

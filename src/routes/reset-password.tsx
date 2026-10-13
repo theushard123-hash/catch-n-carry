@@ -12,6 +12,8 @@ export const Route = createFileRoute("/reset-password")({
   ssr: false,
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Redefinir senha — Portal Trapiche Pescados" },
       { name: "description", content: "Defina uma nova senha para sua conta no portal Trapiche Pescados." },
       { property: "og:title", content: "Redefinir senha — Trapiche Pescados" },

@@ -4,6 +4,8 @@ import { LegalPage, type LegalSection } from "@/components/LegalPage";
 export const Route = createFileRoute("/politica-de-privacidade")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Política de Privacidade — Trapiche Pescados" },
       {
         name: "description",

@@ -19,6 +19,10 @@ import type { Tables } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/_authenticated/admin/condicoes")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Condições de pagamento — Administração Trapiche Pescados" },
+      { property: "og:description", content: "Defina as condições de pagamento disponíveis para atacado e varejo." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Condições de pagamento — Administração Trapiche Pescados" },
       { name: "description", content: "Defina as condições de pagamento disponíveis para atacado e varejo." },
     ],

@@ -21,6 +21,10 @@ import type { Tables } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/_authenticated/admin/produtos")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Produtos — Administração Trapiche Pescados" },
+      { property: "og:description", content: "Cadastre e edite produtos, preços de atacado e varejo e categorias." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Produtos — Administração Trapiche Pescados" },
       { name: "description", content: "Cadastre e edite produtos, preços de atacado e varejo e categorias." },
     ],
