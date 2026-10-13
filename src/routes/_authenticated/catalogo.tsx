@@ -120,12 +120,18 @@ function CatalogPage() {
         )}
       </section>
 
-      <div className="fixed inset-x-0 bottom-0 z-30 border-t bg-card/95 p-3 backdrop-blur sm:p-4">
-        <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3">
-          <div className="min-w-0"><p className="truncate text-sm font-semibold">{cartLines.length === 0 ? "Seu carrinho está vazio" : `${cartLines.length} ${cartLines.length === 1 ? "produto" : "produtos"} no carrinho`}</p><p className="text-xs text-muted-foreground">Subtotal {formatBRL(subtotal)}</p></div>
-          <Button asChild size="lg" variant="aqua" disabled={cartLines.length === 0}><Link to="/carrinho"><ShoppingBasket /> <span className="hidden sm:inline">Ir para o carrinho</span><span className="sm:hidden">Carrinho</span>{cartLines.length > 0 && <Badge variant="default">{cartLines.length}</Badge>}</Link></Button>
+      {cartLines.length > 0 && !weightFor && (
+        <div className="fixed bottom-4 right-4 z-30 sm:bottom-6 sm:right-6">
+          <Button asChild size="lg" variant="aqua" className="h-12 rounded-full pl-4 pr-3 shadow-lift">
+            <Link to="/carrinho" aria-label="Ir para o carrinho">
+              <ShoppingBasket />
+              <span className="hidden sm:inline">Carrinho</span>
+              <span className="hidden text-sm font-semibold sm:inline">{formatBRL(subtotal)}</span>
+              <Badge variant="default">{cartLines.length}</Badge>
+            </Link>
+          </Button>
         </div>
-      </div>
+      )}
       <WeightPickerDialog open={Boolean(weightFor)} onOpenChange={(open) => !open && setWeightFor(null)} productName={weightFor?.name ?? ""} cutOptions={weightFor?.cut_options ?? []} minQty={Number(weightFor?.min_qty ?? 0.1)} initialQty={weightFor ? cart.find((item) => item.productId === weightFor.id)?.qty : undefined} initialSpec={weightFor ? specs[weightFor.id] : undefined} onConfirm={(qty, spec) => { if (!weightFor) return; setQty(weightFor, qty); setSpecs((previous) => ({ ...previous, [weightFor.id]: spec })); }} />
     </div>
   );
