@@ -11,6 +11,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 export const Route = createFileRoute("/_authenticated/admin/")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Visão geral — Administração Trapiche Pescados" },
+      { property: "og:description", content: "Resumo de pedidos, clientes e produtos do portal." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Visão geral — Administração Trapiche Pescados" },
       { name: "description", content: "Resumo de pedidos, clientes e produtos do portal." },
     ],

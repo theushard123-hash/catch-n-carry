@@ -12,6 +12,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 export const Route = createFileRoute("/_authenticated/admin/fretes")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Fretes — Administração Trapiche Pescados" },
+      { property: "og:description", content: "Configure o valor do frete por bairro e cidade." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Fretes — Administração Trapiche Pescados" },
       { name: "description", content: "Configure o valor do frete por bairro e cidade." },
     ],

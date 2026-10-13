@@ -7,6 +7,10 @@ import { cn } from "@/lib/utils";
 export const Route = createFileRoute("/_authenticated/admin")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Administração — Portal Trapiche Pescados" },
+      { property: "og:description", content: "Painel de gestão de produtos, condições de pagamento, clientes e pedidos." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Administração — Portal Trapiche Pescados" },
       { name: "description", content: "Painel de gestão de produtos, condições de pagamento, clientes e pedidos." },
     ],

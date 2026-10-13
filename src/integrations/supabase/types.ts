@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -598,7 +598,24 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      catalog_sales_ranking: {
+        Args: never
+        Returns: {
+          product_id: string
+          sales_rank: number
+        }[]
+      }
+      storefront_featured_products: {
+        Args: never
+        Returns: {
+          description: string
+          id: string
+          image_url: string
+          name: string
+          price_varejo: number
+          unit: string
+        }[]
+      }
     }
     Enums: {
       app_role: "admin" | "user"

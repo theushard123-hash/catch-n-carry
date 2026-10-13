@@ -20,6 +20,10 @@ import type { Tables } from "@/integrations/supabase/types";
 export const Route = createFileRoute("/_authenticated/admin/clientes")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Clientes — Administração Trapiche Pescados" },
+      { property: "og:description", content: "Aprove cadastros, defina o tipo de cliente e o código no CIGAM." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Clientes — Administração Trapiche Pescados" },
       { name: "description", content: "Aprove cadastros, defina o tipo de cliente e o código no CIGAM." },
     ],

@@ -12,6 +12,10 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 export const Route = createFileRoute("/_authenticated/pedidos/")({
   head: () => ({
     meta: [
+      { property: "og:title", content: "Meus pedidos — Portal Trapiche Pescados" },
+      { property: "og:description", content: "Acompanhe o status dos seus pedidos na Trapiche Pescados." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
       { title: "Meus pedidos — Portal Trapiche Pescados" },
       { name: "description", content: "Acompanhe o status dos seus pedidos na Trapiche Pescados." },
     ],

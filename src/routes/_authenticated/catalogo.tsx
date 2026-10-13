@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import { AlertTriangle, Fish, Info, Plus, Search, ShoppingBasket, Trash2 } from "lucide-react";
+import { AlertTriangle, Fish, Info, Plus, RotateCcw, Search, ShoppingBasket, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/hooks/useAuth";
@@ -15,6 +15,8 @@ import { cn } from "@/lib/utils";
 import { WeightPickerDialog, formatWeight, type ItemSpec } from "@/components/WeightPickerDialog";
 import { CartQuantity } from "@/components/CartQuantity";
 import { readCart, readCartSpecs, writeCart, writeCartSpecs, type CartItem } from "@/lib/cart";
+import { CatalogFilters } from "@/components/CatalogFilters";
+import { filterCatalog, type CatalogSort } from "@/lib/catalog-filters";
 
 export const Route = createFileRoute("/_authenticated/catalogo")({
   head: () => ({ meta: [
@@ -37,6 +39,9 @@ function CatalogPage() {
   const customerType = profile?.customer_type ?? "varejo";
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [sort, setSort] = useState<CatalogSort>("featured");
   const [cart, setCart] = useState<CartItem[]>([]);
   const [specs, setSpecs] = useState<Record<string, ItemSpec>>({});
   const [hydrated, setHydrated] = useState(false);
@@ -58,14 +63,19 @@ function CatalogPage() {
     const { data, error } = await supabase.from("app_settings_customer").select("*").eq("id", 1).maybeSingle();
     if (error) throw error; return data;
   }});
+  const salesQ = useQuery({ queryKey: ["catalog-sales-ranking"], enabled: sort === "bestsellers", staleTime: 60_000, queryFn: async () => {
+    const { data, error } = await supabase.rpc("catalog_sales_ranking");
+    if (error) throw error;
+    return data;
+  }});
 
   const products = productsQ.data ?? [];
   const productMap = useMemo(() => new Map(products.map((product) => [product.id, product])), [products]);
   const priceOf = (product: Product) => Number(customerType === "atacado" ? product.price_atacado : product.price_varejo);
-  const filtered = useMemo(() => {
-    const value = search.trim().toLowerCase();
-    return products.filter((product) => (category === "all" || product.category_id === category) && (!value || product.name.toLowerCase().includes(value) || (product.sku ?? "").toLowerCase().includes(value)));
-  }, [products, search, category]);
+  const ranks = useMemo(() => new Map((salesQ.data ?? []).map((item) => [item.product_id, Number(item.sales_rank)])), [salesQ.data]);
+  const filtered = useMemo(() => filterCatalog(products, { search, category, minPrice, maxPrice, sort, customerType, ranks }), [products, search, category, minPrice, maxPrice, sort, customerType, ranks]);
+  const filtersActive = Boolean(search || category !== "all" || minPrice || maxPrice || sort !== "featured");
+  const resetFilters = () => { setSearch(""); setCategory("all"); setMinPrice(""); setMaxPrice(""); setSort("featured"); };
   const cartLines = cart.map((item) => ({ ...item, product: productMap.get(item.productId) })).filter((line): line is CartItem & { product: Product } => Boolean(line.product));
   const subtotal = cartLines.reduce((sum, line) => sum + priceOf(line.product) * line.qty, 0);
   const blocked = Boolean(settingsQ.data?.require_approval && profile?.customer_type === "atacado" && !profile.approved);
@@ -91,7 +101,10 @@ function CatalogPage() {
           <Chip active={category === "all"} onClick={() => setCategory("all")}>Todos</Chip>
           {(categoriesQ.data ?? []).map((item) => <Chip key={item.id} active={category === item.id} onClick={() => setCategory(item.id)}>{item.name}</Chip>)}
         </div>
-        {productsQ.isLoading ? <ProductCardsSkeleton /> : filtered.length === 0 ? <div className="rounded-xl border border-dashed p-12 text-center text-muted-foreground">Nenhum produto encontrado.</div> : (
+        <CatalogFilters minPrice={minPrice} maxPrice={maxPrice} sort={sort} onMinChange={setMinPrice} onMaxChange={setMaxPrice} onSortChange={setSort} onReset={resetFilters} active={filtersActive} />
+        {salesQ.isError && sort === "bestsellers" && <div role="alert" className="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground"><span>Não conseguimos carregar os mais vendidos agora.</span><Button variant="outline" size="sm" onClick={() => salesQ.refetch()}>Tentar novamente</Button></div>}
+        {!productsQ.isLoading && !productsQ.isError && <p aria-live="polite" className="mb-4 text-xs text-muted-foreground">{filtered.length} {filtered.length === 1 ? "produto encontrado" : "produtos encontrados"}</p>}
+        {productsQ.isLoading || (sort === "bestsellers" && salesQ.isLoading) ? <ProductCardsSkeleton count={8} /> : productsQ.isError ? <div role="alert" className="py-12 text-center"><Fish className="mx-auto mb-4 h-10 w-10 text-ocean" /><h2 className="text-lg font-bold">O catálogo não chegou por aqui ainda.</h2><p className="mt-2 text-sm text-muted-foreground">Tente novamente em instantes.</p><Button variant="outline" className="mt-5" onClick={() => productsQ.refetch()}>Tentar novamente</Button></div> : filtered.length === 0 ? <div className="flex flex-col items-center border-y px-4 py-14 text-center"><div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-secondary"><Fish className="h-8 w-8 text-ocean" /></div><h2 className="text-xl font-bold">Nenhum peixe caiu nessa rede!</h2><p className="mt-2 max-w-sm text-sm text-muted-foreground">Não encontramos produtos com essa busca. Que tal conferir nossa seleção completa?</p><Button className="mt-6" onClick={resetFilters}><RotateCcw /> Voltar para todos os produtos</Button></div> : (
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {filtered.map((product) => {
               const inCart = cart.find((item) => item.productId === product.id);

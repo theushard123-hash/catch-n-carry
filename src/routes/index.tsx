@@ -20,6 +20,8 @@ import { PromoBanners } from "@/components/PromoBanners";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { StoreBenefits } from "@/components/StoreBenefits";
+import { FeaturedProducts } from "@/components/FeaturedProducts";
 
 
 export const Route = createFileRoute("/")({
@@ -32,6 +34,8 @@ export const Route = createFileRoute("/")({
           "Faça seus pedidos de pescados e frutos do mar online. Catálogo completo, condições de pagamento flexíveis e acompanhamento de pedidos. Trapiche Pescados, Curitiba - PR.",
       },
       { property: "og:title", content: "Trapiche Pescados — Portal de Pedidos" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content:
@@ -104,6 +108,8 @@ function LandingPage() {
         </div>
       </header>
 
+      <StoreBenefits />
+
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-ocean">
         <div className="bg-waves absolute inset-0 opacity-20" aria-hidden />
@@ -158,6 +164,8 @@ function LandingPage() {
       <section className="mx-auto max-w-6xl px-4 pt-14">
         <PromoBanners />
       </section>
+
+      <FeaturedProducts />
 
       {/* Features */}
       <section className="mx-auto max-w-6xl px-4 py-16 md:py-20">
