@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { redirectSellerToSales } from "@/lib/seller-guard";
 
 export const Route = createFileRoute("/_authenticated/pedidos/$id")({
   head: () => ({

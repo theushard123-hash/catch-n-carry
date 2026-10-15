@@ -23,6 +23,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { CartQuantity } from "@/components/CartQuantity";
 import { WeightPickerDialog, formatWeight, type ItemSpec } from "@/components/WeightPickerDialog";
 import { cn } from "@/lib/utils";
+import { redirectSellerToSales } from "@/lib/seller-guard";
 
 const STORE_ADDRESS = "Alameda Princesa Izabel, 1710 — Bigorrilho, Curitiba — PR";
 const DEFAULT_WHATSAPP = "554130147701";
