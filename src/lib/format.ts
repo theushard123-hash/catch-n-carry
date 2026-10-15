@@ -21,15 +21,19 @@ export function formatDate(value: string | Date | null | undefined, withTime = f
 }
 
 export const ORDER_STATUS_LABEL: Record<string, string> = {
-  pendente: "Pendente",
+  pendente: "Novo",
   aprovado: "Aprovado",
-  faturado: "Faturado",
+  em_separacao: "Em Separação",
+  pronto_envio: "Pronto para Envio",
+  faturado: "Concluído",
   cancelado: "Cancelado",
 };
 
 export const ORDER_STATUS_VARIANT: Record<string, "warning" | "info" | "success" | "destructive"> = {
   pendente: "warning",
   aprovado: "info",
+  em_separacao: "info",
+  pronto_envio: "info",
   faturado: "success",
   cancelado: "destructive",
 };
