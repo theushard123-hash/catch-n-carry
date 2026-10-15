@@ -365,8 +365,8 @@ function AuthPage() {
                 onSubmit={async (e) => {
                   e.preventDefault();
                   const code = otpCode.replace(/\D/g, "");
-                  if (code.length < 4) {
-                    toast.error("Digite o código de 4 dígitos recebido por e-mail.");
+                  if (code.length < 6) {
+                    toast.error("Digite o código de 6 dígitos recebido por e-mail.");
                     return;
                   }
                   setOtpBusy(true);
@@ -391,8 +391,8 @@ function AuthPage() {
                   name="otp"
                   inputMode="numeric"
                   autoComplete="one-time-code"
-                  maxLength={4}
-                  placeholder="0000"
+                  maxLength={6}
+                  placeholder="000000"
                   className="text-center text-2xl tracking-[0.6em]"
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
