@@ -4,7 +4,8 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/PasswordInput";
+import { MIN_PASSWORD_LENGTH, authErrorMessage } from "@/lib/password-policy";
 import { Label } from "@/components/ui/label";
 import { ThemeToggle } from "@/components/ThemeToggle";
 
@@ -44,8 +45,8 @@ function ResetPasswordPage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const password = String(fd.get("password"));
-    if (password.length < 12) {
-      toast.error("A senha deve ter pelo menos 12 caracteres.");
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      toast.error("A senha deve ter pelo menos 8 caracteres.");
       return;
     }
     if (password !== String(fd.get("confirm"))) {
@@ -55,7 +56,7 @@ function ResetPasswordPage() {
     setBusy(true);
     const { error } = await supabase.auth.updateUser({ password });
     setBusy(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(authErrorMessage(error.message, error.code));
     else {
       toast.success("Senha atualizada com sucesso!");
       navigate({ to: "/catalogo" });
@@ -76,12 +77,12 @@ function ResetPasswordPage() {
           <form method="post" onSubmit={handleSubmit} className="mt-6 space-y-4">
             <div className="space-y-2">
               <Label htmlFor="password">Nova senha</Label>
-              <Input id="password" name="password" type="password" required minLength={12} />
-              <p className="text-xs text-muted-foreground">Use no mínimo 12 caracteres.</p>
+              <PasswordInput id="password" name="password" type="password" required minLength={MIN_PASSWORD_LENGTH} />
+              <p className="text-xs text-muted-foreground">Use no mínimo 8 caracteres.</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="confirm">Confirmar senha</Label>
-              <Input id="confirm" name="confirm" type="password" required minLength={12} />
+              <PasswordInput id="confirm" name="confirm" type="password" required minLength={MIN_PASSWORD_LENGTH} />
             </div>
 
             <Button type="submit" className="w-full" disabled={busy}>

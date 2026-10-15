@@ -13,6 +13,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/hooks/useAuth";
 import { useServerFn } from "@tanstack/react-start";
 import { signUpCustomer } from "@/lib/auth.functions";
+import { PasswordInput } from "@/components/PasswordInput";
+import { MIN_PASSWORD_LENGTH, authErrorMessage } from "@/lib/password-policy";
 import { WaveLoader } from "@/components/WaveLoader";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Fish, MailCheck, Store } from "lucide-react";
@@ -198,7 +200,7 @@ function AuthPage() {
     await stopBusy();
     if (error) {
       toast.error(
-        error.message.includes("Invalid login") ? "E-mail ou senha incorretos." : error.message,
+        authErrorMessage(error.message, error.code),
       );
       return;
     }
@@ -209,8 +211,8 @@ function AuthPage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const password = String(fd.get("password"));
-    if (password.length < 12) {
-      toast.error("A senha deve ter pelo menos 12 caracteres.");
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      toast.error("A senha deve ter pelo menos 8 caracteres.");
       return;
     }
     if (password !== confirmPassword) {
@@ -275,9 +277,7 @@ function AuthPage() {
     } catch (err) {
       const message = err instanceof Error ? err.message : "Não foi possível criar a conta.";
       toast.error(
-        message.includes("already registered")
-          ? "Este e-mail já possui cadastro. Faça login."
-          : message,
+        authErrorMessage(message),
       );
     } finally {
       await stopBusy();
@@ -473,7 +473,7 @@ function AuthPage() {
                         Esqueci minha senha
                       </button>
                     </div>
-                    <Input
+                    <PasswordInput
                       id="l-password"
                       name="password"
                       type="password"
@@ -608,26 +608,26 @@ function AuthPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="s-password">Senha</Label>
-                    <Input
+                    <PasswordInput
                       id="s-password"
                       name="password"
                       type="password"
                       required
-                      minLength={12}
+                      minLength={MIN_PASSWORD_LENGTH}
                       autoComplete="new-password"
                       value={signupPassword}
                       onChange={(e) => setSignupPassword(e.target.value)}
                     />
-                    <p className="text-xs text-muted-foreground">Use no mínimo 12 caracteres.</p>
+                    <p className="text-xs text-muted-foreground">Use no mínimo 8 caracteres.</p>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="s-password-confirm">Confirmar senha</Label>
-                    <Input
+                    <PasswordInput
                       id="s-password-confirm"
                       name="password_confirm"
                       type="password"
                       required
-                      minLength={12}
+                      minLength={MIN_PASSWORD_LENGTH}
                       autoComplete="new-password"
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}

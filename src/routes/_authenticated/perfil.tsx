@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { PasswordInput } from "@/components/PasswordInput";
+import { MIN_PASSWORD_LENGTH, authErrorMessage } from "@/lib/password-policy";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/_authenticated/perfil")({
@@ -65,8 +67,8 @@ function ProfilePage() {
     e.preventDefault();
     const fd = new FormData(e.currentTarget);
     const password = String(fd.get("new_password"));
-    if (password.length < 12) {
-      toast.error("A nova senha deve ter ao menos 12 caracteres.");
+    if (password.length < MIN_PASSWORD_LENGTH) {
+      toast.error("A nova senha deve ter ao menos 8 caracteres.");
       return;
     }
     setPwBusy(true);
@@ -75,7 +77,7 @@ function ProfilePage() {
       current_password: String(fd.get("current_password")),
     } as Parameters<typeof supabase.auth.updateUser>[0]);
     setPwBusy(false);
-    if (error) toast.error(error.message);
+    if (error) toast.error(authErrorMessage(error.message, error.code));
     else {
       toast.success("Senha alterada!");
       e.currentTarget.reset();
@@ -145,7 +147,7 @@ function ProfilePage() {
         <h2 className="mb-4 text-lg font-bold">Alterar senha</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Field label="Senha atual" name="current_password" type="password" autoComplete="current-password" />
-          <Field label="Nova senha (mín. 12 caracteres)" name="new_password" type="password" autoComplete="new-password" minLength={12} required />
+          <Field label="Nova senha (mín. 8 caracteres)" name="new_password" type="password" autoComplete="new-password" minLength={MIN_PASSWORD_LENGTH} required />
         </div>
         <div className="mt-6 flex justify-end">
           <Button type="submit" variant="outline" disabled={pwBusy}>
@@ -161,7 +163,7 @@ function Field({ label, name, ...props }: { label: string; name: string } & Reac
   return (
     <div className="space-y-1.5">
       <Label htmlFor={name}>{label}</Label>
-      <Input id={name} name={name} {...props} />
+      {props.type === "password" ? <PasswordInput id={name} name={name} {...props} /> : <Input id={name} name={name} {...props} />}
     </div>
   );
 }
