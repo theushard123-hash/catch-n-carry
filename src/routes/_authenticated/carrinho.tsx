@@ -41,6 +41,7 @@ export const Route = createFileRoute("/_authenticated/carrinho")({
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
   ]}),
+  beforeLoad: redirectSellerToSales,
   component: CartPage,
 });
 

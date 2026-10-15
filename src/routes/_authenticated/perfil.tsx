@@ -24,6 +24,7 @@ export const Route = createFileRoute("/_authenticated/perfil")({
       { name: "description", content: "Atualize os dados da sua empresa e endereço de entrega." },
     ],
   }),
+  beforeLoad: redirectSellerToSales,
   component: ProfilePage,
 });
 
