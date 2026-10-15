@@ -17,7 +17,8 @@ const navItems = [
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
-  const { profile, isAdmin, signOut } = useAuth();
+  const { profile, isAdmin, isSeller, signOut } = useAuth();
+  const staffLink = isAdmin ? "/admin" : "/admin/pedidos";
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
@@ -48,15 +49,15 @@ export function AppShell({ children }: { children: ReactNode }) {
                 </span>
               </Link>
             ))}
-            {isAdmin && (
+            {(isAdmin || isSeller) && (
               <Link
-                to="/admin"
+                to={staffLink}
                 className="rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
                 activeProps={{ className: "bg-secondary text-primary" }}
               >
                 <span className="inline-flex items-center gap-2">
                   <Shield className="h-4 w-4" />
-                  Administração
+                  {isAdmin ? "Administração" : "Vendas"}
                 </span>
               </Link>
             )}
@@ -115,15 +116,15 @@ export function AppShell({ children }: { children: ReactNode }) {
                   {item.label}
                 </Link>
               ))}
-              {isAdmin && (
+              {(isAdmin || isSeller) && (
                 <Link
-                  to="/admin"
+                  to={staffLink}
                   onClick={() => setOpen(false)}
                   className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-secondary hover:text-foreground"
                   activeProps={{ className: "bg-secondary text-primary" }}
                 >
                   <Shield className="h-4 w-4" />
-                  Administração
+                  {isAdmin ? "Administração" : "Vendas"}
                 </Link>
               )}
               <button

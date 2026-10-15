@@ -12,9 +12,9 @@ export const checkAdminAccess = createServerFn({ method: "GET" })
     const { data, error } = await context.supabase
       .from("user_roles")
       .select("role")
-      .eq("user_id", context.userId)
-      .eq("role", "admin");
+      .eq("user_id", context.userId);
 
     if (error) throw error;
-    return { isAdmin: (data ?? []).length > 0 };
+    const roles = (data ?? []).map((r) => r.role);
+    return { isAdmin: roles.includes("admin"), isSeller: roles.includes("vendedor") };
   });
