@@ -11,6 +11,7 @@ type AuthState = {
   session: Session | null;
   profile: Profile | null;
   isAdmin: boolean;
+  isSeller: boolean;
   loading: boolean;
   refreshProfile: () => Promise<void>;
   signOut: () => Promise<void>;
@@ -23,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isSeller, setIsSeller] = useState(false);
   const [loading, setLoading] = useState(true);
 
   async function loadProfile(userId: string) {
@@ -32,6 +34,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ]);
     setProfile(p ?? null);
     setIsAdmin((roles ?? []).some((r) => r.role === "admin"));
+    setIsSeller((roles ?? []).some((r) => r.role === "vendedor"));
   }
 
   useEffect(() => {
@@ -48,6 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setProfile(null);
         setIsAdmin(false);
+        setIsSeller(false);
         setLoading(false);
         queryClient.clear();
       }
@@ -74,6 +78,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     session,
     profile,
     isAdmin,
+    isSeller,
     loading,
     refreshProfile: async () => {
       if (session?.user) await loadProfile(session.user.id);

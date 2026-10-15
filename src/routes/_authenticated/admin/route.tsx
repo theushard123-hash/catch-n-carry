@@ -15,19 +15,25 @@ export const Route = createFileRoute("/_authenticated/admin")({
       { name: "description", content: "Painel de gestão de produtos, condições de pagamento, clientes e pedidos." },
     ],
   }),
-  beforeLoad: async () => {
+  beforeLoad: async ({ location }) => {
     const { data } = await supabase.auth.getSession();
     if (!data.session) throw redirect({ to: "/auth" });
 
     // Authorization is decided on the server (token validated + roles read
     // under RLS); the client never grants itself admin access.
-    let allowed = false;
+    let access = { isAdmin: false, isSeller: false };
     try {
-      allowed = (await checkAdminAccess()).isAdmin;
+      access = await checkAdminAccess();
     } catch {
-      allowed = false;
+      /* sem acesso */
     }
-    if (!allowed) throw redirect({ to: "/catalogo" });
+    if (access.isAdmin) return { isAdmin: true };
+    if (access.isSeller) {
+      // Vendedor só acessa a gestão de pedidos.
+      if (!location.pathname.startsWith("/admin/pedidos")) throw redirect({ to: "/admin/pedidos" });
+      return { isAdmin: false };
+    }
+    throw redirect({ to: "/catalogo" });
   },
   component: AdminLayout,
 });
@@ -46,14 +52,16 @@ const tabs: { to: string; label: string; icon: typeof LayoutDashboard; exact?: b
 ];
 
 function AdminLayout() {
+  const { isAdmin } = Route.useRouteContext();
+  const visible = isAdmin ? tabs : tabs.filter((t) => t.to === "/admin/pedidos");
   return (
     <div className="animate-fade-up">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold">Administração</h1>
+        <h1 className="text-3xl font-bold">{isAdmin ? "Administração" : "Vendas"}</h1>
         <p className="text-sm text-muted-foreground">Gerencie produtos, condições de pagamento, clientes e pedidos.</p>
       </div>
       <nav className="mb-6 flex gap-1 overflow-x-auto rounded-2xl border bg-card p-1.5 shadow-soft">
-        {tabs.map((t) => (
+        {visible.map((t) => (
           <Link
             key={t.to}
             to={t.to}
