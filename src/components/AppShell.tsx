@@ -107,7 +107,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {open && (
           <div className="border-t border-border bg-card md:hidden">
             <nav className="mx-auto flex max-w-7xl flex-col gap-1 p-3">
-              {navItems.map((item) => (
+              {visibleNavItems.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
