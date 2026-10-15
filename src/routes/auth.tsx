@@ -8,6 +8,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from "@/hooks/useAuth";
@@ -386,17 +387,25 @@ function AuthPage() {
                 }}
               >
                 <Label htmlFor="otp-code">Código de verificação</Label>
-                <Input
-                  id="otp-code"
-                  name="otp"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  maxLength={6}
-                  placeholder="000000"
-                  className="text-center text-2xl tracking-[0.6em]"
-                  value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ""))}
-                />
+                <div className="flex justify-center">
+                  <InputOTP
+                    id="otp-code"
+                    name="otp"
+                    maxLength={6}
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    pattern="^[0-9]*$"
+                    value={otpCode}
+                    onChange={(v) => setOtpCode(v.replace(/\D/g, ""))}
+                  >
+                    <InputOTPGroup>
+                      {[0, 1, 2, 3, 4, 5].map((i) => (
+                        <InputOTPSlot key={i} index={i} className="h-12 w-11 text-xl sm:h-14 sm:w-12" />
+                      ))}
+                    </InputOTPGroup>
+                  </InputOTP>
+                </div>
+                <p className="text-center text-xs text-muted-foreground">Digite os 6 dígitos enviados ao seu e-mail.</p>
                 <Button type="submit" className="w-full" size="lg" disabled={otpBusy}>
                   {otpBusy ? "Verificando..." : "Confirmar código"}
                 </Button>
