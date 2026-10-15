@@ -312,7 +312,10 @@ function esc(s: string) {
 
 function printOrder(o: OrderWithCustomer, items: Item[]) {
   const w = window.open("", "_blank", "width=420,height=700");
-  if (!w) return toast.error("Permita pop-ups para imprimir.");
+  if (!w) {
+    toast.error("Permita pop-ups para imprimir.");
+    return;
+  }
   const rows = items
     .map(
       (i) =>
