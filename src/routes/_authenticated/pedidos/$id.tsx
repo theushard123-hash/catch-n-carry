@@ -32,6 +32,7 @@ export const Route = createFileRoute("/_authenticated/pedidos/$id")({
       { name: "description", content: "Itens, pagamento e status do seu pedido na Trapiche Pescados." },
     ],
   }),
+  beforeLoad: redirectSellerToSales,
   component: OrderDetailPage,
 });
 
