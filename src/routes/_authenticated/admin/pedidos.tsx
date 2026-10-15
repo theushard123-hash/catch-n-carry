@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Tables } from "@/integrations/supabase/types";
+import logoMark from "@/assets/logo-mark.png";
 
 export const Route = createFileRoute("/_authenticated/admin/pedidos")({
   head: () => ({
@@ -307,11 +308,15 @@ function OrderCard({
 }
 
 function esc(s: string) {
-  return s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
+  return s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c] ?? c);
 }
 
 function printOrder(o: OrderWithCustomer, items: Item[]) {
-  const w = window.open("", "_blank", "width=420,height=700");
+  if (!items.length) {
+    toast.error("Aguarde o carregamento dos itens antes de imprimir.");
+    return;
+  }
+  const w = window.open("", "_blank", "width=1000,height=900");
   if (!w) {
     toast.error("Permita pop-ups para imprimir.");
     return;
@@ -319,32 +324,41 @@ function printOrder(o: OrderWithCustomer, items: Item[]) {
   const rows = items
     .map(
       (i) =>
-        `<tr><td>${esc(formatQty(i.qty, i.unit))}</td><td>${esc(i.product_name)}${i.sku ? ` <small>(${esc(i.sku)})</small>` : ""}</td><td class="r">${esc(formatBRL(i.total))}</td></tr>`,
+        `<tbody><tr class="item"><td>${esc(i.sku || "—")}</td><td class="description">${esc(i.product_name)}</td><td>${esc(i.unit)}</td><td>${esc(formatQty(i.qty))}</td><td></td><td></td><td class="r">${esc(formatBRL(i.unit_price))}</td><td><span class="check"></span></td></tr><tr class="item-note"><td colspan="8">Observação do item: <span class="writing-line"></span></td></tr></tbody>`,
     )
     .join("");
-  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>Pedido ${num(o.order_number)}</title>
+  w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>Pedido Separação ${num(o.order_number)} — Trapiche Pescados</title>
 <style>
-body{font-family:Arial,sans-serif;color:#000;margin:0;padding:16px;max-width:80mm}
-h1{font-size:18px;margin:0}h2{font-size:14px;margin:8px 0 4px}
-p{margin:2px 0;font-size:12px}table{width:100%;border-collapse:collapse;font-size:12px}
-td{padding:3px 0;border-bottom:1px dashed #999;vertical-align:top}.r{text-align:right;white-space:nowrap}
-.t{font-size:16px;font-weight:bold;text-align:right;margin-top:8px}hr{border:0;border-top:1px dashed #000}
-@media print{@page{margin:6mm}}
-</style></head><body>
-<h1>Trapiche Pescados</h1><p>Alameda Princesa Izabel, 1710 — Bigorrilho, Curitiba/PR</p><hr>
-<h2>Pedido ${num(o.order_number)}</h2>
-<p>Data: ${esc(formatDate(o.created_at, true))}</p>
-<p>Status: ${esc(ORDER_STATUS_LABEL[o.status] ?? o.status)}</p>
-<p>Cliente: ${esc(customerLabel(o.customer))}</p>
-<p>Telefone: ${esc(o.customer?.phone || "—")}</p>
-<p>Documento: ${esc(o.customer?.document || "—")}</p>
-<p>Pagamento: ${esc(o.payment_condition_name)}</p>
-${o.delivery_address ? `<p>Entrega: ${esc(o.delivery_address)}</p>` : ""}
-<hr><table>${rows}</table>
-<p class="r">Frete: ${esc(o.shipping_fee == null ? "a consultar" : formatBRL(o.shipping_fee))}</p>
-<p class="t">Total: ${esc(formatBRL(o.total))}</p>
-${o.notes ? `<hr><p><b>Obs:</b> ${esc(o.notes)}</p>` : ""}
-<script>window.onload=function(){window.print();}</script>
+/* Dedicated monochrome paper tokens keep print independent of the app theme. */
+:root{--paper:#fff;--ink:#111;--rule:#777;--heading:#eee}
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;color:var(--ink);background:var(--paper);margin:0;font-size:11px}
+.sheet{width:100%;max-width:190mm;margin:0 auto;padding:8mm 0}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6mm}h1{font-size:22px;margin:0;flex:1;text-align:center}header img{width:26mm;height:18mm;object-fit:contain}header .spacer{width:26mm}
+.top{display:grid;grid-template-columns:minmax(0,1fr) 58mm;gap:6mm}.details p{margin:0 0 3mm;overflow-wrap:anywhere;line-height:1.45}.details b{display:inline-block;min-width:26mm}
+.verification{border:1px solid var(--rule);padding:4mm;display:flex;flex-direction:column;justify-content:space-between;min-height:54mm}.signature{height:13mm;border-bottom:1px solid var(--rule);margin-bottom:4mm}.verification p{margin:0}.date{border-top:1px solid var(--rule);padding-top:3mm}
+.notes{display:grid;grid-template-columns:26mm 1fr;gap:3mm;margin:4mm 0;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;min-height:10mm}
+.order-number{border-top:1px solid var(--rule);text-align:center;font-size:16px;padding:3mm 0;margin-top:5mm}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10px}thead{display:table-header-group}tbody{break-inside:avoid;page-break-inside:avoid}th,td{border:1px solid var(--rule);padding:2mm 1.5mm;text-align:center;overflow-wrap:anywhere}th{font-weight:normal;background:var(--heading)}.item td{height:13mm}.description{text-align:left}.r{text-align:right}.item-note td{text-align:left;height:7mm;font-size:9px}.writing-line{display:inline-block;width:70%;border-bottom:1px solid var(--rule);height:3mm}.check{display:inline-block;width:4mm;height:4mm;border:1px solid var(--rule)}
+.bottom{display:flex;justify-content:space-between;gap:6mm;margin-top:5mm;break-inside:avoid}.payment{flex:1;line-height:1.6;overflow-wrap:anywhere}.totals{min-width:56mm}.totals p{display:flex;justify-content:space-between;gap:4mm;margin:0;padding:1.5mm 0}.total{border-top:1px solid var(--rule);font-weight:bold;font-size:14px}footer{margin-top:8mm;border-top:1px solid var(--rule);padding-top:3mm;text-align:center;font-size:9px;break-inside:avoid}
+@page{size:A4 portrait;margin:10mm} @media print{.sheet{max-width:none;padding:0}body{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style></head><body><main class="sheet">
+<header><span class="spacer"></span><h1>Pedido Separação</h1><img src="${esc(new URL(logoMark, window.location.origin).href)}" alt="Trapiche Pescados"></header>
+<section class="top"><div class="details">
+<p><b>Unidade:</b> Trapiche Pescados — Curitiba</p>
+<p><b>Cliente:</b> ${esc(customerLabel(o.customer))}</p>
+<p><b>CNPJ / CPF:</b> ${esc(o.customer?.document || "—")}</p>
+<p><b>Telefone:</b> ${esc(o.customer?.phone || "—")}</p>
+<p><b>Entrega:</b> ${esc(o.delivery_address || "—")}</p>
+<p><b>Data/Hora:</b> ${esc(formatDate(o.created_at, true))}</p>
+<p><b>Status:</b> ${esc(ORDER_STATUS_LABEL[o.status] ?? o.status)}</p>
+</div><div class="verification"><div><b>Separado por:</b><div class="signature"></div><b>Conferido por:</b><div class="signature"></div></div><p class="date">Data: ____ / ____ / ________</p></div></section>
+<div class="notes"><b>Observação do pedido:</b><span>${esc(o.admin_notes || "")}</span></div>
+<div class="notes"><b>Observação do cliente:</b><span>${esc(o.notes || "")}</span></div>
+<div class="order-number">Pedido: ${num(o.order_number)}</div>
+<table><colgroup><col style="width:14%"><col style="width:30%"><col style="width:6%"><col style="width:10%"><col style="width:8%"><col style="width:12%"><col style="width:14%"><col style="width:6%"></colgroup><thead><tr><th>Material</th><th>Descrição</th><th>U.M.</th><th>Quantidade</th><th>Lote</th><th>Qtd. separada</th><th>Preço unit.</th><th>Check</th></tr></thead>${rows}</table>
+<section class="bottom"><div class="payment"><b>Pagamento:</b> ${esc(o.payment_condition_name)}${o.shipping_note ? `<br><b>Frete:</b> ${esc(o.shipping_note)}` : ""}</div><div class="totals"><p><span>Subtotal</span><span>${esc(formatBRL(o.subtotal))}</span></p><p><span>Frete</span><span>${esc(o.shipping_fee == null ? "A consultar" : formatBRL(o.shipping_fee))}</span></p><p class="total"><span>Total</span><span>${esc(formatBRL(o.total))}</span></p></div></section>
+<footer>Trapiche Pescados · Alameda Princesa Izabel, 1710 — Bigorrilho, Curitiba/PR</footer>
+</main><script>window.onload=function(){window.focus();window.print();}</script>
 </body></html>`);
   w.document.close();
 }
