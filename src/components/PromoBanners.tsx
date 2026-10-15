@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 
 type Banner = Tables<"banners">;
 
@@ -28,9 +29,21 @@ export function PromoBanners({ customerType }: { customerType?: "atacado" | "var
       if (error) throw error;
       return data as Banner[];
     },
+    retry: 2,
   });
 
   if (q.isLoading) return <Skeleton className="mb-6 h-48 w-full rounded-2xl" />;
+
+  if (q.isError) {
+    return (
+      <div className="mb-6 rounded-2xl border bg-card p-6 text-center shadow-soft">
+        <p className="mb-3 text-sm text-muted-foreground">As novidades estão demorando para chegar.</p>
+        <Button variant="outline" size="sm" onClick={() => q.refetch()}>
+          Tentar novamente
+        </Button>
+      </div>
+    );
+  }
 
   const banners = (q.data ?? []).filter((b) => isVisible(b, customerType));
   if (banners.length === 0) return null;
