@@ -34,12 +34,12 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background bg-waves">
       <header className="sticky top-0 z-40 border-b border-border/70 bg-card/85 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link to="/catalogo" className="shrink-0">
+          <Link to={sellerOnly ? "/admin/pedidos" : "/catalogo"} className="shrink-0">
             <BrandLogo size="sm" />
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
