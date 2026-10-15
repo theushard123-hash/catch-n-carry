@@ -169,6 +169,13 @@
       "when": 1792091315715,
       "tag": "0023_order_workflow_statuses_realtime",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1792093105496,
+      "tag": "0024_seller_role",
+      "breakpoints": true
     }
   ]
 }
