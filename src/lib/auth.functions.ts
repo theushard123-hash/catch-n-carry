@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { digits, isValidCep, isValidCnpj, isValidCpf } from "@/lib/br-validation";
 
-export const MIN_PASSWORD_LENGTH = 12;
+import { MIN_PASSWORD_LENGTH, authErrorMessage } from "@/lib/password-policy";
 
 const signupSchema = z.object({
   email: z.string().trim().email().max(255),
@@ -100,7 +100,7 @@ export const signUpCustomer = createServerFn({ method: "POST" })
         throw new Error("Este e-mail já está cadastrado. Faça login ou recupere sua senha.");
       }
       const msg = body.msg ?? body.error_description ?? body.message ?? "Não foi possível criar a conta.";
-      throw new Error(msg);
+      throw new Error(authErrorMessage(msg, body.error_code));
     }
 
     // Com confirmação de e-mail ativa, um e-mail já existente retorna "sucesso"
