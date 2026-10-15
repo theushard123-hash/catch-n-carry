@@ -14,3 +14,5 @@
 - Storefront products use a bounded database RPC projection; catalog popularity returns authenticated-only ranks from invoiced orders, never private order data or wholesale prices to visitors.
 - Catalog filter/sort logic is isolated in a browser-safe pure module; shared product skeletons match the catalog grid to avoid layout shifts.
 - Password policy and auth error translations live in a browser-safe shared module; password fields use PasswordInput to keep visibility controls consistent across signup, login and password changes.
+
+- Administrative order printing uses a dedicated monochrome A4 document so warehouse forms remain legible independently of the storefront theme.
