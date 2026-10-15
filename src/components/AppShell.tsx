@@ -21,6 +21,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const staffLink = isAdmin ? "/admin" : "/admin/pedidos";
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  // Vendedor (sem ser admin) só gerencia pedidos: nada de catálogo, carrinho ou perfil.
+  const sellerOnly = isSeller && !isAdmin;
+  const visibleNavItems = sellerOnly ? [] : navItems;
 
   async function handleSignOut() {
     await signOut();
