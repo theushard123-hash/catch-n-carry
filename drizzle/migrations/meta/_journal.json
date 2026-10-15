@@ -162,6 +162,13 @@
       "when": 1791897293656,
       "tag": "0022_storefront_product_projections",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1792091315715,
+      "tag": "0023_order_workflow_statuses_realtime",
+      "breakpoints": true
     }
   ]
 }
