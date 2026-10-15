@@ -12,7 +12,7 @@ import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 const SITE_NAME = "Trapiche Loja Virtual"
 const SENDER_DOMAIN = "notify.trapichepescados.com.br"
 const ROOT_DOMAIN = "trapichepescados.com.br"
-const FROM_DOMAIN = "trapichepescados.com.br"
+const FROM_DOMAIN = "notify.trapichepescados.com.br"
 const SITE_URL = `https://${ROOT_DOMAIN}`
 
 // The SDK handler owns verification, dispatch, and retry semantics; this file
