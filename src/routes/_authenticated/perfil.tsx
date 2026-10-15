@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/PasswordInput";
 import { MIN_PASSWORD_LENGTH, authErrorMessage } from "@/lib/password-policy";
 import { Skeleton } from "@/components/ui/skeleton";
+import { redirectSellerToSales } from "@/lib/seller-guard";
 
 export const Route = createFileRoute("/_authenticated/perfil")({
   head: () => ({
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/_authenticated/perfil")({
       { name: "description", content: "Atualize os dados da sua empresa e endereço de entrega." },
     ],
   }),
+  beforeLoad: redirectSellerToSales,
   component: ProfilePage,
 });
 

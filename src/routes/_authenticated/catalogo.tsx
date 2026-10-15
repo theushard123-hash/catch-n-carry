@@ -17,6 +17,7 @@ import { CartQuantity } from "@/components/CartQuantity";
 import { readCart, readCartSpecs, writeCart, writeCartSpecs, type CartItem } from "@/lib/cart";
 import { CatalogFilters } from "@/components/CatalogFilters";
 import { filterCatalog, type CatalogSort } from "@/lib/catalog-filters";
+import { redirectSellerToSales } from "@/lib/seller-guard";
 
 export const Route = createFileRoute("/_authenticated/catalogo")({
   head: () => ({ meta: [
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/_authenticated/catalogo")({
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary" },
   ]}),
+  beforeLoad: redirectSellerToSales,
   component: CatalogPage,
 });
 

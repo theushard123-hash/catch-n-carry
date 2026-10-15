@@ -21,6 +21,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const staffLink = isAdmin ? "/admin" : "/admin/pedidos";
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  // Vendedor (sem ser admin) só gerencia pedidos: nada de catálogo, carrinho ou perfil.
+  const sellerOnly = isSeller && !isAdmin;
+  const visibleNavItems = sellerOnly ? [] : navItems;
 
   async function handleSignOut() {
     await signOut();
@@ -31,12 +34,12 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="min-h-screen bg-background bg-waves">
       <header className="sticky top-0 z-40 border-b border-border/70 bg-card/85 backdrop-blur">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6">
-          <Link to="/catalogo" className="shrink-0">
+          <Link to={sellerOnly ? "/admin/pedidos" : "/catalogo"} className="shrink-0">
             <BrandLogo size="sm" />
           </Link>
 
           <nav className="hidden items-center gap-1 md:flex">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <Link
                 key={item.to}
                 to={item.to}
@@ -104,7 +107,7 @@ export function AppShell({ children }: { children: ReactNode }) {
         {open && (
           <div className="border-t border-border bg-card md:hidden">
             <nav className="mx-auto flex max-w-7xl flex-col gap-1 p-3">
-              {navItems.map((item) => (
+              {visibleNavItems.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}

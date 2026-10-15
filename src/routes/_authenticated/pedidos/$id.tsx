@@ -19,6 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { redirectSellerToSales } from "@/lib/seller-guard";
 
 export const Route = createFileRoute("/_authenticated/pedidos/$id")({
   head: () => ({
@@ -31,6 +32,7 @@ export const Route = createFileRoute("/_authenticated/pedidos/$id")({
       { name: "description", content: "Itens, pagamento e status do seu pedido na Trapiche Pescados." },
     ],
   }),
+  beforeLoad: redirectSellerToSales,
   component: OrderDetailPage,
 });
 
