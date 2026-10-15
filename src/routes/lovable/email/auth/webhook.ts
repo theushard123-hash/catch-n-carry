@@ -10,7 +10,7 @@ import { ReauthenticationEmail } from '@/lib/email-templates/reauthentication'
 
 // Configuration
 const SITE_NAME = "Trapiche Loja Virtual"
-const SENDER_DOMAIN = "notify.app.trapichepescados.com.br"
+const SENDER_DOMAIN = "notify.trapichepescados.com.br"
 const ROOT_DOMAIN = "trapichepescados.com.br"
 const FROM_DOMAIN = "trapichepescados.com.br"
 const SITE_URL = `https://${ROOT_DOMAIN}`
