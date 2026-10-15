@@ -82,6 +82,30 @@ function AdminCustomersPage() {
     onError: () => toast.error("Não foi possível salvar o cliente."),
   });
 
+  const sellersQ = useQuery({
+    queryKey: ["admin-sellers"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("user_roles").select("user_id").eq("role", "vendedor");
+      if (error) throw error;
+      return new Set((data ?? []).map((r) => r.user_id));
+    },
+  });
+  const sellers = sellersQ.data ?? new Set<string>();
+
+  const toggleSeller = useMutation({
+    mutationFn: async ({ userId, on }: { userId: string; on: boolean }) => {
+      const { error } = on
+        ? await supabase.from("user_roles").insert({ user_id: userId, role: "vendedor" })
+        : await supabase.from("user_roles").delete().eq("user_id", userId).eq("role", "vendedor");
+      if (error) throw error;
+    },
+    onSuccess: (_d, v) => {
+      toast.success(v.on ? "Acesso de vendedor concedido." : "Acesso de vendedor removido.");
+      qc.invalidateQueries({ queryKey: ["admin-sellers"] });
+    },
+    onError: () => toast.error("Não foi possível alterar o acesso de vendedor."),
+  });
+
   // Varejo não passa por análise: apenas atacado pode ficar pendente.
   const isPending = (p: Profile) => p.customer_type === "atacado" && !p.approved;
 
@@ -167,6 +191,7 @@ function AdminCustomersPage() {
                   <TableCell>{p.external_code || "—"}</TableCell>
                   <TableCell>{formatDate(p.created_at)}</TableCell>
                   <TableCell>
+                    {sellers.has(p.user_id) && <Badge variant="secondary" className="mr-1">Vendedor</Badge>}
                     {isPending(p) ? (
                       <Badge variant="warning">Pendente</Badge>
                     ) : (
@@ -247,6 +272,15 @@ function AdminCustomersPage() {
                   onCheckedChange={(v) => setEdit({ ...edit, approved: v })}
                 />
                 <Label htmlFor="cl-approved">Cadastro aprovado para pedidos</Label>
+              </div>
+              <div className="flex items-center gap-3">
+                <Switch
+                  id="cl-seller"
+                  checked={sellers.has(edit.user_id)}
+                  disabled={toggleSeller.isPending}
+                  onCheckedChange={(v) => toggleSeller.mutate({ userId: edit.user_id, on: v })}
+                />
+                <Label htmlFor="cl-seller">Acesso de vendedor (somente gestão de pedidos)</Label>
               </div>
               <div className="rounded-xl bg-secondary p-3 text-xs text-muted-foreground">
                 {edit.phone && <div>Telefone: {edit.phone}</div>}
