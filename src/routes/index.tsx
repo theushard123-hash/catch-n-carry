@@ -123,7 +123,7 @@ function LandingPage() {
                 heroTitle
               ) : (
                 <>
-                  Pescado fresco, <span className="text-aqua">selecionado para você todos os dias.</span>
+                  Pescados e frutos do mar, <span className="text-aqua">selecionados para você todos os dias.</span>
                 </>
               )}
             </h1>
@@ -171,7 +171,7 @@ function LandingPage() {
       <section className="mx-auto max-w-6xl px-4 py-16 md:py-20">
         <h2 className="text-center font-display text-3xl font-bold">Tudo que o seu pedido precisa</h2>
         <p className="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
-          Um portal feito para facilitar a vida de quem compra pescado em quantidade.
+          Um portal feito para facilitar a vida de quem compra pescados e frutos do mar em quantidade.
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f) => (
