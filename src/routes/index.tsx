@@ -227,7 +227,7 @@ function LandingPage() {
               <Truck className="h-10 w-10" />
             </div>
           </div>
-          <div className="flex flex-col justify-between gap-8 rounded-3xl border bg-card p-8 shadow-soft md:p-10">
+          <div className="flex flex-col justify-between gap-8 rounded-3xl border bg-card p-8 shadow-soft md:p-12">
             <div>
               <h3 className="font-display text-xl font-bold md:text-2xl">Compra em atacado?</h3>
               <p className="mt-2 text-sm text-muted-foreground">
