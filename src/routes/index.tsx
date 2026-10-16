@@ -39,7 +39,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Orçamentos online de pescados e frutos do mar para atacado e varejo. Cadastre-se e peça seu orçamento.",
+          "Pedidos online de pescados e frutos do mar para atacado e varejo, com atendimento personalizado.",
       },
     ],
   }),
@@ -59,8 +59,8 @@ const features = [
   },
   {
     icon: ClipboardList,
-    title: "Acompanhamento da solicitação",
-    text: "Acompanhe cada solicitação: em análise, confirmada pelo vendedor, em separação e concluída.",
+    title: "Acompanhamento do pedido",
+    text: "Acompanhe cada etapa do seu pedido, do atendimento à entrega.",
   },
   {
     icon: ShieldCheck,
@@ -71,8 +71,8 @@ const features = [
 
 const steps = [
   { n: "1", title: "Crie seu cadastro", text: "Informe os dados da sua empresa e escolha atacado ou varejo." },
-  { n: "2", title: "Envie sua solicitação", text: "Escolha os produtos e a condição de pagamento. Os preços exibidos são de referência." },
-  { n: "3", title: "O vendedor confirma", text: "Nosso estoque muda todos os dias: o vendedor confere a disponibilidade, confirma itens e valores com você e só então o pedido segue para entrega." },
+  { n: "2", title: "Monte seu pedido", text: "Escolha os produtos e a condição de pagamento que preferir." },
+  { n: "3", title: "Atendimento personalizado", text: "Um vendedor acompanha seu pedido, alinha os detalhes com você e garante que chegue o melhor da pesca do dia." },
 ];
 
 function LandingPage() {
@@ -123,18 +123,18 @@ function LandingPage() {
                 heroTitle
               ) : (
                 <>
-                  Solicite seu orçamento, <span className="text-aqua">o vendedor confirma o estoque do dia.</span>
+                  Pescado fresco, <span className="text-aqua">selecionado para você todos os dias.</span>
                 </>
               )}
             </h1>
             <p className="mt-4 max-w-lg text-lg text-sidebar-foreground/80">
               {heroSubtitle ||
-                "Restaurantes, mercados e revendedores: montem sua lista no portal e enviem para análise. Como o pescado muda todos os dias, o vendedor confirma disponibilidade, peso e valor final antes de fechar."}
+                "Restaurantes, mercados e revendedores: montem sua lista no portal e nossa equipe cuida do resto — acompanhamos cada pedido de perto para garantir o melhor do dia, no peso certo."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" variant="aqua">
                 <Link to="/auth" search={{ tab: "cadastro" }}>
-                  Solicitar meu orçamento <ArrowRight />
+                  Fazer meu pedido <ArrowRight />
                 </Link>
               </Button>
               <Button asChild size="lg" variant="heroOutline" className="border-sidebar-foreground/30 text-sidebar-foreground hover:bg-sidebar-foreground/15">
