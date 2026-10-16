@@ -191,7 +191,7 @@ function AdminSettingsPage() {
             <Textarea
               id="s-hero-sub"
               value={form.hero_subtitle}
-              placeholder="Restaurantes, mercados e revendedores: montem seus pedidos direto no portal."
+              placeholder="Restaurantes, mercados e revendedores — e também quem quer o frescor do dia na mesa de casa: montem seus pedidos direto no portal."
               onChange={(e) => setForm({ ...form, hero_subtitle: e.target.value })}
             />
           </div>
