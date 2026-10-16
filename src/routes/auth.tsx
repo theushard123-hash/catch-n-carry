@@ -45,7 +45,7 @@ export const Route = createFileRoute("/auth")({
       { title: "Entrar ou criar conta — Portal Trapiche Pescados" },
       {
         name: "description",
-        content: "Acesse o portal de pedidos da Trapiche Pescados para atacado e varejo.",
+        content: "Acesse o portal de pedidos da Trapiche Pescados para varejo e atacado.",
       },
       { property: "og:title", content: "Entrar — Portal Trapiche Pescados" },
       { property: "og:description", content: "Acesse o portal de pedidos da Trapiche Pescados." },
@@ -325,7 +325,7 @@ function AuthPage() {
             Do mar para a sua mesa, agora com pedidos online.
           </h1>
           <p className="mt-4 text-lg text-sidebar-foreground/75">
-            Restaurantes, mercados e clientes do varejo fazem seus pedidos com poucos cliques e
+            Clientes do varejo, restaurantes e mercados fazem seus pedidos com poucos cliques e
             acompanham tudo em um só lugar.
           </p>
           <ul className="mt-8 space-y-3 text-sm text-sidebar-foreground/80">
@@ -517,15 +517,15 @@ function AuthPage() {
                       className="grid grid-cols-2 gap-3"
                     >
                       <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-input bg-card p-3 text-sm has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-secondary">
-                        <RadioGroupItem value="atacado" id="t-atacado" />
-                        <span className="flex items-center gap-2 font-medium">
-                          <Store className="h-4 w-4 text-ocean" /> Atacado
-                        </span>
-                      </label>
-                      <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-input bg-card p-3 text-sm has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-secondary">
                         <RadioGroupItem value="varejo" id="t-varejo" />
                         <span className="flex items-center gap-2 font-medium">
                           <Fish className="h-4 w-4 text-ocean" /> Varejo
+                        </span>
+                      </label>
+                      <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-input bg-card p-3 text-sm has-[[data-state=checked]]:border-ring has-[[data-state=checked]]:bg-secondary">
+                        <RadioGroupItem value="atacado" id="t-atacado" />
+                        <span className="flex items-center gap-2 font-medium">
+                          <Store className="h-4 w-4 text-ocean" /> Atacado
                         </span>
                       </label>
                     </RadioGroup>

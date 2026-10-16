@@ -182,7 +182,7 @@ function AdminSettingsPage() {
             <Input
               id="s-hero-title"
               value={form.hero_title}
-              placeholder="Peça seus pescados e frutos do mar online, sem ligação, sem papelada."
+              placeholder="Pescados e frutos do mar frescos, escolhidos para a sua casa."
               onChange={(e) => setForm({ ...form, hero_title: e.target.value })}
             />
           </div>
@@ -191,7 +191,7 @@ function AdminSettingsPage() {
             <Textarea
               id="s-hero-sub"
               value={form.hero_subtitle}
-              placeholder="Restaurantes, mercados e revendedores — e também quem quer o frescor do dia na mesa de casa: montem seus pedidos direto no portal."
+              placeholder="Para quem quer o frescor do dia na mesa de casa — e também para restaurantes, mercados e revendedores: montem seus pedidos direto no portal."
               onChange={(e) => setForm({ ...form, hero_subtitle: e.target.value })}
             />
           </div>

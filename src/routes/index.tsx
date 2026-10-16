@@ -27,7 +27,7 @@ import { FeaturedProducts } from "@/components/FeaturedProducts";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Trapiche Pescados — Portal de Pedidos para Atacado e Varejo" },
+      { title: "Trapiche Pescados — Portal de Pedidos para Varejo e Atacado" },
       {
         name: "description",
         content:
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/")({
       {
         property: "og:description",
         content:
-          "Pedidos online de pescados e frutos do mar para atacado e varejo, com atendimento personalizado.",
+          "Pedidos online de pescados e frutos do mar para quem compra em casa, para restaurantes e revendedores, com atendimento personalizado.",
       },
     ],
   }),
@@ -50,12 +50,12 @@ const features = [
   {
     icon: Fish,
     title: "Catálogo completo",
-    text: "Peixes, camarões, lulas, polvo, bacalhau e muito mais — sempre com preços do seu perfil: atacado ou varejo.",
+    text: "Peixes, camarões, lulas, polvo, bacalhau e muito mais — sempre com o preço do seu perfil: varejo ou atacado.",
   },
   {
     icon: CreditCard,
     title: "Condições de pagamento",
-    text: "PIX à vista, cartão, boletos faturados para atacado e pagamento na entrega. Você escolhe no pedido.",
+    text: "PIX à vista, cartão e pagamento na entrega — e, para atacado, boletos faturados. Você escolhe no pedido.",
   },
   {
     icon: ClipboardList,
@@ -64,13 +64,13 @@ const features = [
   },
   {
     icon: ShieldCheck,
-    title: "Cadastro aprovado pela equipe",
-    text: "Seus dados comerciais ficam protegidos e o faturamento segue as regras da Trapiche, sem retrabalho.",
+    title: "Cadastro rápido e protegido",
+    text: "Seus dados ficam guardados com segurança e o faturamento segue as regras da Trapiche, sem retrabalho.",
   },
 ];
 
 const steps = [
-  { n: "1", title: "Crie seu cadastro", text: "Informe os dados da sua empresa e escolha atacado ou varejo." },
+  { n: "1", title: "Crie seu cadastro", text: "Informe seus dados e escolha entre comprar para casa ou em atacado." },
   { n: "2", title: "Monte seu pedido", text: "Escolha os produtos e a condição de pagamento que preferir." },
   { n: "3", title: "Atendimento personalizado", text: "Um vendedor acompanha seu pedido, alinha os detalhes com você e garante que chegue o melhor da pesca do dia." },
 ];
@@ -129,7 +129,7 @@ function LandingPage() {
             </h1>
             <p className="mt-4 max-w-lg text-lg text-sidebar-foreground/80">
               {heroSubtitle ||
-                "Restaurantes, mercados e revendedores — e também quem quer o frescor do dia na mesa de casa: montem sua lista no portal e nossa equipe cuida do resto, acompanhando cada pedido de perto para garantir o melhor da pesca, na medida certa."}
+                "Para quem quer o frescor do dia na mesa de casa — e também para restaurantes, mercados e revendedores: monte sua lista no portal e nossa equipe cuida do resto, acompanhando cada pedido de perto para garantir o melhor da pesca, na medida certa."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" variant="aqua">
@@ -171,7 +171,7 @@ function LandingPage() {
       <section className="mx-auto max-w-6xl px-4 py-16 md:py-20">
         <h2 className="text-center font-display text-3xl font-bold">Tudo que o seu pedido precisa</h2>
         <p className="mx-auto mt-2 max-w-xl text-center text-muted-foreground">
-          Um portal feito para facilitar a vida de quem compra pescados e frutos do mar em quantidade.
+          Um portal feito para facilitar a vida de quem quer o frescor do dia em casa — e de quem compra em quantidade.
         </p>
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {features.map((f) => (
@@ -209,21 +209,35 @@ function LandingPage() {
         </div>
       </section>
 
-      {/* Wholesale strip */}
+      {/* Para casa e para atacado */}
       <section className="mx-auto max-w-6xl px-4 py-16">
-        <div className="grid items-center gap-8 rounded-3xl bg-gradient-ocean p-8 md:grid-cols-[1fr_auto] md:p-12">
-          <div>
-            <h2 className="font-display text-2xl font-bold text-sidebar-foreground md:text-3xl">
-              Compra em atacado? Temos condições especiais.
-            </h2>
-            <p className="mt-2 max-w-xl text-sidebar-foreground/80">
-              Boletos faturados, pedido mínimo diferenciado e tabela exclusiva para restaurantes e revendedores.
-              Cadastre-se como atacado e aguarde a aprovação da nossa equipe.
-            </p>
+        <div className="grid items-stretch gap-6 md:grid-cols-[1.35fr_1fr]">
+          <div className="flex flex-col justify-between gap-8 rounded-3xl bg-gradient-ocean p-8 md:p-12">
+            <div>
+              <h2 className="font-display text-2xl font-bold text-sidebar-foreground md:text-3xl">
+                Vai receber em casa? É só montar a sua lista.
+              </h2>
+              <p className="mt-2 max-w-xl text-sidebar-foreground/80">
+                Escolha o que quer levar e finalize no portal: nossa equipe confirma os detalhes com você e
+                cuida para tudo chegar fresco, do jeito certo.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 text-aqua">
+              <Snowflake className="h-10 w-10" />
+              <Truck className="h-10 w-10" />
+            </div>
           </div>
-          <div className="flex items-center gap-3 text-aqua">
-            <Truck className="h-10 w-10" />
-            <PackageCheck className="h-10 w-10" />
+          <div className="flex flex-col justify-between gap-8 rounded-3xl border bg-card p-8 shadow-soft md:p-10">
+            <div>
+              <h3 className="font-display text-xl font-bold md:text-2xl">Compra em atacado?</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Boletos faturados, pedido mínimo diferenciado e tabela exclusiva para restaurantes e revendedores.
+                Cadastre-se como atacado e aguarde a aprovação da nossa equipe.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 text-ocean">
+              <PackageCheck className="h-10 w-10" />
+            </div>
           </div>
         </div>
       </section>
