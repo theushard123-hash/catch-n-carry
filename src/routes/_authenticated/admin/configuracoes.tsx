@@ -182,7 +182,7 @@ function AdminSettingsPage() {
             <Input
               id="s-hero-title"
               value={form.hero_title}
-              placeholder="Peça seus pescados online, sem ligação, sem papelada."
+              placeholder="Peça seus pescados e frutos do mar online, sem ligação, sem papelada."
               onChange={(e) => setForm({ ...form, hero_title: e.target.value })}
             />
           </div>
