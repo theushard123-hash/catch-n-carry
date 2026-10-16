@@ -129,7 +129,7 @@ function LandingPage() {
             </h1>
             <p className="mt-4 max-w-lg text-lg text-sidebar-foreground/80">
               {heroSubtitle ||
-                "Restaurantes, mercados e revendedores: montem sua lista no portal e nossa equipe cuida do resto — acompanhamos cada pedido de perto para garantir o melhor do dia, no peso certo."}
+                "Restaurantes, mercados e revendedores — e também quem quer o frescor do dia na mesa de casa: montem sua lista no portal e nossa equipe cuida do resto, acompanhando cada pedido de perto para garantir o melhor da pesca, na medida certa."}
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button asChild size="lg" variant="aqua">
