@@ -21,8 +21,8 @@ export function formatDate(value: string | Date | null | undefined, withTime = f
 }
 
 export const ORDER_STATUS_LABEL: Record<string, string> = {
-  pendente: "Novo",
-  aprovado: "Aprovado",
+  pendente: "Em análise",
+  aprovado: "Confirmado pelo vendedor",
   em_separacao: "Em Separação",
   pronto_envio: "Pronto para Envio",
   faturado: "Concluído",

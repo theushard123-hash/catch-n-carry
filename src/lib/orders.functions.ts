@@ -65,7 +65,7 @@ export const createOrder = createServerFn({ method: "POST" })
     const ids = data.items.map((i) => i.productId);
     const { data: products, error: prErr } = await supabase
       .from("products")
-      .select("id, name, sku, unit, price_atacado, price_varejo, min_qty, active")
+      .select("id, name, sku, unit, price_atacado, price_varejo, min_qty, active, availability")
       .in("id", ids);
     if (prErr) throw new Error("Erro ao carregar produtos.");
 
@@ -73,6 +73,7 @@ export const createOrder = createServerFn({ method: "POST" })
     const lines = data.items.map((i) => {
       const p = byId.get(i.productId);
       if (!p || !p.active) throw new Error("Um dos produtos não está mais disponível.");
+      if (p.availability === "indisponivel") throw new Error(`${p.name} está em falta hoje. Remova do orçamento para continuar.`);
       const unitPrice = Number(profile.customer_type === "atacado" ? p.price_atacado : p.price_varejo);
       if (i.qty < Number(p.min_qty)) {
         throw new Error(`Quantidade mínima de ${p.name} é ${p.min_qty} ${p.unit}.`);

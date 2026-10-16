@@ -116,6 +116,19 @@ function AdminProductsPage() {
     onError: () => toast.error("Não foi possível salvar o produto."),
   });
 
+  const quickUpdate = useMutation({
+    mutationFn: async ({ id, patch }: { id: string; patch: Partial<Product> }) => {
+      const { error } = await supabase.from("products").update(patch).eq("id", id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      toast.success("Atualizado.");
+      qc.invalidateQueries({ queryKey: ["admin-products"] });
+      qc.invalidateQueries({ queryKey: ["products"] });
+    },
+    onError: () => toast.error("Não foi possível atualizar."),
+  });
+
   const toggleActive = useMutation({
     mutationFn: async (p: Product) => {
       const { error } = await supabase.from("products").update({ active: !p.active }).eq("id", p.id);
@@ -207,6 +220,7 @@ function AdminProductsPage() {
                 <TableHead>Un.</TableHead>
                 <TableHead className="text-right">Atacado</TableHead>
                 <TableHead className="text-right">Varejo</TableHead>
+                <TableHead>Estoque hoje</TableHead>
                 <TableHead>Ativo</TableHead>
                 <TableHead />
               </TableRow>
@@ -222,8 +236,18 @@ function AdminProductsPage() {
                     <Badge variant="muted">{catName(p.category_id)}</Badge>
                   </TableCell>
                   <TableCell>{p.unit}</TableCell>
-                  <TableCell className="text-right">{formatBRL(p.price_atacado)}</TableCell>
-                  <TableCell className="text-right">{formatBRL(p.price_varejo)}</TableCell>
+                  <TableCell className="text-right"><QuickPrice value={Number(p.price_atacado)} onSave={(v) => quickUpdate.mutate({ id: p.id, patch: { price_atacado: v, price_updated_at: new Date().toISOString() } })} /></TableCell>
+                  <TableCell className="text-right"><QuickPrice value={Number(p.price_varejo)} onSave={(v) => quickUpdate.mutate({ id: p.id, patch: { price_varejo: v, price_updated_at: new Date().toISOString() } })} /></TableCell>
+                  <TableCell>
+                    <Select value={p.availability} onValueChange={(v) => quickUpdate.mutate({ id: p.id, patch: { availability: v } })}>
+                      <SelectTrigger className="h-8 w-[150px]" aria-label="Disponibilidade"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="disponivel">Disponível</SelectItem>
+                        <SelectItem value="sob_consulta">Sob consulta</SelectItem>
+                        <SelectItem value="indisponivel">Em falta</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
                   <TableCell>
                     <Switch checked={p.active} onCheckedChange={() => toggleActive.mutate(p)} />
                   </TableCell>
@@ -236,7 +260,7 @@ function AdminProductsPage() {
               ))}
               {(productsQ.data ?? []).length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                  <TableCell colSpan={8} className="py-10 text-center text-sm text-muted-foreground">
                     Nenhum produto cadastrado ainda.
                   </TableCell>
                 </TableRow>
@@ -397,4 +421,14 @@ function AdminProductsPage() {
       </Dialog>
     </div>
   );
+}
+
+function QuickPrice({ value, onSave }: { value: number; onSave: (v: number) => void }) {
+  const [text, setText] = useState(value.toFixed(2).replace(".", ","));
+  const commit = () => {
+    const n = Number(text.replace(/\./g, "").replace(",", "."));
+    if (!Number.isFinite(n) || n < 0) { setText(value.toFixed(2).replace(".", ",")); return; }
+    if (Math.abs(n - value) > 0.001) onSave(Math.round(n * 100) / 100);
+  };
+  return <Input aria-label="Preço" inputMode="decimal" className="ml-auto h-8 w-24 text-right" value={text} onChange={(e) => setText(e.target.value)} onBlur={commit} onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }} />;
 }
