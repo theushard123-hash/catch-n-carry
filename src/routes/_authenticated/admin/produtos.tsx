@@ -260,7 +260,7 @@ function AdminProductsPage() {
               ))}
               {(productsQ.data ?? []).length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={7} className="py-10 text-center text-sm text-muted-foreground">
+                  <TableCell colSpan={8} className="py-10 text-center text-sm text-muted-foreground">
                     Nenhum produto cadastrado ainda.
                   </TableCell>
                 </TableRow>
@@ -421,4 +421,14 @@ function AdminProductsPage() {
       </Dialog>
     </div>
   );
+}
+
+function QuickPrice({ value, onSave }: { value: number; onSave: (v: number) => void }) {
+  const [text, setText] = useState(value.toFixed(2).replace(".", ","));
+  const commit = () => {
+    const n = Number(text.replace(/\./g, "").replace(",", "."));
+    if (!Number.isFinite(n) || n < 0) { setText(value.toFixed(2).replace(".", ",")); return; }
+    if (Math.abs(n - value) > 0.001) onSave(Math.round(n * 100) / 100);
+  };
+  return <Input aria-label="Preço" inputMode="decimal" className="ml-auto h-8 w-24 text-right" value={text} onChange={(e) => setText(e.target.value)} onBlur={commit} onKeyDown={(e) => { if (e.key === "Enter") (e.target as HTMLInputElement).blur(); }} />;
 }
