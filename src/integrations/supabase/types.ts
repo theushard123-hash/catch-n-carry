@@ -331,6 +331,7 @@ export type Database = {
       products: {
         Row: {
           active: boolean
+          availability: string
           category_id: string | null
           created_at: string
           cut_options: string[]
@@ -340,6 +341,7 @@ export type Database = {
           min_qty: number
           name: string
           price_atacado: number
+          price_updated_at: string
           price_varejo: number
           sku: string | null
           sort_order: number
@@ -350,6 +352,7 @@ export type Database = {
         }
         Insert: {
           active?: boolean
+          availability?: string
           category_id?: string | null
           created_at?: string
           cut_options?: string[]
@@ -359,6 +362,7 @@ export type Database = {
           min_qty?: number
           name: string
           price_atacado?: number
+          price_updated_at?: string
           price_varejo?: number
           sku?: string | null
           sort_order?: number
@@ -369,6 +373,7 @@ export type Database = {
         }
         Update: {
           active?: boolean
+          availability?: string
           category_id?: string | null
           created_at?: string
           cut_options?: string[]
@@ -378,6 +383,7 @@ export type Database = {
           min_qty?: number
           name?: string
           price_atacado?: number
+          price_updated_at?: string
           price_varejo?: number
           sku?: string | null
           sort_order?: number
